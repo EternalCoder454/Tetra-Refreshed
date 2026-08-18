@@ -147,6 +147,10 @@ is the wrong shape, so take integration decisions from it rather than files.
 **Art of Forging is bundled too**, on the same terms and by the same mechanism, which settles the
 compatibility content Secrets of Forging carries for it. That namespace exists now.
 
+**It is an addon for Secrets of Forging rather than for this mod**, so the chain is
+`tetra <- secrets_of_forging_revelations <- art_of_forging` and it is declared that way. Its
+schematics target polearm slots, which only exist because Secrets of Forging defines them.
+
 It is ported and it builds, and **it has never been run**. Its own `PORT-STATUS.md` records what
 changed and what is known to be wrong, including two things that predate the port: its loot
 modifiers read a field name none of their data files write, and its creative tab was registered by
