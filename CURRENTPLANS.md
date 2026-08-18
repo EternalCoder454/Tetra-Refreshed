@@ -114,18 +114,25 @@ That is why it moved onto the event. See the trap in `PORT-STATUS.md` section 8.
 Fold Art of Forging and its companion addon into Tetra as base content rather than shipping them
 alongside.
 
-| Mod | State |
-|---|---|
-| <https://github.com/AceTheEldritchKing/art_of_forging> | no licence file |
-| <https://github.com/AceTheEldritchKing/Secrets-Of-Forging-Revelations> | no licence file |
+| Mod | Terms | State |
+|---|---|---|
+| <https://github.com/AceTheEldritchKing/Secrets-Of-Forging-Revelations> | MIT with restrictions, in its README | **ported to 26.1.2, loads clean** |
+| <https://github.com/AceTheEldritchKing/art_of_forging> | none at all | not started |
 
-Neither carries a licence, which means no permission to reuse is granted by default. Ask the author
-before merging either. This is a different question from the one already put to Mikael and it is
-still open.
+**Secrets of Forging is ported.** It lives beside this one as its own mod and runs against it. Its
+terms permit forking, building and modifying a fork for personal use, so that much is settled.
+**Updating it past 1.19.2 needs the author's explicit permission**, asked for on Discord, and
+reuploading it under another name is forbidden, so merging it into Tetra and shipping that is the
+step still waiting on Ace. Its `PORT-STATUS.md` has the detail.
 
-Both are earlier era content and will need the same port this repository just did, so merge after
-phase 1 rather than during. The perk restriction in Tetra's terms applies to anything merged that
-touches perks.
+One thing that merge has to decide: roughly a third of it is compatibility content for Art of
+Forging, 22 schematic files and 58 references to a namespace that does not exist here. That half
+does nothing until Art of Forging is ported too, so it either waits for that or gets left out.
+
+**Art of Forging has no licence at all.** No file, nothing in its README, and GitHub reports none,
+so no permission to reuse is granted by default. Ask before touching it.
+
+The perk restriction in Tetra's terms applies to anything merged that touches perks.
 
 # Phase 3, visual polish
 
