@@ -1,7 +1,9 @@
 package se.mickelus.tetra;
 
+import net.minecraft.core.component.predicates.DataComponentPredicate;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.advancements.criterion.ItemSubPredicate;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,8 +26,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
@@ -121,7 +121,8 @@ public class TetraRegistries {
     public static final DeferredRegister<ParticleType<?>> particles = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, TetraMod.MOD_ID);
     public static final DeferredRegister<MobEffect> effects = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, TetraMod.MOD_ID);
     public static final DeferredRegister.DataComponents dataComponents = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TetraMod.MOD_ID);
-    public static final DeferredRegister<ItemSubPredicate.Type<?>> itemSubPredicates = DeferredRegister.create(Registries.ITEM_SUB_PREDICATE_TYPE, TetraMod.MOD_ID);
+    public static final DeferredRegister<DataComponentPredicate.Type<?>> itemSubPredicates =
+            DeferredRegister.create(Registries.DATA_COMPONENT_PREDICATE_TYPE, TetraMod.MOD_ID);
     public static final DeferredRegister<IngredientType<?>> ingredientTypes = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, TetraMod.MOD_ID);
     public static final DeferredRegister<CriterionTrigger<?>> triggerTypes = DeferredRegister.create(Registries.TRIGGER_TYPE, TetraMod.MOD_ID);
 
@@ -129,10 +130,10 @@ public class TetraRegistries {
     public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> lootModifiers =
             DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, TetraMod.MOD_ID);
 
-    public static final DeferredRegister<LootItemConditionType> lootConditions = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE,
-            TetraMod.MOD_ID);
-    public static final DeferredRegister<LootItemFunctionType<?>> lootFunctions = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE,
-            TetraMod.MOD_ID);
+    public static final DeferredRegister<MapCodec<? extends LootItemCondition>> lootConditions =
+            DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, TetraMod.MOD_ID);
+    public static final DeferredRegister<MapCodec<? extends LootItemFunction>> lootFunctions =
+            DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, TetraMod.MOD_ID);
     public static final DeferredRegister<StructureProcessorType<?>> structureProcessors = DeferredRegister.create(BuiltInRegistries.STRUCTURE_PROCESSOR,
             TetraMod.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> creativeTabs = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TetraMod.MOD_ID);
@@ -462,14 +463,12 @@ public class TetraRegistries {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // LOOT CONDITIONS
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        FortuneBonusCondition.type = register(lootConditions, FortuneBonusCondition.identifier,
-                () -> new LootItemConditionType(FortuneBonusCondition.CODEC));
+        register(lootConditions, FortuneBonusCondition.identifier, () -> FortuneBonusCondition.CODEC);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // LOOT FUNCTIONS
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ScrollDataFunction.type = register(lootFunctions, ScrollDataFunction.identifier,
-                () -> new LootItemFunctionType<>(ScrollDataFunction.CODEC));
+        register(lootFunctions, ScrollDataFunction.identifier, () -> ScrollDataFunction.CODEC);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // LOOT MODIFIERS

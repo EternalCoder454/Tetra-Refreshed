@@ -1,10 +1,11 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.predicates.DataComponentPredicate;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.criterion.ItemSubPredicate;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.util.CastOptional;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;
@@ -17,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
-public class ItemPredicateModular implements TetraItemPredicate, ItemSubPredicate {
+public class ItemPredicateModular implements TetraItemPredicate, DataComponentPredicate {
     public static final Codec<ItemPredicateModular> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.listOf().listOf().optionalFieldOf("modules", List.of()).forGetter(predicate -> Arrays.stream(predicate.modules)
                     .map(Arrays::asList)
@@ -25,7 +26,7 @@ public class ItemPredicateModular implements TetraItemPredicate, ItemSubPredicat
             Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("variants", Map.of()).forGetter(predicate -> predicate.variants),
             Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("improvements", Map.of()).forGetter(predicate -> predicate.improvements)
     ).apply(instance, ItemPredicateModular::new));
-    public static final ItemSubPredicate.Type<ItemPredicateModular> TYPE = new ItemSubPredicate.Type<>(CODEC);
+    public static final DataComponentPredicate.Type<ItemPredicateModular> TYPE = new DataComponentPredicate.ConcreteType<>(CODEC);
 
     private final Map<String, String> variants = new HashMap<>();
     private final Map<String, Integer> improvements = new HashMap<>();
@@ -203,5 +204,10 @@ public class ItemPredicateModular implements TetraItemPredicate, ItemSubPredicat
 
     public boolean matches(ItemStack itemStack) {
         return test(itemStack, null);
+    }
+
+    @Override
+    public boolean matches(DataComponentGetter components) {
+        return components instanceof ItemStack itemStack && matches(itemStack);
     }
 }

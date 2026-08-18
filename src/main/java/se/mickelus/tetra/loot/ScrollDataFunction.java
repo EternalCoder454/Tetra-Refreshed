@@ -1,11 +1,11 @@
 package se.mickelus.tetra.loot;
 
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import java.util.function.Supplier;
 import se.mickelus.tetra.blocks.scroll.ScrollData;
@@ -16,7 +16,6 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class ScrollDataFunction extends LootItemConditionalFunction {
     public static final String identifier = "scroll";
-    public static Supplier<LootItemFunctionType<ScrollDataFunction>> type;
     public static final MapCodec<ScrollDataFunction> CODEC = RecordCodecBuilder.mapCodec(instance -> LootItemConditionalFunction.commonFields(instance)
             .and(ScrollData.MAP_CODEC.forGetter(function -> function.data))
             .apply(instance, ScrollDataFunction::new));
@@ -35,7 +34,7 @@ public class ScrollDataFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<ScrollDataFunction> getType() {
-        return type.get();
+    public MapCodec<? extends LootItemFunction> codec() {
+        return CODEC;
     }
 }

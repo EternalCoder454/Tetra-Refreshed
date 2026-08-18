@@ -1,8 +1,9 @@
 package se.mickelus.tetra.blocks.scroll;
 
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.predicates.DataComponentPredicate;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.criterion.ItemSubPredicate;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.util.HexCodec;
@@ -21,7 +22,7 @@ public record ScrollDataPredicate(
         Optional<List<Integer>> glyphs,
         Optional<List<Identifier>> schematics,
         Optional<List<Identifier>> effects
-) implements ItemSubPredicate {
+) implements DataComponentPredicate {
     public static final Codec<ScrollDataPredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.optionalFieldOf("key").forGetter(ScrollDataPredicate::key),
             Codec.STRING.optionalFieldOf("details").forGetter(ScrollDataPredicate::details),
@@ -32,10 +33,14 @@ public record ScrollDataPredicate(
             Identifier.CODEC.listOf().optionalFieldOf("schematics").forGetter(ScrollDataPredicate::schematics),
             Identifier.CODEC.listOf().optionalFieldOf("effects").forGetter(ScrollDataPredicate::effects)
     ).apply(instance, ScrollDataPredicate::new));
-    public static final ItemSubPredicate.Type<ScrollDataPredicate> TYPE = new ItemSubPredicate.Type<>(CODEC);
+    public static final DataComponentPredicate.Type<ScrollDataPredicate> TYPE = new DataComponentPredicate.ConcreteType<>(CODEC);
 
     @Override
-    public boolean matches(ItemStack stack) {
+    public boolean matches(DataComponentGetter components) {
+        return components instanceof ItemStack stack && matches(stack);
+    }
+
+    private boolean matches(ItemStack stack) {
         if (stack.getItem() != ScrollItem.instance) {
             return false;
         }
