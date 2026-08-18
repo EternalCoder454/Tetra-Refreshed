@@ -1,5 +1,12 @@
 package se.mickelus.tetra.items.modular;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.core.HolderSet;
@@ -75,6 +82,19 @@ import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class ItemModularHandheld extends ModularItem {
+    private static final Logger logger = LogManager.getLogger();
+
+    private final Cache<String, Optional<Tool>> toolComponentCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build();
+
+    @Override
+    public void clearCaches() {
+        super.clearCaches();
+        toolComponentCache.invalidateAll();
+    }
+
     public static final TagKey<Block> nailedTag = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "nailed"));
     // if the blocking level exceeds this value the item has an infinite blocking duration
     public static final int blockingDurationLimit = 16;
@@ -852,6 +872,30 @@ public class ItemModularHandheld extends ModularItem {
             }
         });
         return builder.build();
+    }
+
+    /**
+     * The tool component this item should carry, remembered per item state.
+     *
+     * The component sync asks for this on every tick of every held item, and building it allocates
+     * two collections, sorts the mining rules and resolves a block tag per rule.
+     *
+     * Broken is checked out here rather than inside the cache on purpose. It depends on the item's
+     * damage, and the cache key is the item's module identifier, which damage is not part of. A
+     * broken tool would otherwise keep serving the rules it had when it was whole.
+     */
+    public @Nullable Tool getDefaultToolComponentCached(ItemStack itemStack) {
+        if (isBroken(itemStack)) {
+            return null;
+        }
+
+        try {
+            return toolComponentCache.get(getDataCacheKey(itemStack), () -> Optional.ofNullable(getDefaultToolComponent(itemStack)))
+                    .orElse(null);
+        } catch (ExecutionException e) {
+            logger.error("Failed to build the tool component for {}", getItemName(itemStack), e);
+            return getDefaultToolComponent(itemStack);
+        }
     }
 
     public @Nullable Tool getDefaultToolComponent(ItemStack itemStack) {

@@ -26,7 +26,7 @@ public final class ModularItemComponentHelper {
             return;
         }
 
-        Tool expectedToolComponent = item.getDefaultToolComponent(itemStack);
+        Tool expectedToolComponent = item.getDefaultToolComponentCached(itemStack);
         Tool currentToolComponent = itemStack.get(DataComponents.TOOL);
         if (Objects.equals(expectedToolComponent, currentToolComponent)) {
             return;
