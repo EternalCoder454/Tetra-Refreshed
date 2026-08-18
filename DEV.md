@@ -167,6 +167,26 @@ without stacking their damage, and that lives in `ModularDoubleHeadedItem` becau
 than shape. A type that needs behaviour like that is still a java class. A type that is a set of
 slots is a datapack.
 
+## Recipe viewer integration
+
+`se.mickelus.tetra.compat.viewer` reads Tetra's data into shapes a recipe viewer can browse and
+imports no viewer api at all. `se.mickelus.tetra.compat.jei` is the JEI plugin on top of it. A
+second viewer is a second class in that shape rather than a second extraction.
+
+JEI is `compileOnly`, and its plugin class is only ever loaded by JEI, so a pack without it is
+unaffected. The test pack does not currently ship JEI, so add it there to see any of this.
+
+**Tetra's crafting is not a set of recipes**, which is why only materials are exported. A
+schematic's outcome is a function of the target item, the slot and the materials, so exporting
+schematics as recipes would be a product of 343 schematics, 78 modules and 70 materials. The
+material list is both tractable and the question players actually ask, and the material items are
+registered as recipe inputs so that asking what an iron ingot is for finds the page.
+
+**EMI is not an option on this version.** Its maven at `repo.sleeping.town` and its Modrinth
+releases both stop at 1.21.1, so there is no api to build against and no mod to run against. The
+extraction layer exists so that an EMI plugin is a small class rather than a project, if EMI ever
+ships for 26.1.
+
 ## Repository rules
 
 1. Minecraft 26.1.2, NeoForge only. Java 25.

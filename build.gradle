@@ -114,6 +114,12 @@ dependencies {
     // runClient and runServer before they start. The dependency is optional in the mods.toml, and
     // the api stays on the compile classpath, so dropping it from the dev runtime costs nothing.
     // compileOnly above is what the integration is written against.
+
+    // The recipe viewer integration. The artifact name carries the game version, so this follows
+    // minecraft_version rather than being written out again. EMI would be the other half of this
+    // and does not exist past 1.21.1, see the note in TetraViewerContent.
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

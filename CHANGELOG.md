@@ -66,6 +66,14 @@ detail is in `PORT-STATUS.md`. The parts worth knowing as a player:
   artwork. Where both exist the layer uses a sprite the atlas recoloured for that material, so a
   material can define its own look without artwork. Copper and iron hammer heads use it and render
   correctly. Every other material is untouched. `DEV.md` explains the intent.
+* **Item types can be datapacks.** A handheld item can now be defined by an archetype file rather
+  than a java class, declaring its module slots, their layout, honing, synergies and hit damage.
+  The mechanism existed and had never been usable, because nothing could express enough to replace
+  a class and no archetype had ever been written. `DEV.md` has the format.
+* **JEI integration.** Tetra's materials are browsable, showing what counts as each material and
+  what it contributes, in the same words the holosphere uses. Asking what an item is used for finds
+  its material. JEI is optional and a pack without it is unaffected. EMI does not exist for this
+  version of the game, so it is not supported yet.
 * **`DEV.md`**, a developer guide, and **`CURRENTPLANS.md`**, where the project goes after the port.
 
 ### Known issues
