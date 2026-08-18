@@ -55,6 +55,12 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
             .maximumSize(1000)
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
+    // Recomputed for every held modular item on every tick, by the component sync, and working it
+    // out walks every major module and every improvement on each of them.
+    private final Cache<String, Integer> enchantabilityCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build();
     protected int honeBase = 450;
     protected int honeIntegrityMultiplier = 200;
     // static marker for item, denoting if it can progress towards being honed
@@ -78,6 +84,7 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
         toolCache.invalidateAll();
         effectCache.invalidateAll();
         propertyCache.invalidateAll();
+        enchantabilityCache.invalidateAll();
     }
 
     @Override
@@ -127,6 +134,11 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
 
     public Cache<String, ToolData> getToolDataCache() {
         return toolCache;
+    }
+
+    @Override
+    public Cache<String, Integer> getEnchantabilityCache() {
+        return enchantabilityCache;
     }
 
     @Override

@@ -179,12 +179,18 @@ public class HoloItemGui extends GuiClickable {
 
     @Override
     public void updateFocusState(int refX, int refY, int mouseX, int mouseY) {
-        this.elements.stream()
-                .filter(GuiElement::isVisible)
-                .forEach((element) -> element.updateFocusState(
-                        refX + this.x + getXOffset(this, element.getAttachmentAnchor()) - getXOffset(element, element.getAttachmentPoint()),
-                        refY + this.y + getYOffset(this, element.getAttachmentAnchor()) - getYOffset(element, element.getAttachmentPoint()),
-                        mouseX, mouseY));
+        // Per frame, so a loop rather than a stream pipeline. Matches GuiElement.
+        for (int i = 0; i < elements.size(); i++) {
+            GuiElement element = elements.get(i);
+            if (!element.isVisible()) {
+                continue;
+            }
+
+            element.updateFocusState(
+                    refX + this.x + getXOffset(this, element.getAttachmentAnchor()) - getXOffset(element, element.getAttachmentPoint()),
+                    refY + this.y + getYOffset(this, element.getAttachmentAnchor()) - getYOffset(element, element.getAttachmentPoint()),
+                    mouseX, mouseY);
+        }
 
         int offsetMouseX = mouseX - refX - x;
         int offsetMouseY = mouseY - refY - y;

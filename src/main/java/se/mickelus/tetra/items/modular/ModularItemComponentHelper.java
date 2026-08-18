@@ -84,7 +84,7 @@ public final class ModularItemComponentHelper {
             return;
         }
 
-        int expected = item.getEnchantability(itemStack);
+        int expected = item.getEnchantabilityCached(itemStack);
         Enchantable current = itemStack.get(DataComponents.ENCHANTABLE);
 
         if (expected <= 0) {

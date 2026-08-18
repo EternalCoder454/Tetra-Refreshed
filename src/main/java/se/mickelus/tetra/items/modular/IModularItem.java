@@ -1103,6 +1103,25 @@ public interface IModularItem {
                 .orElse(0) / 6d);
     }
 
+    Cache<String, Integer> getEnchantabilityCache();
+
+    /**
+     * The same answer as {@link #getEnchantability}, remembered per item state.
+     *
+     * The component sync asks for this on every tick of every held modular item, and answering it
+     * walks every major module and every improvement on each. It is keyed the same way the
+     * attribute, tool, effect and property caches are, so it goes stale under exactly the same
+     * conditions they already do.
+     */
+    default int getEnchantabilityCached(ItemStack itemStack) {
+        try {
+            return getEnchantabilityCache().get(getDataCacheKey(itemStack), () -> getEnchantability(itemStack));
+        } catch (ExecutionException e) {
+            logger.error("Failed to compute enchantability for {}", getItemName(itemStack), e);
+            return getEnchantability(itemStack);
+        }
+    }
+
     @OnlyIn(Dist.CLIENT)
     default ImmutableList<IModuleModel> getModels(ItemStack itemStack, @Nullable LivingEntity entity) {
         return getAllModules(itemStack).stream()
