@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.suspend;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -26,7 +27,7 @@ public class SuspendPotionEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         entity.fallDistance = 0;
         var effect = se.mickelus.tetra.effect.EffectHelper.effectHolder(this);
         if (entity.onGround()) {

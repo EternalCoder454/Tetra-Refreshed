@@ -34,7 +34,7 @@ public class BleedingPotionEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         DamageSource source = entity.level().damageSources().source(TetraDamageTypes.bleeding);
         entity.hurt(source, amplifier);
         spawnParticles(entity, 2);

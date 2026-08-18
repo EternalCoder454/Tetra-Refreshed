@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.server.level.ServerLevel;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
@@ -247,26 +248,26 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!equals(newState.getBlock())) {
-            TileEntityOptional.from(world, pos, HammerBaseBlockEntity.class)
-                    .ifPresent(tile -> {
-                        for (int i = 0; i < 2; i++) {
-                            if (tile.hasCellInSlot(i)) {
-                                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getStackInSlot(i).copy());
-                            }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        TileEntityOptional.from(world, pos, HammerBaseBlockEntity.class)
+                .ifPresent(tile -> {
+                    for (int i = 0; i < 2; i++) {
+                        if (tile.hasCellInSlot(i)) {
+                            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getStackInSlot(i).copy());
                         }
+                    }
 
-                        Stream.of(tile.getEffect(true), tile.getEffect(false))
-                                .filter(Objects::nonNull)
-                                .map(HammerEffect::getItem)
-                                .map(ItemStack::new)
-                                .forEach(stack -> Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack));
-                    });
+                    Stream.of(tile.getEffect(true), tile.getEffect(false))
+                            .filter(Objects::nonNull)
+                            .map(HammerEffect::getItem)
+                            .map(ItemStack::new)
+                            .forEach(stack -> Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+                });
 
-            TileEntityOptional.from(world, pos, HammerBaseBlockEntity.class).ifPresent(BlockEntity::setRemoved);
-        }
+        TileEntityOptional.from(world, pos, HammerBaseBlockEntity.class).ifPresent(BlockEntity::setRemoved);
+    
     }
+
 
     @Override
     public BlockInteraction[] getPotentialInteractions(Level world, BlockPos pos, final BlockState state, final Direction face, final Collection<ItemAbility> tools) {

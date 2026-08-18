@@ -45,7 +45,7 @@ public class UnstablePowerMobEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             if (entity.level().getGameTime() % 10 == 0) {
                 MobEffectInstance current = entity.getEffect(se.mickelus.tetra.effect.EffectHelper.effectHolder(instance));

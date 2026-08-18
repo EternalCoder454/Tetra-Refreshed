@@ -249,18 +249,18 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!equals(newState.getBlock())) {
-            TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class)
-                    .ifPresent(tile -> {
-                        if (tile.hasCell()) {
-                            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getCell().copy());
-                        }
-                    });
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class)
+                .ifPresent(tile -> {
+                    if (tile.hasCell()) {
+                        Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tile.getCell().copy());
+                    }
+                });
 
-            TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class).ifPresent(BlockEntity::setRemoved);
-        }
+        TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class).ifPresent(BlockEntity::setRemoved);
+    
     }
+
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect.howling;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
@@ -25,7 +26,7 @@ public class HowlingPotionEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (entity.level().isClientSide()) {
             double offset = Math.PI * 4 / (amplifier + 1);
             for (int i = 0; i < (amplifier + 1) / 2; i++) {

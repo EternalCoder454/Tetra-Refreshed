@@ -284,7 +284,7 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
-        loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, packet.getTag()));
+    public void onDataPacket(Connection connection, ValueInput input) {
+        loadWithComponents(input);
     }
 }

@@ -30,7 +30,7 @@ public class StunPotionEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             Vec3 pos = entity.getEyePosition(0);
             double time = System.currentTimeMillis() / 1000d * Math.PI;

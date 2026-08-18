@@ -346,8 +346,8 @@ public class HammerBaseBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
+    public void onDataPacket(Connection connection, ValueInput input) {
+        loadWithComponents(input);
     }
 
     @Override

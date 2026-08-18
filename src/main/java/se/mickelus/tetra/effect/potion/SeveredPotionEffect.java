@@ -30,7 +30,7 @@ public class SeveredPotionEffect extends MobEffect {
         instance = this;
     }
 
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
             ((ServerLevel) entity.level()).sendParticles(new DustParticleOptions(ARGB.color(128, 0, 0), 0.5f),

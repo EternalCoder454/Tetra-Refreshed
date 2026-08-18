@@ -734,7 +734,7 @@ public class ItemModularHandheld extends ModularItem {
      * @param timeLeft
      */
     @Override
-    public void releaseUsing(ItemStack itemStack, Level world, LivingEntity entityLiving, int timeLeft) {
+    public boolean releaseUsing(ItemStack itemStack, Level world, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player) {
             Player player = (Player) entityLiving;
             int ticksUsed = this.getUseDuration(itemStack) - timeLeft;
@@ -771,7 +771,9 @@ public class ItemModularHandheld extends ModularItem {
                 }
             }
         }
+        return true;
     }
+
 
     public ChargedAbilityEffect getChargeableAbility(ItemStack itemStack) {
         return Arrays.stream(abilities)

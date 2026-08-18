@@ -218,8 +218,8 @@ public class CoreExtractorBaseBlockEntity extends BlockEntity implements IHeatTr
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
-        this.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, packet.getTag()));
+    public void onDataPacket(Connection connection, ValueInput input) {
+        loadWithComponents(input);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {

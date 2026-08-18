@@ -167,7 +167,7 @@ public class ModularBowItem extends ModularItem {
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
     @Override
-    public void releaseUsing(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
+    public boolean releaseUsing(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
         int usedTicks = getUseDuration(itemStack) - timeLeft;
         if (getEffectLevel(itemStack, ItemEffect.overbowed) > 0 && exceedsOverbowedLimit(entity, itemStack, usedTicks)) {
             entity.stopUsingItem();
@@ -176,7 +176,9 @@ public class ModularBowItem extends ModularItem {
         } else {
             fireArrow(itemStack, world, entity, timeLeft);
         }
+        return true;
     }
+
 
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack itemStack, int count) {

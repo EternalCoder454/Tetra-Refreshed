@@ -304,7 +304,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
      * Called when the player stops using an Item (stops holding the right mouse button).
      */
     @Override
-    public void releaseUsing(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
+    public boolean releaseUsing(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
         float progress = getProgress(itemStack, entity);
         if (progress >= 1.0F && !isLoaded(itemStack)) {
             boolean gotLoaded = reload(entity, itemStack);
@@ -315,8 +315,9 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                         1.0f, 1.0f / (world.getRandom().nextFloat() * 0.5f + 1.0f) + 0.2f);
             }
         }
-
+        return true;
     }
+
 
     protected void fireProjectiles(ItemStack itemStack, Level world, LivingEntity entity) {
         if (entity instanceof Player player && !world.isClientSide()) {

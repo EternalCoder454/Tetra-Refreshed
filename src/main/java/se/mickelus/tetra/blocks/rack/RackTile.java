@@ -75,8 +75,8 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
+    public void onDataPacket(Connection connection, ValueInput input) {
+        loadWithComponents(input);
     }
 
     @Override

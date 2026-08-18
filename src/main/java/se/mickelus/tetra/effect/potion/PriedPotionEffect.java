@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect.potion;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -24,7 +25,7 @@ public class PriedPotionEffect extends MobEffect {
         instance = this;
     }
 
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             ParticleHelper.spawnArmorParticles(entity);
         }

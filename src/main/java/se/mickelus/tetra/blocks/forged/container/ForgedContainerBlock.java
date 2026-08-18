@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import net.minecraft.server.level.ServerLevel;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
@@ -173,16 +174,16 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!equals(newState.getBlock())) {
-            // only drop loot from open, primary/unflipped chests
-            if (state.getValue(openProp) && !state.getValue(flippedProp)) {
-                dropBlockInventory(this, world, pos, newState);
-            } else {
-                TileEntityOptional.from(world, pos, ForgedContainerBlockEntity.class).ifPresent(BlockEntity::setRemoved);
-            }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        // only drop loot from open, primary/unflipped chests
+        if (state.getValue(openProp) && !state.getValue(flippedProp)) {
+            dropBlockInventory(this, world, pos);
+        } else {
+            TileEntityOptional.from(world, pos, ForgedContainerBlockEntity.class).ifPresent(BlockEntity::setRemoved);
         }
+    
     }
+
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {

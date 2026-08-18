@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.workbench;
 
+import net.minecraft.server.level.ServerLevel;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,22 +63,22 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!equals(newState.getBlock())) {
-            TileEntityOptional.from(world, pos, WorkbenchTile.class)
-                    .map(te -> te.getItemHandler(null))
-                    .ifPresent(cap -> {
-                        for (int i = 0; i < cap.getSlots(); i++) {
-                            ItemStack itemStack = cap.getStackInSlot(i);
-                            if (!itemStack.isEmpty()) {
-                                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
-                            }
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        TileEntityOptional.from(world, pos, WorkbenchTile.class)
+                .map(te -> te.getItemHandler(null))
+                .ifPresent(cap -> {
+                    for (int i = 0; i < cap.getSlots(); i++) {
+                        ItemStack itemStack = cap.getStackInSlot(i);
+                        if (!itemStack.isEmpty()) {
+                            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
                         }
-                    });
+                    }
+                });
 
-            TileEntityOptional.from(world, pos, WorkbenchTile.class).ifPresent(BlockEntity::setRemoved);
-        }
+        TileEntityOptional.from(world, pos, WorkbenchTile.class).ifPresent(BlockEntity::setRemoved);
+    
     }
+
 
     /**
      * Returns a stream of block state/position pairs around the given position where each block in the stream implements IToolProviderBlock

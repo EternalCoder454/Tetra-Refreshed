@@ -28,7 +28,7 @@ public class PuncturedPotionEffect extends MobEffect {
         instance = this;
     }
 
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
             EquipmentSlot slot = EquipmentSlot.values()[2 + rand.nextInt(4)];

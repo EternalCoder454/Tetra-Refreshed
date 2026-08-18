@@ -22,22 +22,25 @@ public class TetraBlock extends Block implements InitializableBlock {
         super(properties);
     }
 
-    public static void dropBlockInventory(Block thisBlock, Level world, BlockPos pos, BlockState newState) {
-        if (!thisBlock.equals(newState.getBlock())) {
-            TileEntityOptional.from(world, pos, ItemHandlerBlockEntity.class)
-                    .map(te -> te.getItemHandler(null))
-                    .ifPresent(cap -> {
-                        for (int i = 0; i < cap.getSlots(); i++) {
-                            ItemStack itemStack = cap.getStackInSlot(i);
-                            if (!itemStack.isEmpty()) {
-                                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
-                            }
+    /**
+     * Drop what the block was holding. Callers reach this from affectNeighborsAfterRemoval, which
+     * only runs once the block is actually gone, so the check against the replacing state that
+     * used to guard this is implicit and the state itself is no longer passed.
+     */
+    public static void dropBlockInventory(Block thisBlock, Level world, BlockPos pos) {
+        TileEntityOptional.from(world, pos, ItemHandlerBlockEntity.class)
+                .map(te -> te.getItemHandler(null))
+                .ifPresent(cap -> {
+                    for (int i = 0; i < cap.getSlots(); i++) {
+                        ItemStack itemStack = cap.getStackInSlot(i);
+                        if (!itemStack.isEmpty()) {
+                            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
                         }
-                    });
+                    }
+                });
 
-            TileEntityOptional.from(world, pos, net.minecraft.world.level.block.entity.BlockEntity.class)
-                    .ifPresent(net.minecraft.world.level.block.entity.BlockEntity::setRemoved);
-        }
+        TileEntityOptional.from(world, pos, net.minecraft.world.level.block.entity.BlockEntity.class)
+                .ifPresent(net.minecraft.world.level.block.entity.BlockEntity::setRemoved);
     }
 
     @Nullable

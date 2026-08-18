@@ -133,8 +133,8 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        dropBlockInventory(this, world, pos, newState);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        dropBlockInventory(this, world, pos);
     }
 
     @Override
