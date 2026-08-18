@@ -1,5 +1,16 @@
 package se.mickelus.tetra.blocks.holo;
 
+import org.jspecify.annotations.Nullable;
+import java.util.List;
+import java.util.ArrayList;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -30,55 +41,85 @@ import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.gui.GuiColors;
 import se.mickelus.tetra.util.Lherper;
 
-public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereBlockEntity> {
-    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/holosphere_hud"));
-    private final BlockEntityRenderDispatcher dispatcher;
-    private final Font font;
+public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereBlockEntity, HolosphereEntityRenderer.State> {
+    public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/holosphere_hud"));
+    private final SpriteGetter sprites;
 
     public HolosphereEntityRenderer(BlockEntityRendererProvider.Context context) {
-        this.dispatcher = context.getBlockEntityRenderDispatcher();
-        this.font = context.getFont();
+        this.sprites = context.sprites();
     }
 
     @Override
-    public void render(HolosphereBlockEntity entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-            int combinedOverlay) {
+    public State createRenderState() {
+        return new State();
+    }
+
+    @Override
+    public void extractRenderState(HolosphereBlockEntity entity, State state, float partialTicks, Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
+
+        state.scans.clear();
+        state.visible = false;
+
         long timestamp = entity.getScanModeTimestamp();
         Level level = entity.getLevel();
-        if (timestamp == 0 || timestamp < 0 && level.getGameTime() + timestamp > 20) {
+        if (level == null || timestamp == 0 || timestamp < 0 && level.getGameTime() + timestamp > 20) {
             return;
         }
-//        VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-        BlockPos pos = entity.getBlockPos();
-        ChunkPos chunkPos = new ChunkPos(pos);
 
-        matrixStack.pushPose();
+        Entity camera = Minecraft.getInstance().getCameraEntity();
+        if (camera == null) {
+            return;
+        }
 
-//        matrixStack.mulPose(Vector3f.XN.rotationDegrees(90));
-        matrixStack.translate(0.5, 1, 0.5);
-//        drawLabel("test", matrixStack, buffer, combinedLight);
-        matrixStack.popPose();
+        state.visible = true;
+        state.timestamp = timestamp;
+        state.time = level.getGameTime() + partialTicks;
+        state.light = getLightColor(level, entity.getBlockPos());
 
-        int light = this.getLightColor(entity.getLevel(), entity.getBlockPos());
+        double angle = RotationHelper.getHorizontalAngle(camera.getEyePosition(partialTicks), Vec3.atCenterOf(entity.getBlockPos()));
+        state.rotation = new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F);
+        state.rotation.mul(Axis.YP.rotationDegrees((float) (angle / Math.PI * 180)));
 
-        double angle = RotationHelper.getHorizontalAngle(Minecraft.getInstance().getCameraEntity().getEyePosition(partialTicks),
-                Vec3.atCenterOf(entity.getBlockPos()));
-        Quaternionf rotation = new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F);
-        rotation.mul(Axis.YP.rotationDegrees((float) (angle / Math.PI * 180)));
-
-        VertexConsumer vertexBuilder = material.buffer(buffer, RenderType::entityTranslucent);
-
-        renderBackdrop(vertexBuilder, matrixStack, rotation, light, level.getGameTime() + partialTicks, timestamp);
-
+        ChunkPos chunkPos = ChunkPos.containing(entity.getBlockPos());
         entity.getScanResults().stream()
                 .filter(scan -> scan.timestamp() <= level.getGameTime())
-                .forEach(scan -> {
-                    int x = scan.chunkX() - chunkPos.x();
-                    int z = scan.chunkZ() - chunkPos.z();
-                    long openTimestamp = timestamp + (Math.abs(x) + Math.abs(z));
-                    renderMarker(vertexBuilder, matrixStack, material.sprite(), rotation, level.getGameTime() + partialTicks, openTimestamp,
-                            light, 0.5f + x * 1 / 16f, 0, 0.5f + z * 1 / 16f, scan);
-                });
+                .forEach(scan -> state.scans.add(new Marker(scan, scan.chunkX() - chunkPos.x(), scan.chunkZ() - chunkPos.z())));
+    }
+
+    @Override
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (!state.visible) {
+            return;
+        }
+
+        // the quad building below is unchanged, it just runs inside a recorded draw now and takes
+        // its transform from the pose the collector hands back rather than from a live stack
+        collector.submitCustomGeometry(poseStack, material.renderType(RenderTypes::entityTranslucent), (pose, consumer) -> {
+            PoseStack local = new PoseStack();
+            local.last().set(pose);
+
+            renderBackdrop(consumer, local, state.rotation, state.light, state.time, state.timestamp);
+
+            for (Marker marker : state.scans) {
+                long openTimestamp = state.timestamp + (Math.abs(marker.x()) + Math.abs(marker.z()));
+                renderMarker(consumer, local, sprites.get(material), state.rotation, state.time, openTimestamp,
+                        state.light, 0.5f + marker.x() * 1 / 16f, 0, 0.5f + marker.z() * 1 / 16f, marker.scan());
+            }
+        });
+    }
+
+    private record Marker(HolosphereBlockEntity.ScanResult scan, int x, int z) {}
+
+    public static class State extends BlockEntityRenderState {
+        public final List<Marker> scans = new ArrayList<>();
+        public boolean visible;
+        public long timestamp;
+        public float time;
+        public int light;
+        public Quaternionf rotation = new Quaternionf();
     }
 
     public void renderBackdrop(VertexConsumer consumer, PoseStack poseStack, Quaternionf rotation, int light, float time, long openTimestamp) {
@@ -93,14 +134,14 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
                 : Lherper.easeOut(Mth.clampedMap(time + openTimestamp, 0, 5, 1, 0));
 
         if (animFast > 0) {
-            drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, animFast * 16, 6, 0,
+            drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, animFast * 16, 6, 0,
                     0.5f, (15.5f) / 16, 0.5f, 0xffffff, animFast, -0.0025f, 1);
         }
 
         if (animSlow > 0) {
-            drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, 1, 5, 0,
+            drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, 1, 5, 0,
                     0.5f, (6.5f - animSlow * 0.5f) / 16, 0.5f, 0xffffff, animSlow, -0.0025f, 1);
-            drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, 1, 5, 0,
+            drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, 1, 5, 0,
                     0.5f, (24.5f + animSlow * 0.5f) / 16, 0.5f, 0xffffff, animSlow, -0.0025f, 1);
         }
 
@@ -109,13 +150,13 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
             Quaternionf up = Axis.YN.rotationDegrees(45);
             up.mul(Axis.XN.rotationDegrees(90));
 
-            drawQuad(consumer, poseStack, up, material.sprite(), light, 3, 3, 2, 3,
+            drawQuad(consumer, poseStack, up, sprites.get(material), light, 3, 3, 2, 3,
                     offset + 0.5f, (4.5f + animSlow2 * 1.5f) / 16, 0.5f, 0xffffff, animSlow2, 0, 1);
-            drawQuad(consumer, poseStack, up, material.sprite(), light, 3, 3, 2, 9,
+            drawQuad(consumer, poseStack, up, sprites.get(material), light, 3, 3, 2, 9,
                     0.5f - offset, (4.5f + animSlow2 * 1.5f) / 16, 0.5f, 0xffffff, animSlow2, 0, 1);
-            drawQuad(consumer, poseStack, up, material.sprite(), light, 3, 3, 2, 6,
+            drawQuad(consumer, poseStack, up, sprites.get(material), light, 3, 3, 2, 6,
                     0.5f, (4.5f + animSlow2 * 1.5f) / 16, offset + 0.5f, 0xffffff, animSlow2, 0, 1);
-            drawQuad(consumer, poseStack, up, material.sprite(), light, 3, 3, 2, 0,
+            drawQuad(consumer, poseStack, up, sprites.get(material), light, 3, 3, 2, 0,
                     0.5f, (4.5f + animSlow2 * 1.5f) / 16, 0.5f - offset, 0xffffff, animSlow2, 0, 1);
         }
     }
@@ -146,13 +187,13 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
             float cut = Mth.clamp(ry - 4.5f / 16f, 0, 2) * 16;
             float sh = 16 - cut;
             if (sh > 0) {
-                drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, sh, 6, 0, x, 1 + ((16f - sh) / 2 - 0.5f) / 16, z, GuiColors.scanner, anim, -0.002f, 1);
+                drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, sh, 6, 0, x, 1 + ((16f - sh) / 2 - 0.5f) / 16, z, GuiColors.scanner, anim, -0.002f, 1);
             }
 
-//            drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, 1, 5, 0, x, 6f / 16, z, GuiColors.scanner, anim, -0.0025f, 1);
+//            drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, 1, 5, 0, x, 6f / 16, z, GuiColors.scanner, anim, -0.0025f, 1);
             if (cut < 18) {
-                drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, 1, 5, 0, x, 25f / 16, z, 0, anim, -0.003f, 1.125f);
-                drawQuad(consumer, poseStack, rotation, material.sprite(), light, 1, 1, 5, 0, x, 25f / 16, z, GuiColors.scanner, anim, -0.002f, 1);
+                drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, 1, 5, 0, x, 25f / 16, z, 0, anim, -0.003f, 1.125f);
+                drawQuad(consumer, poseStack, rotation, sprites.get(material), light, 1, 1, 5, 0, x, 25f / 16, z, GuiColors.scanner, anim, -0.002f, 1);
             }
         }
     }
@@ -217,29 +258,16 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
         return 15728880;//level.hasChunkAt(pos) ? LevelRenderer.getLightColor(level, pos) : 0;
     }
 
-    private void drawLabel(String label, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-        matrixStack.scale(-0.0125f, -0.0125f, 0.0125f);
-        Matrix4f matrix4f = matrixStack.last().pose();
-        float x = -font.width(label) / 2f;
-        font.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        font.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        font.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        font.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-
-        matrixStack.translate(0, 0, -0.0125f);
-        font.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-    }
-
 //    for (int i = -5; i <= 5; i++) {
 //            for (int j = -5; j <= 5; j++) {
 //                int x = i + j;
 //                int z = i - j;
 //                int height = entity.getLevel().getChunk(x, z).getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
-//                renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, material.sprite(), 0, light, 0.5f + x * 0.075f, 0.01f * height, 0.5f + z * 0.075f, 1, 1, 1, 0.9f);
+//                renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, sprites.get(material), 0, light, 0.5f + x * 0.075f, 0.01f * height, 0.5f + z * 0.075f, 1, 1, 1, 0.9f);
 //                for (int k = height / 10; k > 0; k--) {
-//                    renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, material.sprite(), 0, light, 0.5f + x * 0.075f, 0.1f * k, 0.5f + z * 0.075f, 1, 1, 1, k * 0.05f);
+//                    renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, sprites.get(material), 0, light, 0.5f + x * 0.075f, 0.1f * k, 0.5f + z * 0.075f, 1, 1, 1, k * 0.05f);
 //                }
-//                renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, material.sprite(), 0, light, 0.5f + x * 0.075f, 0.5f, 0.5f + z * 0.075f, 1, 1, 1, 0.2f);
+//                renderMarker(vertexBuilder, matrixStack, entity.getLevel(), dispatcher.camera, sprites.get(material), 0, light, 0.5f + x * 0.075f, 0.5f, 0.5f + z * 0.075f, 1, 1, 1, 0.2f);
 //            }
 //        }
 

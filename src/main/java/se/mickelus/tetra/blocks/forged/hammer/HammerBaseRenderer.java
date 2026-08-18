@@ -7,14 +7,21 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
@@ -23,8 +30,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
-public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEntity> {
-    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_hammer/base_sheet"));
+public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEntity, HammerBaseRenderer.State> {
+    public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_hammer/base_sheet"));
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, HammerBaseBlock.identifier), "main");
 
     private final ModelPart unpowered;
@@ -39,7 +47,10 @@ public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEn
     private final ModelPart cellApowered;
     private final ModelPart cellBpowered;
 
+    private final SpriteGetter sprites;
+
     public HammerBaseRenderer(BlockEntityRendererProvider.Context context) {
+        sprites = context.sprites();
         ModelPart modelpart = context.bakeLayer(layer);
 
         unpowered = modelpart.getChild("unpowered");
@@ -104,48 +115,78 @@ public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEn
     }
 
     @Override
-    public void render(HammerBaseBlockEntity tile, float v, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        if (tile.hasLevel()) {
-            matrixStack.pushPose();
-            matrixStack.translate(0.5F, 0.5F, 0.5F);
-            // todo: why does the model render upside down by default?
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-            matrixStack.mulPose(Axis.YP.rotationDegrees(tile.getFacing().toYRot()));
-            matrixStack.translate(-0.5F, -0.5F, -0.5F);
+    public State createRenderState() {
+        return new State();
+    }
 
-            VertexConsumer vertexBuilder = material.buffer(buffer, RenderType::entityCutout);
+    @Override
+    public void extractRenderState(HammerBaseBlockEntity tile, State state, float partialTicks, Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
 
-            if (tile.isFunctional()) {
-                powered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            } else {
-                unpowered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            }
+        state.visible = tile.hasLevel();
+        state.facing = tile.getFacing().toYRot();
+        state.functional = tile.isFunctional();
 
-            if (tile.hasCellInSlot(0)) {
-                if (tile.getCellFuel(0) > 0) {
-                    cellApowered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-                } else {
-                    cellAunpowered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-                }
-            }
+        state.hasCellA = tile.hasCellInSlot(0);
+        state.cellAFuelled = state.hasCellA && tile.getCellFuel(0) > 0;
+        state.hasCellB = tile.hasCellInSlot(1);
+        state.cellBFuelled = state.hasCellB && tile.getCellFuel(1) > 0;
 
-            if (tile.hasCellInSlot(1)) {
-                if (tile.getCellFuel(1) > 0) {
-                    cellBpowered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-                } else {
-                    cellBunpowered.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-                }
-            }
+        HammerEffect effectA = tile.getEffect(true);
+        HammerEffect effectB = tile.getEffect(false);
+        state.moduleA = effectA != null ? effectA.ordinal() : -1;
+        state.moduleB = effectB != null ? effectB.ordinal() : -1;
+    }
 
-            if (tile.getEffect(true) != null) {
-                modulesA[tile.getEffect(true).ordinal()].render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            }
-
-            if (tile.getEffect(false) != null) {
-                modulesB[tile.getEffect(false).ordinal()].render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            }
-
-            matrixStack.popPose();
+    @Override
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (!state.visible) {
+            return;
         }
+
+        poseStack.pushPose();
+        poseStack.translate(0.5F, 0.5F, 0.5F);
+        // todo: why does the model render upside down by default?
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.facing));
+        poseStack.translate(-0.5F, -0.5F, -0.5F);
+
+        submitPart(state.functional ? powered : unpowered, state, poseStack, collector);
+
+        if (state.hasCellA) {
+            submitPart(state.cellAFuelled ? cellApowered : cellAunpowered, state, poseStack, collector);
+        }
+
+        if (state.hasCellB) {
+            submitPart(state.cellBFuelled ? cellBpowered : cellBunpowered, state, poseStack, collector);
+        }
+
+        if (state.moduleA >= 0) {
+            submitPart(modulesA[state.moduleA], state, poseStack, collector);
+        }
+
+        if (state.moduleB >= 0) {
+            submitPart(modulesB[state.moduleB], state, poseStack, collector);
+        }
+
+        poseStack.popPose();
+    }
+
+    private void submitPart(ModelPart part, State state, PoseStack poseStack, SubmitNodeCollector collector) {
+        collector.submitModelPart(part, poseStack, material.renderType(id -> RenderTypes.entityCutout(id, false)),
+                state.lightCoords, OverlayTexture.NO_OVERLAY, sprites.get(material), -1, state.breakProgress);
+    }
+
+    public static class State extends BlockEntityRenderState {
+        public boolean visible;
+        public float facing;
+        public boolean functional;
+        public boolean hasCellA;
+        public boolean cellAFuelled;
+        public boolean hasCellB;
+        public boolean cellBFuelled;
+        public int moduleA = -1;
+        public int moduleB = -1;
     }
 }
