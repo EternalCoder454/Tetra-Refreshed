@@ -44,7 +44,7 @@ public class ItemLayerModel implements IUnbakedGeometry<ItemLayerModel> {
                 ? context.getMaterial("particle")
                 : textures.size() > 0
                 ? textures.get(0)
-                : new Material(TextureAtlas.LOCATION_BLOCKS, MissingTextureAtlasSprite.getLocation()));
+                : new Material(MissingTextureAtlasSprite.getLocation()));
 
         Transformation rootTransform = context.getRootTransform();
         if (!rootTransform.isIdentity()) {

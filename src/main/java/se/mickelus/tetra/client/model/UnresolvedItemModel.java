@@ -73,7 +73,7 @@ public final class UnresolvedItemModel implements IUnbakedGeometry<UnresolvedIte
     }
 
     private static class Baked extends SimpleBakedModel {
-        private static final Material MISSING_TEXTURE = new Material(TextureAtlas.LOCATION_BLOCKS, MissingTextureAtlasSprite.getLocation());
+        private static final Material MISSING_TEXTURE = new Material(MissingTextureAtlasSprite.getLocation());
 
         public Baked(ItemOverrides itemOverrideList) {
             super(List.of(), Map.of(), false, false, false, UnitTextureAtlasSprite.INSTANCE, ItemTransforms.NO_TRANSFORMS,

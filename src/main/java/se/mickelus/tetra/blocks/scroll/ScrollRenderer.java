@@ -34,7 +34,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
-    public static final Material material = new Material(InventoryMenu.BLOCK_ATLAS, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
+    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
     private static final int availableGlyphs = 16;
     private static final int availableMaterials = 3;
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"), "main");

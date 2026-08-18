@@ -90,7 +90,7 @@ public class ModularShieldRenderer extends BlockEntityWithoutLevelRenderer {
 
                     ModelPart modelPart = model.getModel(modelData.getModel().toString());
                     if (modelPart != null) {
-                        Material material = new Material(TextureAtlas.LOCATION_BLOCKS, modelData.getTexture());
+                        Material material = new Material(modelData.getTexture());
                         VertexConsumer vertexBuilder = material.sprite().wrap(
                                 ItemRenderer.getFoilBuffer(buffer, model.renderType(material.atlasLocation()), false, itemStack.hasFoil()));
 

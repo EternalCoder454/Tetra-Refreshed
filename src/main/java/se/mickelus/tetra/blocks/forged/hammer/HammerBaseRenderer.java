@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
 public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEntity> {
-    public static final Material material = new Material(InventoryMenu.BLOCK_ATLAS, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_hammer/base_sheet"));
+    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_hammer/base_sheet"));
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, HammerBaseBlock.identifier), "main");
 
     private final ModelPart unpowered;

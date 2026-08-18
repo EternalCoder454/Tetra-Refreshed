@@ -1,5 +1,8 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -86,12 +89,13 @@ public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements Ent
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-        if (Direction.UP.equals(facing) && !facingState.is(CoreExtractorPistonBlock.instance.get())) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (Direction.UP.equals(direction) && !neighbourState.is(CoreExtractorPistonBlock.instance.get())) {
             return state.getValue(WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     // based on same method implementation in BedBlock

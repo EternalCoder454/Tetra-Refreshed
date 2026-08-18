@@ -121,7 +121,7 @@ public class ModularOverrideList extends ItemOverrides {
 
     protected ItemLayerModel createLayerModel(List<GridTextureModelData> models) {
         ImmutableList<Material> textures = models.stream()
-                .map(moduleModel -> new Material(TextureAtlas.LOCATION_BLOCKS, moduleModel.getLocation()))
+                .map(moduleModel -> new Material(moduleModel.getLocation()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
 
         var renderTypes = new Int2ObjectOpenHashMap<Identifier>();

@@ -150,7 +150,7 @@ public class EffectHelper {
             BlockState destroyedState = blockState.getBlock().playerWillDestroy(world, pos, blockState, breakingPlayer);
             boolean canHarvest = !harvest || destroyedState.canHarvestBlock(world, pos, breakingPlayer);
             boolean canRemove = canHarvest
-                    && destroyedState.getBlock().onDestroyedByPlayer(destroyedState, world, pos, breakingPlayer, harvest, world.getFluidState(pos));
+                    && destroyedState.getBlock().onDestroyedByPlayer(destroyedState, world, pos, breakingPlayer, toolStack, harvest, world.getFluidState(pos));
 
             if (canRemove) {
                 destroyedState.getBlock().destroy(world, pos, destroyedState);
@@ -163,7 +163,7 @@ public class EffectHelper {
             }
             return canRemove;
         } else {
-            return blockState.getBlock().onDestroyedByPlayer(blockState, world, pos, breakingPlayer, harvest,
+            return blockState.getBlock().onDestroyedByPlayer(blockState, world, pos, breakingPlayer, toolStack, harvest,
                     world.getFluidState(pos));
         }
     }

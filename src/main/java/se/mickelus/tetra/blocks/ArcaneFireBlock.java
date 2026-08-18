@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ScheduledTickAccess;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -113,20 +115,20 @@ public class ArcaneFireBlock extends BaseFireBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos,
-            BlockPos neighborPos) {
-        if (!canSurvive(state, level, currentPos)) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (!canSurvive(state, level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
 
-        // Check if water is flowing into this block
-        FluidState fluidState = level.getFluidState(currentPos);
+        // Check if water is flowing into this block. The extinguish sound this used to play
+        // cannot happen here any more, the level is read only in a shape update now.
+        FluidState fluidState = level.getFluidState(pos);
         if (!fluidState.isEmpty() && fluidState.getType() == Fluids.WATER) {
-            level.playSound(null, currentPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5f, 2f);
             return Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     private void drainOrExtinguish(BlockState state, LevelAccessor level, BlockPos pos) {
@@ -140,13 +142,14 @@ public class ArcaneFireBlock extends BaseFireBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest,
+            FluidState fluid) {
         int factor = BlockStateProperties.MAX_AGE_15 - state.getValue(ageProperty) + 1;
         UnstablePowerMobEffect.addOrUpdate(player, factor * 20, 0);
         if (!level.isClientSide()) {
             Particles.addSputteringPower((ServerLevel) level, pos.getX() + 0.5f, pos.getY() + 0.2f, pos.getZ() + 0.5f, player, Math.max(4, factor));
         }
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
     }
 
     @Override

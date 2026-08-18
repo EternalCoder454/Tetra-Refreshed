@@ -22,7 +22,7 @@ public class EntityFacingVectorProvider implements VectorProvider {
             }
 
             Vec3 lookAngle = entity.getEntity(context).getLookAngle();
-            return Vec3.atLowerCornerOf(Direction.getNearest(lookAngle.x, lookAngle.y, lookAngle.z).getUnitVec3i());
+            return Vec3.atLowerCornerOf(Direction.getApproximateNearest(lookAngle.x, lookAngle.y, lookAngle.z).getUnitVec3i());
         }
 
         if (onlyHorizontalValue) {

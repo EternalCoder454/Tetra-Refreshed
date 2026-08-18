@@ -152,7 +152,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
                 && !net.neoforged.neoforge.common.CommonHooks.fireBlockBreak(world, gameType, shooter, pos, blockState).isCanceled()) {
 
             BlockState destroyedState = blockState.getBlock().playerWillDestroy(world, pos, blockState, shooter);
-            boolean removed = destroyedState.getBlock().onDestroyedByPlayer(destroyedState, world, pos, shooter, true, world.getFluidState(pos));
+            boolean removed = destroyedState.getBlock().onDestroyedByPlayer(destroyedState, world, pos, shooter, ItemStack.EMPTY, true, world.getFluidState(pos));
             if (!removed) {
                 return false;
             }

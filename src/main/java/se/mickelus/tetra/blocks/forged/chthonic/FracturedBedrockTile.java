@@ -212,7 +212,7 @@ public class FracturedBedrockTile extends BlockEntity {
             return level.clipWithInteractionOverride(origin, target, blockPos, voxelshape, blockState);
         }, ctx -> {
             Vec3 vec3 = ctx.getFrom().subtract(ctx.getTo());
-            return BlockHitResult.miss(ctx.getTo(), Direction.getNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(ctx.getTo()));
+            return BlockHitResult.miss(ctx.getTo(), Direction.getApproximateNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(ctx.getTo()));
         });
     }
 

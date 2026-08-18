@@ -271,11 +271,11 @@ public class ScannerOverlayGui extends GuiRoot implements LayeredDraw.Layer {
             BlockState blockstate = level.getBlockState(pos);
             Vec3 vec3 = innerContext.getFrom().subtract(innerContext.getTo());
             return innerContext.isTargetBlock().test(blockstate)
-                    ? new BlockHitResult(innerContext.getTo(), Direction.getNearest(vec3.x, vec3.y, vec3.z), pos, false)
+                    ? new BlockHitResult(innerContext.getTo(), Direction.getApproximateNearest(vec3.x, vec3.y, vec3.z), pos, false)
                     : null;
         }, (innerContext) -> {
             Vec3 vec3 = innerContext.getFrom().subtract(innerContext.getTo());
-            return BlockHitResult.miss(innerContext.getTo(), Direction.getNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(innerContext.getTo()));
+            return BlockHitResult.miss(innerContext.getTo(), Direction.getApproximateNearest(vec3.x, vec3.y, vec3.z), BlockPos.containing(innerContext.getTo()));
         });
     }
 }

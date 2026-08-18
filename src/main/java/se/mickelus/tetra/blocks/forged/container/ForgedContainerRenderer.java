@@ -26,8 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
 public class ForgedContainerRenderer implements BlockEntityRenderer<ForgedContainerBlockEntity> {
-    public static final Material material = new Material(InventoryMenu.BLOCK_ATLAS,
-            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_container/forged_container"));
+    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_container/forged_container"));
     private static final float openDuration = 300;
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, ForgedContainerBlock.identifier), "main");
     public ModelPart lid;

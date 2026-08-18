@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.core.HolderSet;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -877,7 +878,7 @@ public class ItemModularHandheld extends ModularItem {
 
         miningRules.entrySet().stream()
                 .sorted(Map.Entry.<TagKey<Block>, Float>comparingByValue().reversed())
-                .map(entry -> Tool.Rule.minesAndDrops(entry.getKey(), entry.getValue()))
+                .map(entry -> Tool.Rule.minesAndDrops(blocksIn(entry.getKey()), entry.getValue()))
                 .forEach(rules::add);
 
         addSwordRule(rules, itemStack);
@@ -897,15 +898,19 @@ public class ItemModularHandheld extends ModularItem {
         miningRules.merge(blockTag, getToolMiningSpeed(itemStack, toolAction), Math::max);
     }
 
+    private static HolderSet<Block> blocksIn(TagKey<Block> tag) {
+        return BuiltInRegistries.BLOCK.getOrThrow(tag);
+    }
+
     private void addSwordRule(List<Tool.Rule> rules, ItemStack itemStack) {
         if (getToolLevel(itemStack, TetraItemAbilities.cut) <= 0) {
             return;
         }
 
         float baseSpeed = getToolMiningSpeed(itemStack, TetraItemAbilities.cut);
-        rules.add(Tool.Rule.overrideSpeed(BlockTags.SWORD_EFFICIENT, baseSpeed));
-        rules.add(Tool.Rule.overrideSpeed(ItemAbilityHelper.swordVeryEfficient, baseSpeed * 10));
-        rules.add(Tool.Rule.overrideSpeed(ItemAbilityHelper.swordInstamine, 30));
+        rules.add(Tool.Rule.overrideSpeed(blocksIn(BlockTags.SWORD_EFFICIENT), baseSpeed));
+        rules.add(Tool.Rule.overrideSpeed(blocksIn(ItemAbilityHelper.swordVeryEfficient), baseSpeed * 10));
+        rules.add(Tool.Rule.overrideSpeed(blocksIn(ItemAbilityHelper.swordInstamine), 30));
     }
 
     private float getToolMiningSpeed(ItemStack itemStack, ItemAbility toolAction) {

@@ -1,5 +1,8 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -219,8 +222,8 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
-            BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
         Direction pairedFacing = state.getValue(facingProp);
         if (state.getValue(flippedProp)) {
             pairedFacing = pairedFacing.getCounterClockWise();
@@ -228,11 +231,11 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
             pairedFacing = pairedFacing.getClockWise();
         }
 
-        if (pairedFacing == facing && !equals(facingState.getBlock())) {
+        if (pairedFacing == direction && !equals(neighbourState.getBlock())) {
             return state.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     @Override

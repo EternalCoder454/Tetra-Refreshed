@@ -1,5 +1,8 @@
 package se.mickelus.tetra.blocks.forged;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -184,18 +187,18 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
-            BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(currentPos, WATER, WATER.getTickDelay(world));
+            ticks.scheduleTick(pos, WATER, WATER.getTickDelay(level));
         }
 
-        if (Direction.DOWN.equals(facing)) {
-            return super.updateShape(state, facing, facingState, world, currentPos, facingPos)
-                    .setValue(propStacked, equals(facingState.getBlock()));
+        if (Direction.DOWN.equals(direction)) {
+            return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random)
+                    .setValue(propStacked, equals(neighbourState.getBlock()));
         }
 
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     @Override
