@@ -1,8 +1,7 @@
 package se.mickelus.tetra.tools;
 
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,28 +22,28 @@ import java.util.stream.Collectors;
 
 public final class HarvestTierRegistry {
     private static final Logger logger = LogManager.getLogger();
-    private static final List<Tier> orderedTiers = new ArrayList<>();
-    private static final Map<Tier, TierEntry> entriesByTier = new IdentityHashMap<>();
-    private static final Map<Identifier, Tier> tiersByName = new LinkedHashMap<>();
+    private static final List<ToolMaterial> orderedTiers = new ArrayList<>();
+    private static final Map<ToolMaterial, TierEntry> entriesByTier = new IdentityHashMap<>();
+    private static final Map<Identifier, ToolMaterial> tiersByName = new LinkedHashMap<>();
     private static final Set<Identifier> unknownTierWarnings = ConcurrentHashMap.newKeySet();
     private static int nextOrder;
 
     static {
-        registerVanilla(Tiers.WOOD, "wood", List.of(), List.of());
-        registerVanilla(Tiers.GOLD, "gold", List.of(Tiers.WOOD), List.of());
-        registerVanilla(Tiers.STONE, "stone", List.of(Tiers.GOLD), List.of());
-        registerVanilla(Tiers.IRON, "iron", List.of(Tiers.STONE), List.of());
-        registerVanilla(Tiers.DIAMOND, "diamond", List.of(Tiers.IRON), List.of());
-        registerVanilla(Tiers.NETHERITE, "netherite", List.of(Tiers.DIAMOND), List.of());
+        registerVanilla(ToolMaterial.WOOD, "wood", List.of(), List.of());
+        registerVanilla(ToolMaterial.GOLD, "gold", List.of(ToolMaterial.WOOD), List.of());
+        registerVanilla(ToolMaterial.STONE, "stone", List.of(ToolMaterial.GOLD), List.of());
+        registerVanilla(ToolMaterial.IRON, "iron", List.of(ToolMaterial.STONE), List.of());
+        registerVanilla(ToolMaterial.DIAMOND, "diamond", List.of(ToolMaterial.IRON), List.of());
+        registerVanilla(ToolMaterial.NETHERITE, "netherite", List.of(ToolMaterial.DIAMOND), List.of());
     }
 
     private HarvestTierRegistry() {}
 
-    private static void registerVanilla(Tier tier, String path, List<Tier> after, List<Tier> before) {
+    private static void registerVanilla(ToolMaterial tier, String path, List<ToolMaterial> after, List<ToolMaterial> before) {
         registerInternal(tier, Identifier.withDefaultNamespace(path), after, before);
     }
 
-    public static Tier register(Tier tier, Identifier name, List<Tier> after, List<Tier> before) {
+    public static ToolMaterial register(ToolMaterial tier, Identifier name, List<ToolMaterial> after, List<ToolMaterial> before) {
         Objects.requireNonNull(tier, "tier");
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(after, "after");
@@ -53,7 +52,7 @@ public final class HarvestTierRegistry {
         if (entriesByTier.containsKey(tier)) {
             Identifier existingName = nameOf(tier);
             if (!name.equals(existingName)) {
-                throw new IllegalStateException("Tier " + tier + " is already registered as " + existingName + ", not " + name);
+                throw new IllegalStateException("ToolMaterial " + tier + " is already registered as " + existingName + ", not " + name);
             }
             return tier;
         }
@@ -62,10 +61,10 @@ public final class HarvestTierRegistry {
         return tier;
     }
 
-    private static void registerInternal(Tier tier, Identifier name, List<Tier> after, List<Tier> before) {
-        Tier namedTier = tiersByName.get(name);
+    private static void registerInternal(ToolMaterial tier, Identifier name, List<ToolMaterial> after, List<ToolMaterial> before) {
+        ToolMaterial namedTier = tiersByName.get(name);
         if (namedTier != null && namedTier != tier) {
-            throw new IllegalStateException("Tier name already registered: " + name);
+            throw new IllegalStateException("ToolMaterial name already registered: " + name);
         }
 
         validateDependencies(name, after, "after");
@@ -76,8 +75,8 @@ public final class HarvestTierRegistry {
         rebuildOrderedTiers();
     }
 
-    private static void validateDependencies(Identifier name, List<Tier> dependencies, String direction) {
-        for (Tier dependency : dependencies) {
+    private static void validateDependencies(Identifier name, List<ToolMaterial> dependencies, String direction) {
+        for (ToolMaterial dependency : dependencies) {
             if (!entriesByTier.containsKey(dependency)) {
                 throw new IllegalStateException("Unknown " + direction + " dependency for tier " + name + ": " + dependency);
             }
@@ -85,39 +84,39 @@ public final class HarvestTierRegistry {
     }
 
     private static void rebuildOrderedTiers() {
-        Map<Tier, Set<Tier>> edges = new IdentityHashMap<>();
-        Map<Tier, Integer> indegree = new IdentityHashMap<>();
+        Map<ToolMaterial, Set<ToolMaterial>> edges = new IdentityHashMap<>();
+        Map<ToolMaterial, Integer> indegree = new IdentityHashMap<>();
 
-        for (Tier tier : entriesByTier.keySet()) {
+        for (ToolMaterial tier : entriesByTier.keySet()) {
             edges.put(tier, new LinkedHashSet<>());
             indegree.put(tier, 0);
         }
 
-        for (Map.Entry<Tier, TierEntry> entry : entriesByTier.entrySet()) {
-            Tier tier = entry.getKey();
+        for (Map.Entry<ToolMaterial, TierEntry> entry : entriesByTier.entrySet()) {
+            ToolMaterial tier = entry.getKey();
             TierEntry data = entry.getValue();
 
-            for (Tier dependency : data.after()) {
+            for (ToolMaterial dependency : data.after()) {
                 addEdge(edges, indegree, dependency, tier);
             }
-            for (Tier dependency : data.before()) {
+            for (ToolMaterial dependency : data.before()) {
                 addEdge(edges, indegree, tier, dependency);
             }
         }
 
-        PriorityQueue<Tier> ready = new PriorityQueue<>(Comparator.comparingInt(tier -> entriesByTier.get(tier).order()));
-        for (Map.Entry<Tier, Integer> entry : indegree.entrySet()) {
+        PriorityQueue<ToolMaterial> ready = new PriorityQueue<>(Comparator.comparingInt(tier -> entriesByTier.get(tier).order()));
+        for (Map.Entry<ToolMaterial, Integer> entry : indegree.entrySet()) {
             if (entry.getValue() == 0) {
                 ready.add(entry.getKey());
             }
         }
 
-        List<Tier> resolved = new ArrayList<>(entriesByTier.size());
+        List<ToolMaterial> resolved = new ArrayList<>(entriesByTier.size());
         while (!ready.isEmpty()) {
-            Tier tier = ready.remove();
+            ToolMaterial tier = ready.remove();
             resolved.add(tier);
 
-            for (Tier dependent : edges.get(tier)) {
+            for (ToolMaterial dependent : edges.get(tier)) {
                 int remaining = indegree.computeIfPresent(dependent, (ignored, value) -> value - 1);
                 if (remaining == 0) {
                     ready.add(dependent);
@@ -138,38 +137,38 @@ public final class HarvestTierRegistry {
         orderedTiers.addAll(resolved);
     }
 
-    private static void addEdge(Map<Tier, Set<Tier>> edges, Map<Tier, Integer> indegree, Tier source, Tier target) {
+    private static void addEdge(Map<ToolMaterial, Set<ToolMaterial>> edges, Map<ToolMaterial, Integer> indegree, ToolMaterial source, ToolMaterial target) {
         if (edges.get(source).add(target)) {
             indegree.computeIfPresent(target, (ignored, value) -> value + 1);
         }
     }
 
     @Nullable
-    public static Tier byName(@Nullable Identifier name) {
+    public static ToolMaterial byName(@Nullable Identifier name) {
         if (name == null) {
             return null;
         }
 
-        Tier tier = tiersByName.get(name);
+        ToolMaterial tier = tiersByName.get(name);
         if (tier == null && unknownTierWarnings.add(name)) {
             logger.warn("Unknown harvest tier '{}', falling back to level 0", name);
         }
         return tier;
     }
 
-    public static List<Tier> ordered() {
+    public static List<ToolMaterial> ordered() {
         return List.copyOf(orderedTiers);
     }
 
     @Nullable
-    public static Identifier nameOf(Tier tier) {
+    public static Identifier nameOf(ToolMaterial tier) {
         TierEntry entry = entriesByTier.get(tier);
         return entry != null ? entry.name() : null;
     }
 
-    public static boolean isCorrectTierForDrops(Tier tier, BlockState state) {
-        return !state.is(tier.getIncorrectBlocksForDrops());
+    public static boolean isCorrectTierForDrops(ToolMaterial tier, BlockState state) {
+        return !state.is(tier.incorrectBlocksForDrops());
     }
 
-    private record TierEntry(Identifier name, List<Tier> after, List<Tier> before, int order) {}
+    private record TierEntry(Identifier name, List<ToolMaterial> after, List<ToolMaterial> before, int order) {}
 }

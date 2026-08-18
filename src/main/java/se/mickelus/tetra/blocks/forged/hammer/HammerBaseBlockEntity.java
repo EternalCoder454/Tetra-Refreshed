@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -21,7 +22,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -164,8 +164,8 @@ public class HammerBaseBlockEntity extends BlockEntity {
     public int getHammerLevel() {
         return switch (getEffectLevel(HammerEffect.power)) {
             case 2 -> TierHelper.getIndex(TetraRegistries.forgeHammerTier) + 1;
-            case 1 -> TierHelper.getIndex(Tiers.NETHERITE) + 1;
-            default -> TierHelper.getIndex(Tiers.DIAMOND) + 1;
+            case 1 -> TierHelper.getIndex(ToolMaterial.NETHERITE) + 1;
+            default -> TierHelper.getIndex(ToolMaterial.DIAMOND) + 1;
         };
     }
 

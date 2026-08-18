@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -28,7 +29,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.SimpleTier;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.crafting.IngredientType;
@@ -138,10 +138,11 @@ public class TetraRegistries {
     public static final DeferredRegister<CreativeModeTab> creativeTabs = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TetraMod.MOD_ID);
 
     public static final TagKey<Block> forgeHammerIncorrectTag = BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "incorrect_for_maxed_forge_hammer"));
-    public static final Tier forgeHammerTier = HarvestTierRegistry.register(
-            new SimpleTier(forgeHammerIncorrectTag, 0, 0, 0, 0, () -> Ingredient.EMPTY),
+    public static final TagKey<Item> forgeHammerRepairTag = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "repairs_maxed_forge_hammer"));
+    public static final ToolMaterial forgeHammerTier = HarvestTierRegistry.register(
+            new ToolMaterial(forgeHammerIncorrectTag, 0, 0, 0, 0, forgeHammerRepairTag),
             Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "maxed_forge_hammer"),
-            List.of(Tiers.NETHERITE),
+            List.of(ToolMaterial.NETHERITE),
             List.of()
     );
 

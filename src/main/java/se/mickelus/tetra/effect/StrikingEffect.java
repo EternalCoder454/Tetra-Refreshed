@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.ItemAbilities;
 import org.apache.commons.lang3.tuple.Pair;
 import se.mickelus.tetra.TetraItemAbilities;
 import se.mickelus.tetra.items.modular.ItemModularHandheld;
@@ -20,11 +19,11 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class StrikingEffect {
     public static final List<Pair<ItemEffect, ItemAbility>> effectActionMap = ImmutableList.of(
-            Pair.of(ItemEffect.strikingAxe, ItemAbilities.AXE_DIG),
-            Pair.of(ItemEffect.strikingPickaxe, ItemAbilities.PICKAXE_DIG),
+            Pair.of(ItemEffect.strikingAxe, TetraItemAbilities.AXE_DIG),
+            Pair.of(ItemEffect.strikingPickaxe, TetraItemAbilities.PICKAXE_DIG),
             Pair.of(ItemEffect.strikingCut, TetraItemAbilities.cut),
-            Pair.of(ItemEffect.strikingShovel, ItemAbilities.SHOVEL_DIG),
-            Pair.of(ItemEffect.strikingHoe, ItemAbilities.HOE_DIG)
+            Pair.of(ItemEffect.strikingShovel, TetraItemAbilities.SHOVEL_DIG),
+            Pair.of(ItemEffect.strikingHoe, TetraItemAbilities.HOE_DIG)
     );
 
     public static boolean causeEffect(Player breakingPlayer, ItemStack itemStack, ItemModularHandheld item, Level world, BlockPos pos, BlockState blockState) {

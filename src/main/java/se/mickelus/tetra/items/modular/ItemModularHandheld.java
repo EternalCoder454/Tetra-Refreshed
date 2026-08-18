@@ -297,9 +297,9 @@ public class ItemModularHandheld extends ModularItem {
                     } else if (ItemAbilities.AXE_WAX_OFF.equals(tool)) {
                         world.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         world.levelEvent(player, 3005, pos, 0);
-                    } else if (ItemAbilities.HOE_DIG.equals(tool)) {
+                    } else if (TetraItemAbilities.HOE_DIG.equals(tool)) {
                         world.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    } else if (ItemAbilities.SHOVEL_DIG.equals(tool)) {
+                    } else if (TetraItemAbilities.SHOVEL_DIG.equals(tool)) {
                         world.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
                     } else {
                         SoundEvent sound = blockState.getSoundType(world, pos, player).getHitSound();
@@ -868,11 +868,11 @@ public class ItemModularHandheld extends ModularItem {
         List<Tool.Rule> rules = new ArrayList<>();
         Map<TagKey<Block>, Float> miningRules = new LinkedHashMap<>();
 
-        addMiningRule(miningRules, itemStack, ItemAbilities.AXE_DIG, ItemAbilityHelper.appropriateTools.get(ItemAbilities.AXE_DIG));
-        addMiningRule(miningRules, itemStack, ItemAbilities.PICKAXE_DIG, ItemAbilityHelper.appropriateTools.get(ItemAbilities.PICKAXE_DIG));
-        addMiningRule(miningRules, itemStack, ItemAbilities.SHOVEL_DIG, ItemAbilityHelper.appropriateTools.get(ItemAbilities.SHOVEL_DIG));
-        addMiningRule(miningRules, itemStack, ItemAbilities.HOE_DIG, ItemAbilityHelper.appropriateTools.get(ItemAbilities.HOE_DIG));
-        addMiningRule(miningRules, itemStack, ItemAbilities.HOE_DIG, ItemAbilityHelper.hoeExtraTag);
+        addMiningRule(miningRules, itemStack, TetraItemAbilities.AXE_DIG, ItemAbilityHelper.appropriateTools.get(TetraItemAbilities.AXE_DIG));
+        addMiningRule(miningRules, itemStack, TetraItemAbilities.PICKAXE_DIG, ItemAbilityHelper.appropriateTools.get(TetraItemAbilities.PICKAXE_DIG));
+        addMiningRule(miningRules, itemStack, TetraItemAbilities.SHOVEL_DIG, ItemAbilityHelper.appropriateTools.get(TetraItemAbilities.SHOVEL_DIG));
+        addMiningRule(miningRules, itemStack, TetraItemAbilities.HOE_DIG, ItemAbilityHelper.appropriateTools.get(TetraItemAbilities.HOE_DIG));
+        addMiningRule(miningRules, itemStack, TetraItemAbilities.HOE_DIG, ItemAbilityHelper.hoeExtraTag);
         addMiningRule(miningRules, itemStack, TetraItemAbilities.hammer, ItemAbilityHelper.hammerMineable);
 
         miningRules.entrySet().stream()

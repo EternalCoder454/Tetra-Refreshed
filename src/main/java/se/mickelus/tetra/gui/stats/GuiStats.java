@@ -1,8 +1,8 @@
 package se.mickelus.tetra.gui.stats;
 
+import se.mickelus.tetra.TetraItemAbilities;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.neoforged.neoforge.common.ItemAbilities;
 import se.mickelus.tetra.effect.ItemEffect;
 import se.mickelus.tetra.gui.stats.bar.GuiStatBar;
 import se.mickelus.tetra.gui.stats.bar.GuiStatBarBlockingDuration;
@@ -213,7 +213,7 @@ public class GuiStats {
             new TooltipGetterInteger("tetra.stats.mending.tooltip", mendingGetter));
     public static final IStatGetter silkTouchGetter = new StatGetterEnchantmentLevel(Enchantments.SILK_TOUCH, 1);
     public static final IStatGetter replantGetter = new StatGetterAnd(silkTouchGetter, new StatGetterEffectLevel(ItemEffect.sweepingStrike, 1),
-            new StatGetterToolLevel(ItemAbilities.HOE_DIG));
+            new StatGetterToolLevel(TetraItemAbilities.HOE_DIG));
     public static final GuiStatBar silkTouch = new GuiStatBar(0, 0, barLength, "tetra.stats.silkTouch",
             0, 1, false, silkTouchGetter, LabelGetterBasic.noLabel,
             new TooltipGetterDecimal("tetra.stats.silkTouch.tooltip", silkTouchGetter))

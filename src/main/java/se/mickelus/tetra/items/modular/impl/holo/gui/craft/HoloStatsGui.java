@@ -3,7 +3,6 @@ package se.mickelus.tetra.items.modular.impl.holo.gui.craft;
 import com.google.common.collect.Streams;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.ItemAbilities;
 import se.mickelus.mutil.gui.GuiAlignment;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -116,11 +115,11 @@ public class HoloStatsGui extends GuiElement {
                 GuiStats.workable,
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.hammer, true, false),
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.cut, true, false),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.AXE_DIG, true, false),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.PICKAXE_DIG, true, false),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.SHOVEL_DIG, true, false),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.AXE_DIG, true, false),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.PICKAXE_DIG, true, false),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.SHOVEL_DIG, true, false),
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.pry, true, false),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.HOE_DIG, true, false)
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.HOE_DIG, true, false)
         ).forEach(HoloStatsGui::addBar);
     }
 

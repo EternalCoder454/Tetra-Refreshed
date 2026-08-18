@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.EventHooks;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.TetraItemAbilities;
@@ -33,10 +32,10 @@ public class ItemAbilityHelper {
     public static final TagKey<Block> hammerMineable = BlockTags.create(Identifier.withDefaultNamespace("mineable/hammer"));
 
     public static void init() {
-        appropriateTools.put(ItemAbilities.AXE_DIG, BlockTags.MINEABLE_WITH_AXE);
-        appropriateTools.put(ItemAbilities.PICKAXE_DIG, BlockTags.MINEABLE_WITH_PICKAXE);
-        appropriateTools.put(ItemAbilities.SHOVEL_DIG, BlockTags.MINEABLE_WITH_SHOVEL);
-        appropriateTools.put(ItemAbilities.HOE_DIG, BlockTags.MINEABLE_WITH_HOE);
+        appropriateTools.put(TetraItemAbilities.AXE_DIG, BlockTags.MINEABLE_WITH_AXE);
+        appropriateTools.put(TetraItemAbilities.PICKAXE_DIG, BlockTags.MINEABLE_WITH_PICKAXE);
+        appropriateTools.put(TetraItemAbilities.SHOVEL_DIG, BlockTags.MINEABLE_WITH_SHOVEL);
+        appropriateTools.put(TetraItemAbilities.HOE_DIG, BlockTags.MINEABLE_WITH_HOE);
         appropriateTools.put(TetraItemAbilities.hammer, hammerMineable);
     }
 
@@ -68,15 +67,15 @@ public class ItemAbilityHelper {
             return true;
         }
 
-        if (ItemAbilities.HOE_DIG.equals(action) && state.is(hoeExtraTag)) {
+        if (TetraItemAbilities.HOE_DIG.equals(action) && state.is(hoeExtraTag)) {
             return true;
         }
 //
-//        if (ItemAbilities.AXE_DIG.equals(action) && axeMaterials.contains(state.getMaterial())) {
+//        if (TetraItemAbilities.AXE_DIG.equals(action) && axeMaterials.contains(state.getMaterial())) {
 //            return true;
 //        }
 //
-//        return ItemAbilities.PICKAXE_DIG.equals(action) && pickaxeMaterials.contains(state.getMaterial());
+//        return TetraItemAbilities.PICKAXE_DIG.equals(action) && pickaxeMaterials.contains(state.getMaterial());
         return false;
     }
 

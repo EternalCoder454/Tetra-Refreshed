@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect;
 
+import se.mickelus.tetra.TetraItemAbilities;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.ItemAbilities;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import se.mickelus.tetra.items.modular.IModularItem;
 
@@ -169,7 +169,7 @@ public class EffectHelper {
     }
 
     public static boolean tryReplant(ItemStack itemStack, ItemAbility toolAction) {
-        return toolAction == ItemAbilities.HOE_DIG && getEnchantmentLevel(Enchantments.SILK_TOUCH, itemStack) > 0;
+        return toolAction == TetraItemAbilities.HOE_DIG && getEnchantmentLevel(Enchantments.SILK_TOUCH, itemStack) > 0;
     }
 
     private static boolean breakAndReplant(ServerLevel serverLevel, BlockPos pos, BlockState blockState, Player entity, ItemStack itemStack, boolean doDrops) {

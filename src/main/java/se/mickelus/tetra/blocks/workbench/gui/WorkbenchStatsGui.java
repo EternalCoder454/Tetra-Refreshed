@@ -3,7 +3,6 @@ package se.mickelus.tetra.blocks.workbench.gui;
 import com.google.common.collect.Streams;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.ItemAbilities;
 import se.mickelus.mutil.gui.GuiAlignment;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -115,12 +114,12 @@ public class WorkbenchStatsGui extends GuiElement {
                 GuiStats.stability,
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.hammer),
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.cut),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.AXE_DIG),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.PICKAXE_DIG),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.SHOVEL_DIG),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.SWORD_DIG),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.AXE_DIG),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.PICKAXE_DIG),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.SHOVEL_DIG),
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.SWORD_DIG),
                 new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.pry),
-                new GuiStatBarTool(0, 0, StatsHelper.barLength, ItemAbilities.HOE_DIG)
+                new GuiStatBarTool(0, 0, StatsHelper.barLength, TetraItemAbilities.HOE_DIG)
         ).forEach(WorkbenchStatsGui::addBar);
     }
 

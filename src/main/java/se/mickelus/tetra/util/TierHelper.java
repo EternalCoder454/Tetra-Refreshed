@@ -1,7 +1,7 @@
 package se.mickelus.tetra.util;
 
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.ToolMaterial;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.tools.HarvestTierRegistry;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TierHelper {
-    public static List<Tier> tiers = Collections.emptyList();
+    public static List<ToolMaterial> tiers = Collections.emptyList();
 
     public static void init() {
 
@@ -30,12 +30,12 @@ public class TierHelper {
                 .collect(Collectors.toList());
     }
 
-    public static int getIndex(Tier tier) {
+    public static int getIndex(ToolMaterial tier) {
         return tiers.indexOf(tier);
     }
 
     @Nullable
-    public static Tier getTier(int index) {
+    public static ToolMaterial getTier(int index) {
         if (index > -1 && !tiers.isEmpty()) {
             return tiers.get(Math.min(index, tiers.size() - 1));
         }
