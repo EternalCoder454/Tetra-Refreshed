@@ -35,8 +35,8 @@ public class MultiblockSchematicGui extends GuiRoot implements LayeredDraw.Layer
     public void onClientTick(ClientTickEvent.Post event) {
         if (mc.player != null
                 && mc.level != null
-                && (mc.level.getGameTime() % 10 == 0 || selected != mc.player.getInventory().selected)) {
-            this.selected = mc.player.getInventory().selected;
+                && (mc.level.getGameTime() % 10 == 0 || selected != mc.player.getInventory().getSelectedSlot())) {
+            this.selected = mc.player.getInventory().getSelectedSlot();
             element.clearChildren();
 
             ItemStack itemStack = Stream.of(mc.player.getMainHandItem(), mc.player.getOffhandItem())

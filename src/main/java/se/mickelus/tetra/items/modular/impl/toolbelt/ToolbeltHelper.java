@@ -155,7 +155,7 @@ public class ToolbeltHelper {
             return ItemStack.EMPTY;
         }
         Inventory inventoryPlayer = player.getInventory();
-        for (int i = 0; i < inventoryPlayer.items.size(); ++i) {
+        for (int i = 0; i < inventoryPlayer.getNonEquipmentItems().size(); ++i) {
             ItemStack itemStack = inventoryPlayer.getItem(i);
             if (ModularToolbeltItem.instance.get().equals(itemStack.getItem())) {
                 return itemStack;

@@ -40,7 +40,7 @@ public class InteractiveToolGui extends GuiElement {
                 .applyTo(new Applier.Opacity(1, 0));
 
         updateTint();
-        currentSlot = player.getInventory().selected;
+        currentSlot = player.getInventory().getSelectedSlot();
     }
 
     public void updateFadeTime() {
@@ -73,9 +73,9 @@ public class InteractiveToolGui extends GuiElement {
 
     @Override
     public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
-        if (player.getInventory().selected != currentSlot) {
+        if (player.getInventory().getSelectedSlot() != currentSlot) {
             updateTint();
-            currentSlot = player.getInventory().selected;
+            currentSlot = player.getInventory().getSelectedSlot();
         }
 
         super.draw(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);

@@ -81,8 +81,8 @@ public class ModularHolosphereItem extends ModularItem {
 
     public static ItemStack findHolosphere(Player player) {
         return Stream.of(
-                        player.getInventory().offhand.stream(),
-                        player.getInventory().items.stream(),
+                        Stream.of(player.getOffhandItem()),
+                        player.getInventory().getNonEquipmentItems().stream(),
                         ToolbeltHelper.getToolbeltItems(player).stream())
                 .flatMap(Function.identity())
                 .filter(stack -> stack.getItem() instanceof ModularHolosphereItem)
@@ -131,12 +131,12 @@ public class ModularHolosphereItem extends ModularItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (world.isClientSide()) {
             showGui();
         }
 
-        return new InteractionResult<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     @Override

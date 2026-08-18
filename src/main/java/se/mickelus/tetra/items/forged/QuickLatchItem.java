@@ -47,7 +47,7 @@ public class QuickLatchItem extends TetraItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         playClick(world, player);
         return super.use(world, player, hand);
     }

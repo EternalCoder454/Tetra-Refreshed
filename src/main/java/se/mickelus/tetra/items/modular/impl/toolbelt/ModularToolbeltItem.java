@@ -105,12 +105,12 @@ public class ModularToolbeltItem extends ModularItem implements MenuProvider {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide()) {
             ((ServerPlayer) player).openMenu(this);
         }
 
-        return new InteractionResult<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     @Override

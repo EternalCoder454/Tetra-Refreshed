@@ -49,7 +49,7 @@ public class PropertyHelper {
     }
 
     public static int getPlayerEffectLevel(Player player, ItemEffect effect) {
-        return Stream.concat(player.getInventory().offhand.stream(), player.getInventory().items.stream())
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)
                 .filter(itemStack -> itemStack.getItem() instanceof IModularItem)
@@ -59,7 +59,7 @@ public class PropertyHelper {
     }
 
     public static float getPlayerEffectEfficiency(Player player, ItemEffect effect) {
-        return Stream.concat(player.getInventory().offhand.stream(), player.getInventory().items.stream())
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)
                 .filter(itemStack -> itemStack.getItem() instanceof IModularItem)
@@ -69,7 +69,7 @@ public class PropertyHelper {
     }
 
     public static int getPlayerToolLevel(Player player, ItemAbility tool) {
-        return Stream.concat(player.getInventory().offhand.stream(), player.getInventory().items.stream())
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
@@ -79,7 +79,7 @@ public class PropertyHelper {
     }
 
     public static Set<ItemAbility> getPlayerTools(Player player) {
-        return Stream.concat(player.getInventory().offhand.stream(), player.getInventory().items.stream())
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
@@ -88,7 +88,7 @@ public class PropertyHelper {
     }
 
     public static Map<ItemAbility, Integer> getPlayerToolLevels(Player player) {
-        return Stream.concat(player.getInventory().offhand.stream(), player.getInventory().items.stream())
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
@@ -159,7 +159,7 @@ public class PropertyHelper {
 
     public static ItemStack getPlayerProvidingItemStack(ItemAbility tool, int level, Entity entity) {
         return CastOptional.cast(entity, Player.class)
-                .map(player -> Stream.concat(Stream.of(player.getMainHandItem(), player.getOffhandItem()), player.getInventory().items.stream()))
+                .map(player -> Stream.concat(Stream.of(player.getMainHandItem(), player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream()))
                 .orElse(Stream.empty())
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(PropertyHelper::getReplacement)

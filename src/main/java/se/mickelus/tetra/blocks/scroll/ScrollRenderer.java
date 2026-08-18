@@ -281,12 +281,12 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
         Matrix4f matrix4f = matrixStack.last().pose();
         Font fontrenderer = context.getFont();
         float x = -fontrenderer.width(label) / 2f;
-        fontrenderer.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        fontrenderer.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        fontrenderer.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        fontrenderer.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
+        fontrenderer.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        fontrenderer.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        fontrenderer.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        fontrenderer.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
         matrixStack.translate(0, 0, -0.0125f);
-        fontrenderer.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
+        fontrenderer.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
     }
 }

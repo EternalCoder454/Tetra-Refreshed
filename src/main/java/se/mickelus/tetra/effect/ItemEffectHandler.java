@@ -498,7 +498,7 @@ public class ItemEffectHandler {
 
             if (ToolbeltHelper.loadQuickAccessAmmoFromQuiver(player, event.getHand(), count)) {
                 player.startUsingItem(event.getHand());
-                event.setAction(new InteractionResult<>(InteractionResult.SUCCESS, event.getBow()));
+                event.setAction(InteractionResult.SUCCESS);
             }
         }
     }

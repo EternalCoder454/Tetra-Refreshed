@@ -222,13 +222,13 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
         matrixStack.scale(-0.0125f, -0.0125f, 0.0125f);
         Matrix4f matrix4f = matrixStack.last().pose();
         float x = -font.width(label) / 2f;
-        font.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        font.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        font.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
-        font.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
+        font.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        font.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        font.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        font.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
         matrixStack.translate(0, 0, -0.0125f);
-        font.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight, false);
+        font.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
     }
 
 //    for (int i = -5; i <= 5; i++) {

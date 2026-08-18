@@ -440,22 +440,22 @@ public class ModularBowItem extends ModularItem {
         return ItemUseAnimation.BOW;
     }
 
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack bowStack = player.getItemInHand(hand);
         boolean hasAmmo = !player.getProjectile(vanillaBow).isEmpty();
 
         if (isBroken(bowStack)) {
-            return InteractionResult.pass(bowStack);
+            return InteractionResult.PASS;
         }
 
-        InteractionResult<ItemStack> ret = EventHooks.onArrowNock(bowStack, world, player, hand, hasAmmo);
+        InteractionResult ret = EventHooks.onArrowNock(bowStack, world, player, hand, hasAmmo);
         if (ret != null) return ret;
 
         if (!hasAmmo && !player.getAbilities().instabuild && EffectHelper.getEnchantmentLevel(Enchantments.INFINITY, bowStack) <= 0) {
-            return InteractionResult.fail(bowStack);
+            return InteractionResult.FAIL;
         } else {
             player.startUsingItem(hand);
-            return InteractionResult.consume(bowStack);
+            return InteractionResult.CONSUME;
         }
     }
 

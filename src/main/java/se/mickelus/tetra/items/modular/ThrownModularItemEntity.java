@@ -77,7 +77,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         entityData.set(LOYALTY_LEVEL, getLoyaltyFromItem(thrownStackIn));
 
         preferredSlot = thrower.getUsedItemHand() == InteractionHand.MAIN_HAND
-                ? thrower.getInventory().selected
+                ? thrower.getInventory().getSelectedSlot()
                 : ThrownModularItemEntity.preferOffhand;
 
         CastOptional.cast(thrownStack.getItem(), ItemModularHandheld.class).ifPresent(item -> {

@@ -246,12 +246,12 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (openScroll(player.getItemInHand(hand), world.isClientSide())) {
             return InteractionResult.SUCCESS;
         }
-        return InteractionResult.pass(itemstack);
+        return InteractionResult.PASS;
     }
 
     @Override

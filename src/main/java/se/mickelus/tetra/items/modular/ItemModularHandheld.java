@@ -339,13 +339,13 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
         // pass success for channeled abilities
         if (getUseDuration(itemStack) > 0) {
             player.startUsingItem(hand);
-            return new InteractionResult<>(InteractionResult.SUCCESS, itemStack);
+            return InteractionResult.SUCCESS;
         }
 
         if (InteractionHand.OFF_HAND.equals(hand)) {
@@ -364,11 +364,11 @@ public class ItemModularHandheld extends ModularItem {
 
                 player.getCooldowns().addCooldown(itemStack, (int) Math.round(getCooldownBase(itemStack) * 20));
 
-                return new InteractionResult<>(InteractionResult.SUCCESS, itemStack);
+                return InteractionResult.SUCCESS;
             }
         }
 
-        return new InteractionResult<>(InteractionResult.PASS, itemStack);
+        return InteractionResult.PASS;
     }
 
     @Override

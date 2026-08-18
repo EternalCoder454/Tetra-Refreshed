@@ -267,17 +267,17 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
         if (isBroken(itemstack)) {
-            return InteractionResult.pass(itemstack);
+            return InteractionResult.PASS;
         }
 
         if (isLoaded(itemstack)) {
             fireProjectiles(itemstack, world, player);
             setLoaded(itemstack, false);
-            return InteractionResult.consume(itemstack);
+            return InteractionResult.CONSUME;
         }
 
         if (findAmmo(player).isEmpty()) {
@@ -291,9 +291,9 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                 player.startUsingItem(hand);
             }
 
-            return InteractionResult.consume(itemstack);
+            return InteractionResult.CONSUME;
         } else {
-            return InteractionResult.fail(itemstack);
+            return InteractionResult.FAIL;
         }
     }
 
