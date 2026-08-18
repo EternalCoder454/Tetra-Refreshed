@@ -37,6 +37,7 @@ python tools/check-at.py                                 # every access transfor
 python tools/check-data-fields.py                        # every data key is read by the codec that owns it
 python tools/check-material-tints.py                     # every tint still matches the item it is made from
 python tools/check-bundle-collisions.py                  # no two bundled jars claim the same path
+python tools/check-bus-registrations.py                   # every bus registration names a class with a listener
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -47,6 +48,12 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-bus-registrations.py` matters because Forge accepted `EVENT_BUS.register` for a class with no
+`@SubscribeEvent` on it and quietly did nothing, while NeoForge throws during mod construction and
+takes the whole mod down before it loads. Art of Forging registered a charged ability that way and
+never had a listener on it, so the call had been dead since it was written and only became fatal on
+the port. The message names one class, which reads as specific when the mistake is usually a pattern.
 
 `check-bundle-collisions.py` matters because this jar carries two other mods inside it, and all
 three write into `data/tetra` and `assets/tetra`, which is what makes the arrangement work at all.
