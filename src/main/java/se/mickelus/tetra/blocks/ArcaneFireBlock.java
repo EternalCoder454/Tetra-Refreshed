@@ -50,7 +50,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
 
     public ArcaneFireBlock() {
         super(BlockBehaviour.Properties.of()
-                .noCollission()
+                .noCollision()
                 .instabreak()
                 .replaceable()
                 .lightLevel(state -> 8)

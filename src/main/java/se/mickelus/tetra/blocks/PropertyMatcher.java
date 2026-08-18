@@ -97,7 +97,7 @@ public class PropertyMatcher implements Predicate<BlockState> {
             return false;
         }
 
-        if (tag != null && !blockState.getBlockHolder().is(tag)) {
+        if (tag != null && !blockState.typeHolder().is(tag)) {
             return false;
         }
 

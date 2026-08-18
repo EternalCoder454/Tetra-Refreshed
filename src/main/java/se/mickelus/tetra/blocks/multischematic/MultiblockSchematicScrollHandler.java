@@ -23,7 +23,7 @@ public class MultiblockSchematicScrollHandler {
     @SubscribeEvent
     public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.isCreative() && Screen.hasAltDown()
+        if (player != null && player.isCreative() && Minecraft.getInstance().hasAltDown()
                 && player.getMainHandItem().getItem() instanceof StackedMultiblockSchematicItem) {
             double delta = event.getScrollDeltaY();
             scrollDelta = Math.signum(scrollDelta) == Math.signum(delta)

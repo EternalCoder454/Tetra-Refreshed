@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class ScanHelper {
     public static boolean hasStructure(String id, ServerLevel level, ChunkPos chunkPos) {
-        Registry<Structure> registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         var holders = getHolders(getKey(id), registry).get();
 
         return !hasStructure(holders, level, level.structureManager(), false, chunkPos).isEmpty();

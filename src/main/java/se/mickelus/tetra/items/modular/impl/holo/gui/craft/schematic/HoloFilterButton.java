@@ -70,7 +70,7 @@ public class HoloFilterButton extends GuiElement {
     public boolean onKeyPress(int keyCode, int scanCode, int modifiers) {
         switch (keyCode) {
             case GLFW.GLFW_KEY_BACKSPACE:
-                if (Screen.hasControlDown()) {
+                if (Minecraft.getInstance().hasControlDown()) {
                     updateFilter("");
                 }
                 if (!filter.isEmpty()) {
