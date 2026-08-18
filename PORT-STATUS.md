@@ -41,8 +41,12 @@ bash tools/jp.sh net.minecraft.nbt.CompoundTag getInt
 bash tools/src.sh net/minecraft/world/InteractionResult
 ```
 
-`jp.sh` runs javap against the patched Minecraft jar and `forge-universal.jar` together, so it
-finds NeoForge classes as well. `src.sh` prints the decompiled source from the sources jar,
+`jp.sh` runs javap against the patched Minecraft jar and the NeoForge jar together. The patched
+Minecraft jar carries **no** NeoForge classes at all, so pinning the NeoForge one to the version
+in `gradle.properties` matters. It used to glob for any `forge-universal.jar` and found a
+26.1.2.78 copy from another project's cache, which answered confidently and wrongly: `Capabilities`
+read as an empty class for a while because of it. Same trap as `_minecraft_jar.py` guards for
+Minecraft, one layer up. `src.sh` prints the decompiled source from the sources jar,
 which is the faster read when the question is about behaviour rather than a signature. To find
 where a class moved to, list the jar:
 
@@ -314,6 +318,15 @@ carries the second cost the scrap trades charged.
 The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends are stacks
 built with scroll data components, so their `gives` needs the component patch spelled out rather
 than just an item id.
+
+**The item transfer API.** `Capabilities.ItemHandler` is `Capabilities.Item` now and its `BLOCK`
+capability is a `ResourceHandler<ItemResource>` rather than an `IItemHandler`. `ItemStackHandler`
+still exists and is still `IItemHandler`, so it no longer satisfies the capability it was written
+for. `net.neoforged.neoforge.transfer.item.ItemStackResourceHandler` looks like the replacement,
+with `ItemResourceHandlerAdapter` going the other way for consumers that still want the old
+interface. This reaches every Tetra inventory, the workbench, the rack, the forged container and
+the toolbelt, and every insert and extract call on them, so it is a migration rather than a
+rename.
 
 **Shield disabling.** `IItemExtension.canDisableShield` is gone. Disabling a shield is the
 weapon component's `disableBlockingForSeconds` now, so Tetra's shieldbreaker effect needs
