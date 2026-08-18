@@ -41,6 +41,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import com.google.common.base.Suppliers;
+import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
+import org.joml.Vector3fc;
+import java.util.function.Supplier;
 
 /**
  * Renders a modular item as a stack of layers, one per module model.
@@ -125,6 +129,8 @@ public class ModularItemModel implements ItemModel {
             }
 
             ItemStackRenderState.LayerRenderState state = output.newLayer();
+            // The gui fits an item to its extents. Without them a layer has nothing to be fitted to.
+            state.setExtents(layer.extents());
             state.setItemTransform(transform);
             state.setLocalTransform(layer.transformation());
             if (layer.tint() != 0) {
@@ -176,12 +182,24 @@ public class ModularItemModel implements ItemModel {
                     .map(quad -> withEmission(quad, emission))
                     .toList();
 
-            int tint = textureModel.getTint() != null ? textureModel.getTint().getRaw() : 0;
+            int tint = opaque(textureModel.getTint() != null ? textureModel.getTint().getRaw() : 0xffffffff);
             layers.add(new Layer(quads, tint == 0xffffffff ? 0 : tint, localTransform(textureModel.getTransform()),
-                    textureModel.getContexts(), textureModel.isInvertPerspectives()));
+                    textureModel.getContexts(), textureModel.isInvertPerspectives(),
+                    Suppliers.memoize(() -> CuboidItemModelWrapper.computeExtents(quads))));
         }
 
         return layers;
+    }
+
+    /**
+     * Most module tints are written with no alpha channel at all, which reads as fully transparent.
+     * Tetra has always taken an alpha of zero to mean opaque, which the quad transformer this model
+     * replaced did for itself and the shield renderer still does. Without it every layer whose tint
+     * omits the alpha byte draws nothing, which is why an obsidian head and the holosphere frame
+     * were visible and every other module was not: those two are the ones written as ffffffff.
+     */
+    private static int opaque(int color) {
+        return (color >>> 24) == 0 ? color | 0xff000000 : color;
     }
 
     /**
@@ -208,7 +226,7 @@ public class ModularItemModel implements ItemModel {
     }
 
     private record Layer(List<BakedQuad> quads, int tint, Matrix4fc transformation, @Nullable ItemDisplayContext[] contexts,
-            boolean invertContexts) {
+            boolean invertContexts, Supplier<Vector3fc[]> extents) {
         boolean appliesTo(ItemDisplayContext displayContext) {
             return contexts == null || ArrayUtils.contains(contexts, displayContext) != invertContexts;
         }

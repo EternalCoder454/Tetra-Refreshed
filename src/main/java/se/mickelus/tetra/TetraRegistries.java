@@ -510,10 +510,14 @@ public class TetraRegistries {
     }
 
     public static <B extends Block> DeferredHolder<Item, BlockItem> registerBlockItem(DeferredHolder<Block, B> block) {
-        return items.registerItem(block.getId().getPath(),
-                properties -> block.get() instanceof BlockTooltip
-                        ? new TooltipBlockItem(block.get(), properties)
-                        : new BlockItem(block.get(), properties));
+        // A block item takes its name from block.tetra.x rather than item.tetra.x, and the prefix
+        // is a property now rather than something BlockItem decides for itself.
+        return items.registerItem(block.getId().getPath(), properties -> {
+            properties.useBlockDescriptionPrefix();
+            return block.get() instanceof BlockTooltip
+                    ? new TooltipBlockItem(block.get(), properties)
+                    : new BlockItem(block.get(), properties);
+        });
     }
 
     public static <P extends StructureProcessor> DeferredHolder<StructureProcessorType<?>, StructureProcessorType<P>> registerStructureProcessor(
