@@ -12,7 +12,7 @@ import se.mickelus.tetra.craftingeffect.CraftingEffect;
 import se.mickelus.tetra.craftingeffect.CraftingEffectRegistry;
 import se.mickelus.tetra.craftingeffect.condition.CraftingEffectCondition;
 import se.mickelus.tetra.module.schematic.UpgradeSchematic;
-import se.mickelus.tetra.util.LazyOptional;
+import se.mickelus.tetra.util.NonNullLazy;
 import se.mickelus.tetra.util.StreamHelper;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,8 @@ public class ApplyListOutcome implements CraftingEffectOutcome {
         this.effects = effects;
     }
 
-    LazyOptional<EffectPair[]> resolvedReferences = LazyOptional.of(() -> resolveReferences(references));
+    // Lazy because gson fills in references after this field initialiser has run.
+    NonNullLazy<EffectPair[]> resolvedReferences = NonNullLazy.of(() -> resolveReferences(references));
 
     @Override
     public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
@@ -50,7 +51,7 @@ public class ApplyListOutcome implements CraftingEffectOutcome {
                 ? StreamHelper.toShuffledList()
                 : Collectors.toUnmodifiableList();
 
-        List<EffectPair> applicableOutcomes = Streams.concat(Arrays.stream(effects), resolvedReferences.lazyMap(Arrays::stream).orElseGet(Stream::empty))
+        List<EffectPair> applicableOutcomes = Streams.concat(Arrays.stream(effects), Arrays.stream(resolvedReferences.get()))
                 .filter(outcome -> outcome.requirement().test(unlockedEffects, upgradedStack, slot, isReplacing, player, preMaterials, tools, schematic,
                         world, pos, blockState))
                 .collect(collector);

@@ -26,7 +26,6 @@ import se.mickelus.tetra.ServerScheduler;
 import se.mickelus.tetra.TetraSounds;
 import se.mickelus.tetra.effect.ItemEffect;
 import se.mickelus.tetra.items.modular.impl.holo.ModularHolosphereItem;
-import se.mickelus.tetra.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -44,15 +43,10 @@ public class HolosphereBlockEntity extends BlockEntity {
 
     private CompoundTag itemTag = new CompoundTag();
 
-    // should not be null but players can use commands to get to that state
-    private LazyOptional<Boolean> canScan = LazyOptional.of(() -> this.itemTag != null ? this.itemTag : new CompoundTag())
-            .lazyMap(tag -> {
-                ItemStack itemStack = new ItemStack(ModularHolosphereItem.instance);
-                setTag(itemStack, tag);
-                return Optional.ofNullable(ModularHolosphereItem.instance.getEffectData(itemStack))
-                        .map(effects -> effects.getLevel(ItemEffect.percussionScanner) > 0)
-                        .orElse(false);
-            });
+    // Null until something asks, and set back to null whenever the item changes. Working it out
+    // means building a stack and reading its effects, which is far too much to do per tick.
+    @Nullable
+    private Boolean canScan;
 
     public HolosphereBlockEntity(BlockPos pos, BlockState blockState) {
         super(type.get(), pos, blockState);
@@ -68,7 +62,19 @@ public class HolosphereBlockEntity extends BlockEntity {
     }
 
     public boolean canScan() {
-        return canScan.orElse(false);
+        if (canScan == null) {
+            canScan = resolveCanScan();
+        }
+        return canScan;
+    }
+
+    private boolean resolveCanScan() {
+        ItemStack itemStack = new ItemStack(ModularHolosphereItem.instance);
+        // A copy, because the stack would otherwise share the tag this block entity keeps.
+        setTag(itemStack, itemTag != null ? itemTag.copy() : new CompoundTag());
+        return Optional.ofNullable(ModularHolosphereItem.instance.getEffectData(itemStack))
+                .map(effects -> effects.getLevel(ItemEffect.percussionScanner) > 0)
+                .orElse(false);
     }
 
     public long getScanModeTimestamp() {
@@ -161,15 +167,7 @@ public class HolosphereBlockEntity extends BlockEntity {
 
     public void setItemTag(CompoundTag tag) {
         this.itemTag = tag == null ? new CompoundTag() : tag.copy();
-        this.canScan.invalidate();
-        this.canScan = LazyOptional.of(() -> this.itemTag != null ? this.itemTag.copy() : new CompoundTag())
-                .lazyMap(itemTag -> {
-                    ItemStack itemStack = new ItemStack(ModularHolosphereItem.instance);
-                    setTag(itemStack, itemTag);
-                    return Optional.ofNullable(ModularHolosphereItem.instance.getEffectData(itemStack))
-                            .map(effects -> effects.getLevel(ItemEffect.percussionScanner) > 0)
-                            .orElse(false);
-                });
+        this.canScan = null;
     }
 
     @Nullable
