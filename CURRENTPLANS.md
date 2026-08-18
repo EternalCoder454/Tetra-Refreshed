@@ -174,9 +174,13 @@ Things that will bite somebody later if nobody writes them down.
   entries beside it were written by hand, so running `runData` regenerates the block models and
   leaves those stale. Teach the provider to emit both before anybody runs it.
 * **The dedicated server has never had a client connect to it.** It starts clean, which is what got
-  checked. Everything past that is unproven, and NeoForge warns that both mods still use `@OnlyIn`
-  while it no longer strips anything, so more client classes may be reachable from server paths. The
-  five found during the port were found one crash at a time.
+  checked. Everything past that is unproven.
+* **The `@OnlyIn` warning is narrower than it reads.** All 122 uses sit on members rather than on
+  types, and a method body is resolved when it is called rather than when its class loads, so an
+  uncalled client only method does not stop a server loading the class. What does break at load
+  time is a static field of a client type, and a scan found ten, all of them in renderers or the
+  datagen provider, none on a path a server takes. The residual risk is a server path calling one
+  of those methods, which is a question about call sites rather than about class loading.
 * **Silent drops are the failure mode of this codebase.** The attribute prefix bug discarded every
   module attribute without a word, and was found by reading data rather than by playing. The same
   shape exists wherever a deserializer resolves a name and returns null on a miss. Worth an audit of
@@ -185,6 +189,23 @@ Things that will bite somebody later if nobody writes them down.
   <https://github.com/mickelus/tetra/issues>.
 * **Mutil has no developer documentation.** It is the shared library and the generic half of the api
   work belongs in it, so it will need a `DEV.md` of its own.
+
+## What a modernisation pass should and should not touch
+
+296 dead imports have been removed across both mods, 21 of them exact duplicates left by collapsing
+the old interaction result types onto one. That shrinks the diff against upstream, because the
+residue was the port's rather than upstream's.
+
+**The rest should not be swept.** Reviewing against upstream is the whole value of staying a fork,
+and rewriting 798 files into newer idioms destroys it for no behaviour gain. Modernise a file when
+there is already a reason to open it. What is waiting there:
+
+* **34 `Collectors.toList()` calls.** Each needs reading rather than replacing, because `.toList()`
+  returns an immutable list and some of these results are mutated afterwards.
+* **`LazyOptional`** is 79 lines reimplementing a Forge class that no longer exists, for two call
+  sites. Both are behaviour bearing, so it is a real refactor rather than a tidy.
+* **57 todo markers**, some of which name versions long past, such as one addressed to 1.12.
+* **Three anonymous classes** that predate lambdas being available for their interfaces.
 
 # What gates all of it
 
