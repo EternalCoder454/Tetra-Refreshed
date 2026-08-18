@@ -183,7 +183,7 @@ public class ToolbeltOverlay extends GuiRoot implements GuiLayer {
         TetraMod.packetHandler.sendToServer(packet);
 
         if (!storeItemSuccess) {
-            mc.player.displayClientMessage(Component.translatable("tetra.toolbelt.full"), true);
+            mc.player.sendOverlayMessage(Component.translatable("tetra.toolbelt.full"));
         }
     }
 

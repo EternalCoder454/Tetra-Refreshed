@@ -40,7 +40,7 @@ public class TetraCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("tetra")
-                .requires(player -> player.hasPermission(2));
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
         command.then(Commands.literal("hone").executes(ctx -> runHone(ctx, 100))
                 .then(Commands.argument("progress", IntegerArgumentType.integer(0, 100))

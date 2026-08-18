@@ -64,7 +64,7 @@ public class ToolbeltHelper {
                 if (!player.getInventory().add(heldItemStack)) {
                     inventory.storeItemInInventory(player.getItemInHand(hand));
                     player.setItemInHand(hand, heldItemStack);
-                    player.displayClientMessage(Component.translatable("tetra.toolbelt.blocked"), true);
+                    player.sendOverlayMessage(Component.translatable("tetra.toolbelt.blocked"));
                 }
             }
         }

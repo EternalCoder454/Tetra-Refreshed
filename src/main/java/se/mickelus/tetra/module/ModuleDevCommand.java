@@ -32,7 +32,7 @@ public class ModuleDevCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         dispatcher.register(Commands.literal("tmdev")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("item", ItemArgument.item(context))
                         .then(Commands.argument("module", StringArgumentType.greedyString())
                                 .suggests(ModuleDevCommand::getModuleSuggestions)
