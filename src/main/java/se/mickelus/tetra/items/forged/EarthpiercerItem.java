@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.forged;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -28,17 +30,17 @@ public class EarthpiercerItem extends TetraItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(ForgedBlockCommon.unsettlingTooltip);
-        tooltip.add(Component.literal(" "));
+    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(ForgedBlockCommon.unsettlingTooltip);
+        tooltip.accept(Component.literal(" "));
 
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
-            tooltip.add(Component.translatable("item.tetra.earthpiercer.description").withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal(" "));
-            tooltip.add(ForgedBlockCommon.locationTooltip);
+            tooltip.accept(Tooltips.expanded);
+            tooltip.accept(Component.translatable("item.tetra.earthpiercer.description").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(ForgedBlockCommon.locationTooltip);
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
     }
 }

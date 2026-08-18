@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
@@ -72,8 +74,8 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final List<Component> tooltip, final TooltipFlag advanced) {
-        tooltip.add(locationTooltip);
+    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+        tooltip.accept(locationTooltip);
     }
 
     private boolean isJammed(BlockGetter world, BlockPos pos) {

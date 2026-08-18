@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +21,7 @@ public class ForgedPlatformSlabBlock extends SlabBlock implements InitializableB
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag advanced) {
-        tooltip.add(ForgedBlockCommon.locationTooltip);
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 }

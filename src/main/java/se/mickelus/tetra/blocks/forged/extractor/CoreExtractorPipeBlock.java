@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -41,8 +43,8 @@ public class CoreExtractorPipeBlock extends TetraBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(ForgedBlockCommon.locationTooltip);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 
     private boolean shouldGetPower(Level world, BlockPos pos, Direction blockFacing) {

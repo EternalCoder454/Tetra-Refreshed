@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -118,18 +120,18 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final List<Component> tooltip, final TooltipFlag advanced) {
-        tooltip.add(Component.translatable(description).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.literal(" "));
+    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+        tooltip.accept(Component.translatable(description).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal(" "));
 
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
-            tooltip.add(Component.literal(" "));
-            tooltip.add(ForgedBlockCommon.locationTooltip);
-            tooltip.add(Component.literal(" "));
-            tooltip.add(Component.translatable(extendedDescription).withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Tooltips.expanded);
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(ForgedBlockCommon.locationTooltip);
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(Component.translatable(extendedDescription).withStyle(ChatFormatting.GRAY));
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
     }
 

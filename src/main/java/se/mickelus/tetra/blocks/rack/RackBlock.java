@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.rack;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.ARGB;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -157,13 +159,13 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
 
 
     @Override
-    public void appendHoverText(final ItemStack stack, final net.minecraft.world.item.Item.TooltipContext context, final List<Component> tooltip,
+    public void appendHoverText(final ItemStack stack, final net.minecraft.world.item.Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip,
             final TooltipFlag advanced) {
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
-            tooltip.add(Component.translatable("block.tetra.rack.description").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Tooltips.expanded);
+            tooltip.accept(Component.translatable("block.tetra.rack.description").withStyle(ChatFormatting.GRAY));
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
     }
 

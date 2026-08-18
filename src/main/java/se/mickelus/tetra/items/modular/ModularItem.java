@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Multimap;
@@ -171,8 +172,8 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.addAll(getTooltip(stack, context.level(), flag));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+        getTooltip(stack, context.level(), flag).forEach(tooltip);
     }
 
     @Override

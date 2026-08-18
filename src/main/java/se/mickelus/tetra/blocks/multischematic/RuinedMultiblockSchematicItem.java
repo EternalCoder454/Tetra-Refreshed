@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.multischematic;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -16,11 +18,11 @@ public class RuinedMultiblockSchematicItem extends BaseMultiblockSchematicItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("block.tetra.multi_schematic.ruined")
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("block.tetra.multi_schematic.ruined")
                 .withStyle(ChatFormatting.DARK_RED, ChatFormatting.ITALIC));
-        tooltip.add(Component.literal(" "));
+        tooltip.accept(Component.literal(" "));
 
-        tooltip.addAll(getTooltip());
+        getTooltip().forEach(tooltip);
     }
 }

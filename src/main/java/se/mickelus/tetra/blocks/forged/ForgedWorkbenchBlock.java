@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
@@ -58,8 +60,8 @@ public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements Simp
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag advanced) {
-        tooltip.add(ForgedBlockCommon.locationTooltip);
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 
     @Override

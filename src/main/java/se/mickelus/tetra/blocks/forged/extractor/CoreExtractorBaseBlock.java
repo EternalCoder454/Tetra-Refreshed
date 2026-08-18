@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
@@ -67,10 +69,10 @@ public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements Ent
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(ForgedBlockCommon.locationTooltip);
-        tooltip.add(Component.literal(" "));
-        tooltip.add(Component.translatable("block.multiblock_hint.1x2x1")
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(Component.translatable("block.multiblock_hint.1x2x1")
                 .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 

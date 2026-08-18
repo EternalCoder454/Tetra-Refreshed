@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.cell;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -63,7 +65,7 @@ public class ThermalCellItem extends TetraItem {
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final List<Component> tooltip, final TooltipFlag advanced) {
+    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
         int charge = getCharge(stack);
 
         MutableComponent chargeLine;
@@ -78,9 +80,9 @@ public class ThermalCellItem extends TetraItem {
             chargeLine = Component.translatable("item.tetra.thermal_cell.charge", Component.translatable("item.tetra.thermal_cell.charge_empty"));
         }
 
-        tooltip.add(chargeLine);
-        tooltip.add(Component.literal(" "));
-        tooltip.add(locationTooltip);
+        tooltip.accept(chargeLine);
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(locationTooltip);
     }
 
     // todo: change these for metered upgrade

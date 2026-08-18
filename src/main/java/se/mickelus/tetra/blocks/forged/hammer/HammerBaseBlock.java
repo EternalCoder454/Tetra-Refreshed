@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.ChatFormatting;
@@ -98,10 +100,10 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     }
 
     @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final List<Component> tooltip, final TooltipFlag advanced) {
-        tooltip.add(locationTooltip);
-        tooltip.add(Component.literal(" "));
-        tooltip.add(Component.translatable("block.multiblock_hint.1x2x1")
+    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+        tooltip.accept(locationTooltip);
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(Component.translatable("block.multiblock_hint.1x2x1")
                 .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 

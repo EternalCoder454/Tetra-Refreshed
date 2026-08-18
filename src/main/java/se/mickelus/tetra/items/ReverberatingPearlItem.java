@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -23,17 +25,17 @@ public class ReverberatingPearlItem extends TetraItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("item." + unlocalizedName + ".tooltip"));
-        tooltip.add(Component.literal(" "));
+    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable("item." + unlocalizedName + ".tooltip"));
+        tooltip.accept(Component.literal(" "));
 
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
-            tooltip.add(Tooltips.reveal);
-            tooltip.add(Component.literal(" "));
-            tooltip.add(Component.translatable("item." + unlocalizedName + ".tooltip_extended"));
+            tooltip.accept(Tooltips.expanded);
+            tooltip.accept(Tooltips.reveal);
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(Component.translatable("item." + unlocalizedName + ".tooltip_extended"));
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
     }
 }

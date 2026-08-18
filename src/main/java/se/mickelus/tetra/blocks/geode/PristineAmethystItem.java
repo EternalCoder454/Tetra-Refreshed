@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.geode;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -23,12 +25,12 @@ public class PristineAmethystItem extends TetraItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag advanced) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
-            tooltip.add(Component.translatable("item.tetra.pristine_gem.description").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Tooltips.expanded);
+            tooltip.accept(Component.translatable("item.tetra.pristine_gem.description").withStyle(ChatFormatting.GRAY));
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
     }
 }

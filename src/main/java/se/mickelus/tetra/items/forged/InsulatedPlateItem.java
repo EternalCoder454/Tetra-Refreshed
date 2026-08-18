@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.forged;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -26,9 +28,9 @@ public class InsulatedPlateItem extends TetraItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("item.tetra.vent_plate.description").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.literal(" "));
-        tooltip.add(ForgedBlockCommon.locationTooltip);
+    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable("item.tetra.vent_plate.description").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 }

@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.crossbow;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.server.level.ServerLevel;
 import com.google.common.collect.*;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -195,11 +197,11 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         List<ItemStack> list = getProjectiles(stack, context.registries());
         if (isLoaded(stack) && !list.isEmpty()) {
             ItemStack itemstack = list.get(0);
-            tooltip.add((Component.translatable("item.minecraft.crossbow.projectile")).append(" ").append(itemstack.getDisplayName()));
+            tooltip.accept((Component.translatable("item.minecraft.crossbow.projectile")).append(" ").append(itemstack.getDisplayName()));
             if (flagIn.isAdvanced() && itemstack.getItem() == Items.FIREWORK_ROCKET) {
                 List<Component> list1 = Lists.newArrayList();
                 Items.FIREWORK_ROCKET.appendHoverText(itemstack, context, list1, flagIn);
@@ -208,17 +210,17 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                         list1.set(i, (Component.literal("  ")).append(list1.get(i)).withStyle(ChatFormatting.GRAY));
                     }
 
-                    tooltip.addAll(list1);
+                    list1.forEach(tooltip);
                 }
             }
         }
 
-        super.appendHoverText(stack, context, tooltip, flagIn);
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
 
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Component.literal(" "));
-            tooltip.add(Component.translatable("item.tetra.crossbow.wip").withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal(" "));
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(Component.translatable("item.tetra.crossbow.wip").withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.literal(" "));
         }
     }
 

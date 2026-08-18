@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.multischematic;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +23,8 @@ public class StackedMultiblockSchematicItem extends BaseMultiblockSchematicItem 
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.addAll(getTooltip());
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        getTooltip().forEach(tooltip);
     }
 
     @Nullable

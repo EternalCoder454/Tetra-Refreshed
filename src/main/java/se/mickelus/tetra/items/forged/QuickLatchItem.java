@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.forged;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -34,10 +36,10 @@ public class QuickLatchItem extends TetraItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Tooltips.reveal);
-        tooltip.add(Component.literal(" "));
-        tooltip.add(ForgedBlockCommon.locationTooltip);
+    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Tooltips.reveal);
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.scroll;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
@@ -169,7 +171,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         ScrollData data = ScrollData.read(itemStack);
         StringJoiner attributes = new StringJoiner(" ");
 
@@ -185,45 +187,45 @@ public class ScrollItem extends BlockItem implements InitializableItem {
             attributes.add(ChatFormatting.GOLD + I18n.get("item.tetra.scroll.intricate"));
         }
 
-        tooltip.add(Component.literal(attributes.toString()));
-        tooltip.add(Component.literal(" "));
-        tooltip.add(Component.translatable("item.tetra.scroll." + data.key + ".description").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.literal(" "));
+        tooltip.accept(Component.literal(attributes.toString()));
+        tooltip.accept(Component.literal(" "));
+        tooltip.accept(Component.translatable("item.tetra.scroll." + data.key + ".description").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal(" "));
 
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Tooltips.expanded);
+            tooltip.accept(Tooltips.expanded);
 
             if (!ScrollData.read(itemStack).schematics.isEmpty()) {
-                tooltip.add(Component.literal(" "));
-                tooltip.add(Component.translatable("item.tetra.scroll.schematics").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.DARK_PURPLE));
-                tooltip.add(Component.translatable("item.tetra.scroll.schematics.description").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.literal(" "));
+                tooltip.accept(Component.translatable("item.tetra.scroll.schematics").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.DARK_PURPLE));
+                tooltip.accept(Component.translatable("item.tetra.scroll.schematics.description").withStyle(ChatFormatting.GRAY));
             }
 
             if (!ScrollData.read(itemStack).craftingEffects.isEmpty()) {
-                tooltip.add(Component.literal(" "));
-                tooltip.add(Component.translatable("item.tetra.scroll.effects").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.DARK_AQUA));
-                tooltip.add(Component.translatable("item.tetra.scroll.effects.description").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.literal(" "));
+                tooltip.accept(Component.translatable("item.tetra.scroll.effects").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.DARK_AQUA));
+                tooltip.accept(Component.translatable("item.tetra.scroll.effects.description").withStyle(ChatFormatting.GRAY));
             }
 
             if (data.isIntricate) {
-                tooltip.add(Component.literal(" "));
-                tooltip.add(Component.translatable("item.tetra.scroll.intricate").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.GOLD));
-                tooltip.add(Component.translatable("item.tetra.scroll.intricate.description").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.literal(" "));
+                tooltip.accept(Component.translatable("item.tetra.scroll.intricate").withStyle(ChatFormatting.UNDERLINE, ChatFormatting.GOLD));
+                tooltip.accept(Component.translatable("item.tetra.scroll.intricate.description").withStyle(ChatFormatting.GRAY));
             } else {
-                tooltip.add(Component.literal(" "));
-                tooltip.add(Component.translatable("item.tetra.scroll.range.description").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.literal(" "));
+                tooltip.accept(Component.translatable("item.tetra.scroll.range.description").withStyle(ChatFormatting.GRAY));
             }
 
             if (I18n.exists("item.tetra.scroll." + data.key + ".description_extended")) {
-                tooltip.add(Component.literal(" "));
-                tooltip.add(Component.translatable("item.tetra.scroll." + data.key + ".description_extended").withStyle(ChatFormatting.GRAY));
+                tooltip.accept(Component.literal(" "));
+                tooltip.accept(Component.translatable("item.tetra.scroll." + data.key + ".description_extended").withStyle(ChatFormatting.GRAY));
             }
         } else {
-            tooltip.add(Tooltips.expand);
+            tooltip.accept(Tooltips.expand);
         }
 
         if (flagIn.isAdvanced()) {
-            tooltip.add(Component.literal("s: " + data.schematics + ",e: " + data.craftingEffects));
+            tooltip.accept(Component.literal("s: " + data.schematics + ",e: " + data.craftingEffects));
         }
     }
 

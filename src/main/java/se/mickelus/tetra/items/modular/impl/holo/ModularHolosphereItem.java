@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.holo;
 
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -113,21 +115,21 @@ public class ModularHolosphereItem extends ModularItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("item.tetra.holo.tooltip1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.literal(" "));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext tooltipContext, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.accept(Component.translatable("item.tetra.holo.tooltip1").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal(" "));
 
         if (ScannerOverlayGui.instance != null && ScannerOverlayGui.instance.isAvailable()) {
-            tooltip.add(Component.translatable("tetra.holo.scan.status", ScannerOverlayGui.instance.getStatus())
+            tooltip.accept(Component.translatable("tetra.holo.scan.status", ScannerOverlayGui.instance.getStatus())
                     .withStyle(ChatFormatting.GRAY));
 
-            tooltip.add(Component.literal(" "));
-            tooltip.add(Component.translatable("tetra.holo.place"));
+            tooltip.accept(Component.literal(" "));
+            tooltip.accept(Component.translatable("tetra.holo.place"));
         }
 
-        tooltip.add(Component.translatable("item.tetra.holo.tooltip2"));
+        tooltip.accept(Component.translatable("item.tetra.holo.tooltip2"));
 
-        super.appendHoverText(stack, tooltipContext, tooltip, flagIn);
+        super.appendHoverText(stack, tooltipContext, display, tooltip, flagIn);
     }
 
     @Override
