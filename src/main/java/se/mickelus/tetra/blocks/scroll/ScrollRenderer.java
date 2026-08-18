@@ -1,5 +1,17 @@
 package se.mickelus.tetra.blocks.scroll;
 
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Style;
+import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -33,8 +45,9 @@ import se.mickelus.tetra.blocks.rack.RackBlock;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
-    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
+public class ScrollRenderer implements BlockEntityRenderer<ScrollTile, ScrollRenderer.State> {
+    public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
     private static final int availableGlyphs = 16;
     private static final int availableMaterials = 3;
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"), "main");
@@ -44,10 +57,10 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
     private final QuadRenderer[][] wallGlyphs;
     private final ModelPart[] openModel;
     private final QuadRenderer[][] openGlyphs;
-    private final BlockEntityRendererProvider.Context context;
+    private final Font font;
 
     public ScrollRenderer(BlockEntityRendererProvider.Context context) {
-        this.context = context;
+        this.font = context.font();
 
         ModelPart model = context.bakeLayer(layer);
 
@@ -115,56 +128,84 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
     }
 
     @Override
-    public void render(ScrollTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        VertexConsumer vertexBuilder = material.buffer(buffer, RenderType::entityCutout);
+    public State createRenderState() {
+        return new State();
+    }
 
-//        model.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
+    @Override
+    public void extractRenderState(ScrollTile tile, State state, float partialTicks, Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
 
-        ScrollData[] scrolls = tile.getScrolls();
-        ScrollBlock.Arrangement arrangement = ((ScrollBlock) tile.getBlockState().getBlock()).getArrangement();
-        Direction direction = tile.getBlockState().getValue(RackBlock.facingProp);
+        state.scrolls = tile.getScrolls();
+        state.arrangement = ((ScrollBlock) tile.getBlockState().getBlock()).getArrangement();
+        state.direction = tile.getBlockState().getValue(RackBlock.facingProp);
 
-        matrixStack.pushPose();
-        matrixStack.translate(0.5, 0, 0.5);
-        matrixStack.mulPose(direction.getRotation());
-        matrixStack.mulPose(Axis.XN.rotationDegrees(90));
-        matrixStack.translate(-0.5, 0, -0.5);
-
-
-        switch (arrangement) {
-            case rolled:
-                renderRolled(scrolls, matrixStack, combinedLight, combinedOverlay, vertexBuilder);
-                break;
-            case wall:
-                renderWall(scrolls, matrixStack, combinedLight, combinedOverlay, vertexBuilder);
-                break;
-            case open:
-                renderOpen(scrolls, matrixStack, combinedLight, combinedOverlay, vertexBuilder);
-                break;
+        state.label = null;
+        if (!shouldDrawLabel(state.scrolls, tile.getBlockPos())) {
+            return;
         }
 
-        matrixStack.popPose();
+        state.label = I18n.get("item.tetra.scroll." + state.scrolls[0].key + ".name");
 
-        if (shouldDrawLabel(scrolls, tile.getBlockPos())) {
-            matrixStack.pushPose();
-            matrixStack.translate(0.5, 0, 0.5);
-            if (arrangement == ScrollBlock.Arrangement.wall) {
-                matrixStack.mulPose(direction.getOpposite().getRotation());
-                matrixStack.mulPose(Axis.XN.rotationDegrees(90));
-                matrixStack.translate(0, 0.55, 0.4);
-                drawLabel(scrolls[0], matrixStack, buffer, combinedLight);
-            } else if (arrangement == ScrollBlock.Arrangement.open) {
-                if (Minecraft.getInstance().getCameraEntity() == null) return;
-                double angle = RotationHelper.getHorizontalAngle(Minecraft.getInstance().getCameraEntity().getEyePosition(partialTicks),
-                        Vec3.atCenterOf(tile.getBlockPos()));
-                Quaternionf rotation = new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F);
-                rotation.mul(Axis.YP.rotationDegrees((float) (angle / Math.PI * 180 + 180)));
-                matrixStack.mulPose(rotation);
-                matrixStack.translate(0, 0.4f, 0.4);
-                drawLabel(scrolls[0], matrixStack, buffer, combinedLight);
+        if (state.arrangement == ScrollBlock.Arrangement.open) {
+            Entity camera = Minecraft.getInstance().getCameraEntity();
+            if (camera == null) {
+                state.label = null;
+                return;
             }
-            matrixStack.popPose();
+            double angle = RotationHelper.getHorizontalAngle(camera.getEyePosition(partialTicks), Vec3.atCenterOf(tile.getBlockPos()));
+            state.labelRotation = new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F);
+            state.labelRotation.mul(Axis.YP.rotationDegrees((float) (angle / Math.PI * 180 + 180)));
         }
+    }
+
+    @Override
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        // the model and glyph drawing below is unchanged, it runs inside a recorded draw now and
+        // takes its transform from the pose the collector hands back
+        collector.submitCustomGeometry(poseStack, material.renderType(id -> RenderTypes.entityCutout(id, false)), (pose, consumer) -> {
+            PoseStack local = new PoseStack();
+            local.last().set(pose);
+
+            local.pushPose();
+            local.translate(0.5, 0, 0.5);
+            local.mulPose(state.direction.getRotation());
+            local.mulPose(Axis.XN.rotationDegrees(90));
+            local.translate(-0.5, 0, -0.5);
+
+            switch (state.arrangement) {
+                case rolled -> renderRolled(state.scrolls, local, state.lightCoords, OverlayTexture.NO_OVERLAY, consumer);
+                case wall -> renderWall(state.scrolls, local, state.lightCoords, OverlayTexture.NO_OVERLAY, consumer);
+                case open -> renderOpen(state.scrolls, local, state.lightCoords, OverlayTexture.NO_OVERLAY, consumer);
+            }
+
+            local.popPose();
+        });
+
+        if (state.label != null) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0, 0.5);
+            if (state.arrangement == ScrollBlock.Arrangement.wall) {
+                poseStack.mulPose(state.direction.getOpposite().getRotation());
+                poseStack.mulPose(Axis.XN.rotationDegrees(90));
+                poseStack.translate(0, 0.55, 0.4);
+                drawLabel(state.label, poseStack, collector, state.lightCoords);
+            } else if (state.arrangement == ScrollBlock.Arrangement.open) {
+                poseStack.mulPose(state.labelRotation);
+                poseStack.translate(0, 0.4f, 0.4);
+                drawLabel(state.label, poseStack, collector, state.lightCoords);
+            }
+            poseStack.popPose();
+        }
+    }
+
+    public static class State extends BlockEntityRenderState {
+        public ScrollData[] scrolls = new ScrollData[0];
+        public ScrollBlock.Arrangement arrangement = ScrollBlock.Arrangement.rolled;
+        public Direction direction = Direction.NORTH;
+        public String label;
+        public Quaternionf labelRotation = new Quaternionf();
     }
 
     private void renderRolled(ScrollData[] scrolls, PoseStack matrixStack, int combinedLight, int combinedOverlay, VertexConsumer vertexBuilder) {
@@ -274,19 +315,18 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
                 && pos.equals(((BlockHitResult) mouseover).getBlockPos());
     }
 
-    private void drawLabel(ScrollData scroll, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-        String label = I18n.get("item.tetra.scroll." + scroll.key + ".name");
+    private void drawLabel(String label, PoseStack poseStack, SubmitNodeCollector collector, int light) {
+        poseStack.scale(-0.0125f, -0.0125f, 0.0125f);
+        FormattedCharSequence text = FormattedCharSequence.forward(label, Style.EMPTY);
+        float x = -font.width(label) / 2f;
 
-        matrixStack.scale(-0.0125f, -0.0125f, 0.0125f);
-        Matrix4f matrix4f = matrixStack.last().pose();
-        Font fontrenderer = context.getFont();
-        float x = -fontrenderer.width(label) / 2f;
-        fontrenderer.drawInBatch(label, x + 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        fontrenderer.drawInBatch(label, x - 1, 0, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        fontrenderer.drawInBatch(label, x, -1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
-        fontrenderer.drawInBatch(label, x, 1, 0, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        // four offset copies make the outline the label used to get from being drawn five times
+        collector.submitText(poseStack, x + 1, 0, text, false, Font.DisplayMode.NORMAL, light, 0xff000000, 0, 0);
+        collector.submitText(poseStack, x - 1, 0, text, false, Font.DisplayMode.NORMAL, light, 0xff000000, 0, 0);
+        collector.submitText(poseStack, x, -1, text, false, Font.DisplayMode.NORMAL, light, 0xff000000, 0, 0);
+        collector.submitText(poseStack, x, 1, text, false, Font.DisplayMode.NORMAL, light, 0xff000000, 0, 0);
 
-        matrixStack.translate(0, 0, -0.0125f);
-        fontrenderer.drawInBatch(label, x, 0, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
+        poseStack.translate(0, 0, -0.0125f);
+        collector.submitText(poseStack, x, 0, text, false, Font.DisplayMode.NORMAL, light, 0xff000000, 0, 0);
     }
 }
