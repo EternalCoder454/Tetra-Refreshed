@@ -3,7 +3,7 @@
 Self contained. A session with no prior context can pick this up from here.
 
 Port of Tetra from 1.21.1 NeoForge to Minecraft 26.1.2 NeoForge, Java 25. In progress.
-**1941 errors down to 578. Does not compile yet.**
+**1941 errors down to 328. Does not compile yet.**
 
 ## 1. Where things are
 
@@ -96,6 +96,14 @@ cd "../Mutil Refreshed" && ./gradlew.bat publishToMavenLocal
 | appendHoverText onto the tooltip consumer | 603 |
 | Light dampening and comparator output | 600 |
 | Block removal, effect ticks, item release | 578 |
+| Item classes to components and tags | 555 |
+| Gui draw calls onto the render pipeline | 527 |
+| Screens onto extract and submit | 500 |
+| Every block entity and entity renderer | 402 |
+| Block state datagen onto vanilla generators | 370 |
+| Block tooltips onto BlockTooltip | 353 |
+| Toasts, key mappings, key events | 336 |
+| ItemModularHandheld finished | 328 |
 
 `javac` caps error output. Early figures were capped at 100 and then 2000 and understated the
 real count. `-Xmaxerrs 20000` is set in `build.gradle` now, so 1941 is the first honest number.
@@ -167,9 +175,14 @@ helpers, so those helpers took `ValueOutput` and each processor wraps a `TagValu
 the registry access it already held and merges the built tag back in. Update packets still
 carry a `CompoundTag` over the wire, so those readers wrap it in a `TagValueInput`.
 
-## 6. What is left, 578
+## 6. What is left, 328
 
-Measured, not assumed: 578 errors across 134 files, 75 of which hold two or fewer for 107 total.
+Measured, not assumed: 328 errors, and they split cleanly in two. **127 are the custom item
+model loader in `client/model`.** The other 201 are spread thin across everything else.
+
+The renderers are done. Every block entity renderer, every entity renderer, the particles, the
+screens and the gui draw calls are all on the extract and submit pipeline now. What is left of
+the render work is the model loader alone.
 
 The count is not monotonic and a rise is not a regression. Resolving a symbol lets javac finish
 analysing a file it had given up on, and it then reports errors that were always there. One
@@ -185,13 +198,10 @@ What remains is concentrated in one place. By area rather than by message:
 | Count | Area |
 |---|---|
 | 127 | `client/model`, the custom model loader |
-| 89 | block entity and entity renderers |
-| 61 | gui screens and widgets |
-| 37 | `data/provider`, datagen |
-| 264 | everything else, thin |
+| 201 | everything else, thin |
 
-The first three rows are 277 between them and are all one change, described in section 7. The
-thin spread is still the cheapest work per error.
+The model loader is described in section 7. The thin spread is the cheapest work per error and
+is mostly one lookup each.
 
 Worst files:
 
@@ -230,33 +240,45 @@ after the tool materials are all it. Rendering moved to extract a render state, 
 * `BlockEntityRenderer` takes two type parameters now, the entity and a `BlockEntityRenderState`,
   and the work moved from `render` into `createRenderState`, `extractRenderState` and `submit`.
   Ten renderers declare the old single parameter form.
+* Block entity and entity renderers are **done**, all ten of them. A renderer gathers what it
+  needs into a render state and submits from that state afterwards. Items go through an
+  `ItemStackRenderState` filled by the `ItemModelResolver`, blocks drawn away from their own
+  position go through `MovingBlockRenderState` and `submitMovingBlock`, model parts take a
+  `SpriteId` and a render type, and hand built quads go through `submitCustomGeometry`, which
+  hands back a pose and a vertex consumer so the geometry code itself survives intact.
+* Screens and the gui are **done**. `render` became `extractRenderState`, `renderBg` became
+  `extractBackground`, `drawString` became `text`, and the gui transform stack is a two
+  dimensional joml matrix stack where depth is a stratum rather than a z offset.
 * Particles are **done**. `SingleQuadParticle` replaced `TextureSheetParticle`, the hand rolled
   quad loops became `extractRotatedQuad`, and `SingleQuadParticle.Layer` replaced the anonymous
   `ParticleRenderType`. That pair went from 101 errors to zero, and almost all of it was one
   unresolved supertype taking every inherited field with it. Read those two files before
   starting on the renderers, they are the worked example.
-* `BakedModel`, `ItemOverrides`, `ModelState`, `IGeometryBakingContext`, `IQuadTransformer`,
+* **The model loader is what is left, and it is the last of the render work.** `BakedModel`,
+  `ItemOverrides`, `ModelState`, `IGeometryBakingContext`, `IQuadTransformer`,
   `BlockRenderDispatcher` and the whole `net.neoforged.neoforge.client.model.geometry` package
-  are gone. Tetra ships a custom model loader for modular item rendering, so this is a rewrite
-  against a pipeline that resolves and bakes differently. `client/model/*` is the area.
+  are gone. Tetra ships a custom loader so a modular item renders as a stack of layers, one per
+  module, and that has to be rebuilt against the new item model system.
 
-Gui screens are the fourth face of the same change. `Screen.render` became
-`extractRenderState`, and `renderBackground`, `drawString` and `blit` moved with it.
+  The shape it wants: an `ItemModel.Unbaked` with a `MapCodec` registered into the item model
+  type registry, baking to an `ItemModel` whose `update` appends layers to the
+  `ItemStackRenderState` it is handed. `LayerRenderState.prepareQuadList()` returns a list to
+  add `BakedQuad`s to, which is where the existing quad building in `ItemLayerModel` lands, and
+  `setItemTransform` carries what `ItemTransforms` used to. `ItemOverrides` has no replacement
+  because it does not need one: picking a model per stack is what `update` does, so
+  `ModularOverrideList` collapses into it, cache and all.
 
-Doing these as one piece of work will go better than four, because they share the render state
-idea and the same answer to where per frame data now lives. The particle pair is the smallest
-worked example of it and is finished.
+Read `client/particle/SweepingStrikeParticle.java` and any of the ported renderers first. They
+are the same change already made, at a size you can hold in your head.
 
 **Villager trades.** `VillagerTrades.ItemListing` is gone, `VillagerTrade` is a codec driven
 record, and NeoForge's `VillagerTradesEvent` no longer exists. Trades are registry data now, so
 Tetra's four listing classes have nothing to plug into. That is a redesign, not a lookup.
 
-**Block tooltips.** `Block.appendHoverText` does not exist, and NeoForge's `IBlockExtension`
-does not add it back, so 17 block classes override a method that is not there. They each add one
-static line, `ForgedBlockCommon.locationTooltip`. The routes are a custom `BlockItem` per block
-or a component on the item properties, and the second changes how the line renders, so this
-wants deciding rather than guessing. Do not simply drop the `@Override`: the method would
-compile and never run, and the tooltips would go missing silently.
+**Shield disabling.** `IItemExtension.canDisableShield` is gone. Disabling a shield is the
+weapon component's `disableBlockingForSeconds` now, so Tetra's shieldbreaker effect needs
+rehoming onto that component rather than onto an item hook. The override is removed, so the
+effect currently does nothing.
 
 ## 8. Traps already hit, do not repeat
 
