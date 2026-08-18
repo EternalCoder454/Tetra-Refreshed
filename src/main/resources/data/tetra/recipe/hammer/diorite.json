@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:diorite"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:diorite",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:jungle_planks"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:jungle_planks",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

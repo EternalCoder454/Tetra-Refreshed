@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "type": "tetra:scroll",
+      "neoforge:ingredient_type": "tetra:scroll",
       "key": "hone/gild_3",
       "intricate": true,
       "material": 2,
       "ribbon": "deb243"
     },
     {
-      "type": "tetra:scroll",
+      "neoforge:ingredient_type": "tetra:scroll",
       "key": "hone/gild_3",
       "intricate": true,
       "material": 2,

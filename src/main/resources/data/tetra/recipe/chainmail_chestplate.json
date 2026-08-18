@@ -6,9 +6,7 @@
     "###"
   ],
   "key": {
-    "#": {
-      "item": "tetra:forged_mesh"
-    }
+    "#": "tetra:forged_mesh"
   },
   "result": {
     "id": "minecraft:chainmail_chestplate"

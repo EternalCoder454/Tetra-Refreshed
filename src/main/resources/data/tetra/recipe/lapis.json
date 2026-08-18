@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "tetra:pristine_lapis"
-    }
+    "tetra:pristine_lapis"
   ],
   "result": {
     "id": "minecraft:lapis_lazuli",

@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:andesite"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:andesite",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

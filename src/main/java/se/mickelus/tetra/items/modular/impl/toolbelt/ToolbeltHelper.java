@@ -20,7 +20,6 @@ import se.mickelus.tetra.items.modular.IModularItem;
 import se.mickelus.tetra.items.modular.ItemModularHandheld;
 import se.mickelus.tetra.items.modular.impl.toolbelt.inventory.*;
 import se.mickelus.tetra.properties.IToolProvider;
-import top.theillusivec4.curios.api.CuriosApi;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
@@ -145,9 +144,7 @@ public class ToolbeltHelper {
      * @return A toolbelt itemstack, or an empty itemstack if the player has no toolbelt
      */
     public static ItemStack findToolbelt(Player player) {
-        Optional<ItemStack> equippedToolbelt = CuriosApi.getCuriosInventory(player)
-                .flatMap(handler -> handler.findFirstCurio(ModularToolbeltItem.instance.get()))
-                .map(slotResult -> slotResult.stack());
+        Optional<ItemStack> equippedToolbelt = CuriosIntegration.findToolbelt(player);
         if (equippedToolbelt.isPresent()) {
             return equippedToolbelt.get();
         }

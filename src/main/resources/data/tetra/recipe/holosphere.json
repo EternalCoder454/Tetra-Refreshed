@@ -6,12 +6,8 @@
     " s "
   ],
   "key": {
-    "s": {
-      "item": "tetra:metal_scrap"
-    },
-    "l": {
-      "item": "minecraft:redstone_lamp"
-    }
+    "s": "tetra:metal_scrap",
+    "l": "minecraft:redstone_lamp"
   },
   "result": {
     "id": "tetra:holo",

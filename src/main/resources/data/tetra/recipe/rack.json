@@ -6,12 +6,8 @@
     "   "
   ],
   "key": {
-    ".": {
-      "item": "minecraft:iron_nugget"
-    },
-    "_": {
-      "tag": "minecraft:wooden_slabs"
-    }
+    ".": "minecraft:iron_nugget",
+    "_": "#minecraft:wooden_slabs"
   },
   "result": {
     "id": "tetra:rack"

@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:dark_oak_planks"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:dark_oak_planks",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

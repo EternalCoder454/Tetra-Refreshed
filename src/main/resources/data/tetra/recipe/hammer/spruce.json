@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:spruce_planks"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:spruce_planks",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

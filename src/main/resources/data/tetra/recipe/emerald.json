@@ -1,9 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "tetra:pristine_emerald"
-    }
+    "tetra:pristine_emerald"
   ],
   "result": {
     "id": "minecraft:emerald",

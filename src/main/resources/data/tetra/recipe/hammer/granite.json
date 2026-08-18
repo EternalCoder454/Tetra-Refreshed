@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:granite"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:granite",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

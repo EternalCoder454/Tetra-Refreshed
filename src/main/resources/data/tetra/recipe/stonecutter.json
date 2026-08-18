@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "tetra:stonecutter"
-    },
-    {
-      "item": "minecraft:stick"
-    }
+    "tetra:stonecutter",
+    "minecraft:stick"
   ],
   "result": {
     "id": "tetra:modular_sword",

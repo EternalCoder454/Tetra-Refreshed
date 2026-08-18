@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "minecraft:cobblestone"
-    },
-    "/": {
-      "tag": "c:rods/wooden"
-    }
+    "#": "minecraft:cobblestone",
+    "/": "#c:rods/wooden"
   },
   "result": {
     "id": "tetra:modular_double",

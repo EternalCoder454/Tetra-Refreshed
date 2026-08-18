@@ -6,12 +6,8 @@
     "/  "
   ],
   "key": {
-    "#": {
-      "item": "tetra:earthpiercer"
-    },
-    "/": {
-      "item": "minecraft:stick"
-    }
+    "#": "tetra:earthpiercer",
+    "/": "minecraft:stick"
   },
   "result": {
     "id": "tetra:modular_single",
