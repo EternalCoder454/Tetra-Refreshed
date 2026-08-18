@@ -69,6 +69,7 @@
   "tetra.holo.craft.holosphere_shortcut_missing": "Requires Holosphere",
   "tetra.holo.craft.holosphere_shortcut_unavailable": "Details unavailable",
   "tetra.jei.material.title": "Tetra materials",
+  "emi.category.tetra.material": "Tetra materials",
   "tetra.holo.craft.materials.stat.primary": "Hardness",
   "tetra.holo.craft.materials.stat.primary.short": "hard",
   "tetra.holo.craft.materials.stat.primary.tooltip": "The material's hardness or sharpness, or the ability to shape this material into something with a hard/sharp edge",

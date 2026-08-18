@@ -177,11 +177,12 @@ slots is a datapack.
 ## Recipe viewer integration
 
 `se.mickelus.tetra.compat.viewer` reads Tetra's data into shapes a recipe viewer can browse and
-imports no viewer api at all. `se.mickelus.tetra.compat.jei` is the JEI plugin on top of it. A
-second viewer is a second class in that shape rather than a second extraction.
+imports no viewer api at all. `se.mickelus.tetra.compat.jei` and `se.mickelus.tetra.compat.emi` are
+the plugins on top of it, and `MaterialSummary` is the text both of them draw, so a material reads
+the same in either viewer.
 
-JEI is `compileOnly`, and its plugin class is only ever loaded by JEI, so a pack without it is
-unaffected. The test pack does not currently ship JEI, so add it there to see any of this.
+Both are `compileOnly` and each plugin class is only ever loaded by its own viewer, so a pack with
+neither is unaffected. The test pack ships EMI and not JEI.
 
 **Tetra's crafting is not a set of recipes**, which is why only materials are exported. A
 schematic's outcome is a function of the target item, the slot and the materials, so exporting
@@ -189,10 +190,17 @@ schematics as recipes would be a product of 343 schematics, 78 modules and 70 ma
 material list is both tractable and the question players actually ask, and the material items are
 registered as recipe inputs so that asking what an iron ingot is for finds the page.
 
-**EMI is not an option on this version.** Its maven at `repo.sleeping.town` and its Modrinth
-releases both stop at 1.21.1, so there is no api to build against and no mod to run against. The
-extraction layer exists so that an EMI plugin is a small class rather than a project, if EMI ever
-ships for 26.1.
+**EMI resolves from mavenLocal rather than a remote.** Upstream EMI stops at 1.21.1, so this
+builds against EMI Refreshed, the fork in `Projects/Minecraft/EMI/emi-port`. Publish it before
+building here, the same as mutil:
+
+```bash
+cd "../../EMI/emi-port" && ./gradlew.bat :neoforge:publishToMavenLocal
+```
+
+That produces `dev.emi:emi-neoforge:<version>:api`, and `emi_version` in `gradle.properties` names
+which one. The version carries the fork's commit hash, so it changes whenever EMI Refreshed is
+rebuilt. If the build stops resolving it, republish and update that property.
 
 ## Repository rules
 

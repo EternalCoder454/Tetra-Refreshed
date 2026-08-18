@@ -16,9 +16,9 @@ import java.util.Objects;
  * modules and 70 materials. What does export cleanly is the material list, which is also the
  * question players actually ask: what can I use this for.
  *
- * Nothing here imports a viewer's api. JEI reads it in se.mickelus.tetra.compat.jei, and EMI would
- * read the same thing, once EMI exists for this version of the game. Its api and its releases both
- * stop at 1.21.1.
+ * Nothing here imports a viewer's api. JEI reads it in se.mickelus.tetra.compat.jei and EMI reads
+ * the same thing in se.mickelus.tetra.compat.emi, both drawing the text in MaterialSummary. EMI
+ * support builds against EMI Refreshed, because upstream EMI stops at 1.21.1.
  */
 public final class TetraViewerContent {
     private TetraViewerContent() {
