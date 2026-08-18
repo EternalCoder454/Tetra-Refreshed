@@ -177,13 +177,11 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
             }
 
-            @Override
-            public int size() {
-                if (currentSchematic != null) {
-                    return currentSchematic.getNumMaterialSlots() + 1;
-                }
-                return 1;
-            }
+            // ItemStackHandler.getSlots was only what consumers saw, so narrowing it to the
+            // schematic's material count was free. StacksResourceHandler keeps its backing list in
+            // step with size(), so the same override threw the stored stacks away and every read
+            // past the first slot went out of bounds. The menu already hides the unused material
+            // slots through ToggleableSlot, so the handler reports its true size now.
         };
     }
 
