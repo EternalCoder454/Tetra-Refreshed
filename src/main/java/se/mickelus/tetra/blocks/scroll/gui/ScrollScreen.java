@@ -59,9 +59,8 @@ public class ScrollScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
-        renderBackground(graphics, mouseX, mouseY, partialTicks);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         gui.updateFocusState((width - gui.getWidth()) / 2, (height - gui.getHeight()) / 2, mouseX, mouseY);
         gui.draw(graphics, (width - gui.getWidth()) / 2, (height - gui.getHeight()) / 2,

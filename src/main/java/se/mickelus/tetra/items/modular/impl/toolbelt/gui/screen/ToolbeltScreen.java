@@ -94,14 +94,13 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+        extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
@@ -114,8 +113,8 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.renderTooltip(graphics, mouseX, mouseY);
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractTooltip(graphics, mouseX, mouseY);
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
             graphics.setTooltipForNextFrame(font, tooltipLines, Optional.empty(), mouseX, mouseY);
@@ -123,7 +122,7 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    protected void renderLabels(GuiGraphicsExtractor graphics, int x, int y) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int x, int y) {
     }
 
     @Override

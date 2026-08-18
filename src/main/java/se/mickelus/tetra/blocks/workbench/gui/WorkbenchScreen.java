@@ -122,23 +122,20 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         defaultGui.updateFocusState(this.leftPos, this.topPos, mouseX, mouseY);
         defaultGui.draw(graphics, this.leftPos, this.topPos, width, height, mouseX, mouseY, 1);
     }
 
     // override this to stop titles from rendering
     @Override
-    protected void renderLabels(GuiGraphicsExtractor graphics, int x, int y) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int x, int y) {
     }
 
     @Override

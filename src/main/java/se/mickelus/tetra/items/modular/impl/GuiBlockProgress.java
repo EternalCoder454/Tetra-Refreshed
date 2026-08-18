@@ -74,7 +74,6 @@ public class GuiBlockProgress extends GuiRoot {
             int mouseY = (int) (mc.mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight());
 
             this.drawChildren(graphics, width / 2, height / 2, 0, 0, mouseX, mouseY, 1.0F);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
         }
     }
 }
