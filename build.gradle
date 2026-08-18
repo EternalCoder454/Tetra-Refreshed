@@ -109,11 +109,11 @@ configurations {
 
 dependencies {
     implementation "se.mickelus.mutil:mutil:${mutil_version}"
+    // Curios ships for 26.1.2 now. It used to be pinned to a 1.21.1 build that refused to load,
+    // so it was compile only and the dev runtime went without it, which meant the toolbelt curio
+    // slot could not be exercised at all.
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
-    // The published curios jar is built for 1.21.1 and refuses to load on 26.1.2, which stops
-    // runClient and runServer before they start. The dependency is optional in the mods.toml, and
-    // the api stays on the compile classpath, so dropping it from the dev runtime costs nothing.
-    // compileOnly above is what the integration is written against.
+    localRuntime "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
     // The recipe viewer integrations. JEI's artifact name carries the game version, so it follows
     // minecraft_version rather than writing it out again.
