@@ -291,17 +291,17 @@ public class ItemModularHandheld extends ModularItem {
                 BlockState block = blockState.getToolModifiedState(context, tool, false);
                 if (block != null) {
                     if (ItemAbilities.AXE_STRIP.equals(tool)) {
-                        world.playSound(player, pos, SoundEvents.AXE_STRIP.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
                     } else if (ItemAbilities.AXE_SCRAPE.equals(tool)) {
-                        world.playSound(player, pos, SoundEvents.AXE_SCRAPE.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         world.levelEvent(player, 3005, pos, 0);
                     } else if (ItemAbilities.AXE_WAX_OFF.equals(tool)) {
-                        world.playSound(player, pos, SoundEvents.AXE_SCRAPE.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         world.levelEvent(player, 3005, pos, 0);
                     } else if (TetraItemAbilities.HOE_DIG.equals(tool)) {
-                        world.playSound(player, pos, SoundEvents.HOE_TILL.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                     } else if (TetraItemAbilities.SHOVEL_DIG.equals(tool)) {
-                        world.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                        world.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
                     } else {
                         SoundEvent sound = blockState.getSoundType(world, pos, player).getHitSound();
                         world.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -529,9 +529,9 @@ public class ItemModularHandheld extends ModularItem {
             if (this instanceof ModularSingleHeadedItem) {
                 world.playSound(null, projectileEntity, SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
             } else if (this instanceof ModularShieldItem) {
-                world.playSound(null, projectileEntity, SoundEvents.DISPENSER_LAUNCH.value(), SoundSource.PLAYERS, 1.0F, 2F);
+                world.playSound(null, projectileEntity, SoundEvents.DISPENSER_LAUNCH, SoundSource.PLAYERS, 1.0F, 2F);
             } else {
-                world.playSound(null, projectileEntity, SoundEvents.FISHING_BOBBER_THROW.value(), SoundSource.PLAYERS, 1.0F, 0.7F);
+                world.playSound(null, projectileEntity, SoundEvents.FISHING_BOBBER_THROW, SoundSource.PLAYERS, 1.0F, 0.7F);
             }
         }
 

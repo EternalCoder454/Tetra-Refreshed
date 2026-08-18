@@ -130,7 +130,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                     populateInventory(worldServer, (ServerPlayer) player);
                     causeOpeningEffects(worldServer);
                 } else {
-                    worldServer.playSound(null, worldPosition, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 1.3f);
+                    worldServer.playSound(null, worldPosition, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 1.3f);
                 }
 
                 Optional.ofNullable(player)
@@ -181,8 +181,8 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                     1, 0, 0, 0, 0d);
         }
 
-        worldServer.playSound(null, worldPosition, SoundEvents.IRON_TRAPDOOR_OPEN.value(), SoundSource.PLAYERS, 1, 0.5f);
-        worldServer.playSound(null, worldPosition, SoundEvents.LAVA_EXTINGUISH.value(), SoundSource.PLAYERS, 0.2f, 0.8f);
+        worldServer.playSound(null, worldPosition, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.PLAYERS, 1, 0.5f);
+        worldServer.playSound(null, worldPosition, SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 0.2f, 0.8f);
     }
 
     private void updateBlockState() {
@@ -221,7 +221,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
             if (lockIntegrity[index] == 0) {
                 level.playSound(player, worldPosition, SoundEvents.SHIELD_BREAK.value(), SoundSource.PLAYERS, 1, 0.5f);
             } else {
-                level.playSound(player, worldPosition, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR.value(), SoundSource.PLAYERS, 1, 0.5f);
+                level.playSound(player, worldPosition, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 1, 0.5f);
             }
 
             if (!level.isClientSide() && lockIntegrity[index] == 0) {

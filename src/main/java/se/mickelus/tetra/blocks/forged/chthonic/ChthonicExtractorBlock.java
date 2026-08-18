@@ -94,7 +94,7 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
 
             TileEntityOptional.from(world, pos, ChthonicExtractorTile.class).ifPresent(tile -> tile.damage(amount));
             FracturedBedrockBlock.pierce(world, pos.below(), amount);
-            world.playSound(playerEntity, pos, SoundEvents.NETHERITE_BLOCK_HIT.value(), SoundSource.PLAYERS, 0.8f, 0.5f);
+            world.playSound(playerEntity, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.PLAYERS, 0.8f, 0.5f);
             return true;
         }
         return false;

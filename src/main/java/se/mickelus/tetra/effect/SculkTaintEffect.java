@@ -20,7 +20,7 @@ public class SculkTaintEffect {
     }
 
     public static void startSpread(ServerLevel level, BlockPos target, int severity) {
-        level.playSound(null, target, SoundEvents.SCULK_CATALYST_BLOOM.value(), SoundSource.PLAYERS, 2.0F, 0.6F + level.getRandom().nextFloat() * 0.4F);
+        level.playSound(null, target, SoundEvents.SCULK_CATALYST_BLOOM, SoundSource.PLAYERS, 2.0F, 0.6F + level.getRandom().nextFloat() * 0.4F);
 
         SculkSpreader spreader = SculkSpreader.createLevelSpreader();
         spreader.addCursors(target, severity);

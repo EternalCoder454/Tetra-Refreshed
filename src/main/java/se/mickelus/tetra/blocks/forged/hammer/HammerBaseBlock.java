@@ -87,7 +87,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
             }
         }
 
-        world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.6f);
+        world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
 
         return true;
     }
@@ -191,7 +191,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                     }
 
                     BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), ItemStack.EMPTY, getAdvancementData(world, pos));
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.6f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -203,7 +203,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                 if (te.putCellInSlot(heldStack, slotIndex)) {
                     player.setItemInHand(hand, ItemStack.EMPTY);
                     BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), heldStack, getAdvancementData(world, pos));
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
 
                     return InteractionResult.CONSUME;
                 }
@@ -218,7 +218,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                         BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), heldStack, getAdvancementData(world, pos));
                     }
 
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
                     heldStack.shrink(1);
 
                     if (world.isClientSide()) {

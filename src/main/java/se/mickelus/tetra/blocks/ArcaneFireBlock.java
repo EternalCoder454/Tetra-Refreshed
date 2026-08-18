@@ -79,7 +79,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
         ServerScheduler.schedule(52, () -> level.playSound(null, blockPos, TetraSounds.arcane_fire_2, SoundSource.PLAYERS, 0.075f, 1));
 
         level.playSound(null, blockPos, TetraSounds.destabilize, SoundSource.PLAYERS, 0.4f, 1.2f);
-        ServerScheduler.schedule(80, () -> level.playSound(null, blockPos, SoundEvents.BLAZE_SHOOT.value(), SoundSource.PLAYERS, 0.2f, 1f));
+        ServerScheduler.schedule(80, () -> level.playSound(null, blockPos, SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 0.2f, 1f));
 
         ServerScheduler.schedule(80, () -> level.setBlock(blockPos, ArcaneFireBlock.instance.get().defaultBlockState(),
                 Block.UPDATE_ALL));
@@ -137,7 +137,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
             level.setBlock(pos, state.setValue(ageProperty, age + 1), 3);
         } else {
             level.removeBlock(pos, false);
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH.value(), SoundSource.BLOCKS, 0.2F, 1.8F);
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.2F, 1.8F);
         }
     }
 

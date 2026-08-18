@@ -40,7 +40,7 @@ public class BasicWorkbenchBlock extends AbstractWorkbenchBlock {
 
         if (world.getBlockState(pos).is(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES)) {
 
-            world.playSound(player, pos, SoundEvents.WOOD_PLACE.value(), SoundSource.BLOCKS, 1.0F, 0.5F);
+            world.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
 
             if (!world.isClientSide()) {
                 world.setBlockAndUpdate(pos, instance.defaultBlockState());

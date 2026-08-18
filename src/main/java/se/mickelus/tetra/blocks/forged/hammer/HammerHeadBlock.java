@@ -67,7 +67,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
     private static boolean unjam(Level world, BlockPos pos, Player playerEntity) {
         TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(tile -> tile.setJammed(false));
-        world.playSound(playerEntity, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR.value(), SoundSource.PLAYERS, 1, 0.5f);
+        world.playSound(playerEntity, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 1, 0.5f);
         return true;
     }
 
@@ -138,7 +138,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
         if (consumeResources) {
             TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(HammerHeadBlockEntity::activate);
-            world.playSound(player, pos, SoundEvents.ANVIL_LAND.value(), SoundSource.PLAYERS, 0.2f, (float) (0.5 + Math.random() * 0.2));
+            world.playSound(player, pos, SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 0.2f, (float) (0.5 + Math.random() * 0.2));
         }
 
         return upgradedStack;
@@ -165,7 +165,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
         if (consumeResources) {
             TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(HammerHeadBlockEntity::activate);
-            world.playSound(player, pos, SoundEvents.ANVIL_LAND.value(), SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
+            world.playSound(player, pos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
         }
         return upgradedStack;
     }

@@ -207,7 +207,7 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
             ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE,
                     worldPosition.getX() + 0.5, worldPosition.getY() + 0.7, worldPosition.getZ() + 0.5,
                     10, 0, 0, 0, 0.02f);
-            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH.value(), SoundSource.BLOCKS,
+            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,
                     0.2f, 1);
         }
     }
@@ -217,7 +217,7 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
             ((ServerLevel) level).sendParticles(ParticleTypes.FLAME,
                     worldPosition.getX() + 0.5, worldPosition.getY() + 0.7, worldPosition.getZ() + 0.5,
                     5, 0, 0, 0, 0.02f);
-            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH.value(), SoundSource.BLOCKS,
+            level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,
                     0.2f, 1);
         }
     }
