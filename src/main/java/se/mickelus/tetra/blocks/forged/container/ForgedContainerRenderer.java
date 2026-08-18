@@ -10,13 +10,20 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
@@ -25,15 +32,18 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
-public class ForgedContainerRenderer implements BlockEntityRenderer<ForgedContainerBlockEntity> {
-    public static final Material material = new Material(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_container/forged_container"));
+public class ForgedContainerRenderer implements BlockEntityRenderer<ForgedContainerBlockEntity, ForgedContainerRenderer.State> {
+    public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_container/forged_container"));
     private static final float openDuration = 300;
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, ForgedContainerBlock.identifier), "main");
     public ModelPart lid;
     public ModelPart base;
     public ModelPart[] locks;
+    private final SpriteGetter sprites;
 
     public ForgedContainerRenderer(BlockEntityRendererProvider.Context context) {
+        sprites = context.sprites();
         ModelPart modelpart = context.bakeLayer(layer);
         this.lid = modelpart.getChild("lid");
 
@@ -74,53 +84,65 @@ public class ForgedContainerRenderer implements BlockEntityRenderer<ForgedContai
     }
 
     @Override
-    public void render(ForgedContainerBlockEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer,
-            int combinedLight, int combinedOverlay) {
-        if (tile.isFlipped()) {
+    public State createRenderState() {
+        return new State();
+    }
+
+    @Override
+    public void extractRenderState(ForgedContainerBlockEntity tile, State state, float partialTicks, Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
+
+        state.visible = !tile.isFlipped() && tile.hasLevel();
+        state.facing = tile.getFacing().toYRot();
+        state.open = tile.isOpen();
+        state.openProgress = state.open ? Math.min(1, (System.currentTimeMillis() - tile.openTime) / openDuration) : 0;
+
+        Boolean[] locked = tile.isLocked();
+        for (int i = 0; i < state.locked.length; i++) {
+            state.locked[i] = locked[i];
+        }
+    }
+
+    @Override
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (!state.visible) {
             return;
         }
 
-        if (tile.hasLevel()) {
-            matrixStack.pushPose();
-            matrixStack.translate(0.5F, 0.5F, 0.5F);
-            // todo: why does the model render upside down by default?
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-            matrixStack.mulPose(Axis.YP.rotationDegrees(tile.getFacing().toYRot()));
-            matrixStack.translate(-0.5F, -0.5F, -0.5F);
+        poseStack.pushPose();
+        poseStack.translate(0.5F, 0.5F, 0.5F);
+        // todo: why does the model render upside down by default?
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.facing));
+        poseStack.translate(-0.5F, -0.5F, -0.5F);
 
-            VertexConsumer vertexBuilder = material.buffer(renderTypeBuffer, RenderType::entitySolid);
+        lid.yRot = state.openProgress * 0.1f * ((float) Math.PI / 2F);
+        poseStack.translate(0, 0, 0.3f * state.openProgress);
+        submitPart(lid, state, poseStack, collector);
+        poseStack.translate(0, 0, -0.3f * state.openProgress);
 
-            renderLid(tile, partialTicks, matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            renderLocks(tile, partialTicks, matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            base.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-
-            matrixStack.popPose();
-        }
-    }
-
-    private void renderLid(ForgedContainerBlockEntity tile, float partialTicks, PoseStack matrixStack, VertexConsumer vertexBuilder,
-            int combinedLight, int combinedOverlay) {
-        if (tile.isOpen()) {
-            float progress = Math.min(1, (System.currentTimeMillis() - tile.openTime) / openDuration);
-            lid.yRot = (progress * 0.1f * ((float) Math.PI / 2F));
-
-            matrixStack.translate(0, 0, 0.3f * progress);
-            lid.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-            matrixStack.translate(0, 0, -0.3f * progress);
-
-        } else {
-            lid.yRot = 0;
-            lid.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
-        }
-    }
-
-    private void renderLocks(ForgedContainerBlockEntity tile, float partialTicks, PoseStack matrixStack, VertexConsumer vertexBuilder,
-            int combinedLight, int combinedOverlay) {
-        Boolean[] locked = tile.isLocked();
         for (int i = 0; i < locks.length; i++) {
-            if (locked[i]) {
-                locks[i].render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
+            if (state.locked[i]) {
+                submitPart(locks[i], state, poseStack, collector);
             }
         }
+
+        submitPart(base, state, poseStack, collector);
+
+        poseStack.popPose();
+    }
+
+    private void submitPart(ModelPart part, State state, PoseStack poseStack, SubmitNodeCollector collector) {
+        collector.submitModelPart(part, poseStack, material.renderType(RenderTypes::entitySolid), state.lightCoords,
+                OverlayTexture.NO_OVERLAY, sprites.get(material), -1, state.breakProgress);
+    }
+
+    public static class State extends BlockEntityRenderState {
+        public final boolean[] locked = new boolean[4];
+        public boolean visible;
+        public boolean open;
+        public float facing;
+        public float openProgress;
     }
 }
