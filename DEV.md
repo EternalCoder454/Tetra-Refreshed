@@ -129,6 +129,44 @@ The palette itself is a texture, the same shape as vanilla's armour trim palette
 colours matching the key ramp, position for position. Restrict palettes to materials of one category
 per greyscale texture, because the atlas builds every combination and the matrix grows quickly.
 
+### Adding an item type
+
+Every modular item used to be a java class. `tetra:dynamic_handheld` is a handheld item that reads
+its shape from an archetype instead, one file under `data/tetra/archetypes/<key>.json`:
+
+```json
+{
+    "honeable": true,
+    "honeBase": 120,
+    "honeIntegrityMultiplier": 60,
+    "synergyPrefix": "single/",
+    "entityHitDamage": 1,
+    "slots": [
+        { "key": "single/head", "major": true, "required": true, "x": 1, "y": -3 },
+        { "key": "single/handle", "major": true, "required": true, "x": -11, "y": 21 },
+        { "key": "single/binding", "major": false, "required": false, "x": -14, "y": 0 }
+    ]
+}
+```
+
+The file name is the key. A major slot holds a module that can carry improvements, a minor slot one
+that cannot, and `x` and `y` place the slot in the workbench relative to the item. `synergyPrefix`
+names a directory under `data/tetra/synergies` whose synergies apply to this type. Anything omitted
+falls back, so the shortest useful archetype is a `slots` array on its own.
+
+`data/tetra/archetypes/reference.json` ships as a working example and nothing grants it in game. An
+archetype reaches a player two ways, and both name the key as a plain string:
+
+* a replacement, under `data/tetra/replacements`, with `"item": "tetra:dynamic_handheld"` and
+  `"archetype": "<key>"`, which converts a matching item on pickup
+* a holosphere entry, under `assets/tetra/holosphere_entries`, with the same `archetype` field,
+  which lists it as something to craft
+
+**What an archetype cannot do** is change how stats combine. A double headed tool merges two heads
+without stacking their damage, and that lives in `ModularDoubleHeadedItem` because it is code rather
+than shape. A type that needs behaviour like that is still a java class. A type that is a set of
+slots is a datapack.
+
 ## Repository rules
 
 1. Minecraft 26.1.2, NeoForge only. Java 25.

@@ -151,7 +151,7 @@ public class ItemModularHandheld extends ModularItem {
         return blockDestroyDamage;
     }
 
-    public int getEntityHitDamage() {
+    public int getEntityHitDamage(ItemStack itemStack) {
         return entityHitDamage;
     }
 
@@ -233,7 +233,7 @@ public class ItemModularHandheld extends ModularItem {
 
     @Override
     public void hurtEnemy(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
-        applyDamage(entityHitDamage, itemStack, attacker);
+        applyDamage(getEntityHitDamage(itemStack), itemStack, attacker);
 
         if (!isBroken(itemStack)) {
             float attackStrength = CastOptional.cast(attacker, Player.class)

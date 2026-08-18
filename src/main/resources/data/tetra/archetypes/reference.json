@@ -1,0 +1,12 @@
+{
+    "honeable": true,
+    "honeBase": 120,
+    "honeIntegrityMultiplier": 60,
+    "synergyPrefix": "single/",
+    "entityHitDamage": 1,
+    "slots": [
+        { "key": "single/head", "major": true, "required": true, "x": 1, "y": -3 },
+        { "key": "single/handle", "major": true, "required": true, "x": -11, "y": 21 },
+        { "key": "single/binding", "major": false, "required": false, "x": -14, "y": 0 }
+    ]
+}
