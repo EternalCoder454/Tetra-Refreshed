@@ -79,6 +79,19 @@ public class MaterialData {
     public String[] textureOverrides = {};
     public boolean tintOverrides = false;
 
+    /**
+     * A colour palette for this material, named without the textures/ prefix or the extension, as
+     * every texture reference in a model is.
+     *
+     * A material with a palette can use a module's greyscale artwork rather than needing artwork of
+     * its own. The palette remaps the greyscale ramp to this material's colours, which is a whole
+     * ramp rather than the single multiply a tint can express, so it can define a look rather than
+     * only shift one. Adding such a material costs this one field and no artwork at all.
+     *
+     * Null leaves the material on the texture and tint it always used, so this is additive.
+     */
+    public Identifier palette;
+
     public OutcomeMaterial material;
     public ToolData requiredTools;
     public float experienceCost;
@@ -154,6 +167,10 @@ public class MaterialData {
 
         if (from.tints != null) {
             to.tints = from.tints;
+        }
+
+        if (from.palette != null) {
+            to.palette = from.palette;
         }
 
         if (from.tintOverrides != defaultValues.tintOverrides) {

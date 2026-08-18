@@ -174,7 +174,7 @@ public class ModularItemModel implements ItemModel {
                 continue;
             }
 
-            TextureSlots slots = new TextureSlots(Map.of(layerSlot, new Material(textureModel.getLocation())));
+            TextureSlots slots = new TextureSlots(Map.of(layerSlot, new Material(textureModel.getPaletteLocation())));
             QuadCollection collection = ItemModelGenerator.bake(slots, baker, BlockModelRotation.IDENTITY, debugName::toString);
 
             int emission = textureModel.getEmission();

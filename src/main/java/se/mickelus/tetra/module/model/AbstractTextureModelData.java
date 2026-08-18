@@ -21,6 +21,9 @@ public abstract class AbstractTextureModelData implements IModuleModel {
     protected Priority renderLayer = Priority.BASE;
 
     protected boolean invertPerspectives = false;
+
+    /** The material whose palette recoloured this layer, null for ordinary artwork. */
+    protected String paletteSuffix;
     protected ItemDisplayContext[] contexts;
 
     AbstractTextureModelData() {

@@ -49,7 +49,26 @@ public class GridTextureModelData extends AbstractTextureModelData {
         this.contexts = contexts;
     }
 
+    /**
+     * The texture class a module offers for materials that carry a colour palette.
+     *
+     * Artwork under this name is drawn once in greyscale. The atlas builds one recoloured sprite per
+     * material from it, named for the material, which is what the palette suffix below selects. A
+     * module that offers it lets any palette carrying material use it without artwork of its own.
+     */
+    public static final String paletteTexture = "greyscale";
+
     public GridTextureModelData forMaterial(List<String> availableTextures, MaterialData material) {
+        if (material.palette != null && availableTextures.contains(paletteTexture)) {
+            GridTextureModelData copy = copy();
+            copy.location = appendString(location, paletteTexture);
+            copy.paletteSuffix = material.key;
+            // The palette has already coloured every pixel, so a tint on top would only muddy it.
+            copy.tint = new SimpleColor(0xffffffff);
+            copy.overlayTint = new SimpleColor(material.tints.texture);
+            return copy;
+        }
+
         if (Arrays.stream(material.textureOverrides).anyMatch(override -> location.getPath().equals(override))) {
             GridTextureModelData copy = copy();
             copy.location = appendString(location, material.textures[0]);
@@ -74,6 +93,18 @@ public class GridTextureModelData extends AbstractTextureModelData {
         return Identifier.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + string);
     }
 
+    /**
+     * The material whose palette recoloured this layer, or null when it is ordinary artwork.
+     *
+     * It is applied last, after the slot suffix, because the atlas appends its permutation name to
+     * the end of the texture it was given.
+     */
+    public Identifier getPaletteLocation() {
+        return paletteSuffix != null
+                ? appendString(location, "_" + paletteSuffix)
+                : location;
+    }
+
     public GridTextureModelData withSlotSuffix(String suffix) {
         GridTextureModelData copy = copy();
         copy.location = Identifier.fromNamespaceAndPath(location.getNamespace(), location.getPath() + suffix);
@@ -90,7 +121,7 @@ public class GridTextureModelData extends AbstractTextureModelData {
     }
 
     public GridTextureModelData copy() {
-        return new GridTextureModelData(
+        GridTextureModelData copy = new GridTextureModelData(
                 type,
                 location,
                 renderType,
@@ -101,5 +132,9 @@ public class GridTextureModelData extends AbstractTextureModelData {
                 renderLayer,
                 invertPerspectives,
                 contexts);
+        // The palette outlives every later copy, including the slot suffix, because it names the
+        // sprite the atlas built rather than anything about this layer.
+        copy.paletteSuffix = paletteSuffix;
+        return copy;
     }
 }

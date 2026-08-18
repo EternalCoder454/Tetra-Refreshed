@@ -1,6 +1,27 @@
-# Tetra
+# Tetra Refreshed
 
 [![](http://cf.way2muchnoise.eu/tetra.svg)](https://minecraft.curseforge.com/projects/tetra)
+
+A fork of [Tetra](https://github.com/mickelus/tetra) by Mikael Eriksson Vikner, ported to Minecraft
+26.1.2 on NeoForge and Java 25. Tetra is Mikael's work. This fork is a port and nothing more, and
+carries no claim of authorship over the mod. Port by EternalHell.
+
+The upstream terms below apply to this fork unchanged, including the restrictions on the Perk
+system and on redistribution. Read them before using anything here.
+
+| | |
+|---|---|
+| Base | PR 931, "Port to 1.21.1 neoforge" by evelant, on top of upstream 1.20 |
+| Target | Minecraft 26.1.2, NeoForge 26.1.2.95, Java 25 |
+| Branch | `26.1.2` |
+| Dependency | [Mutil Refreshed](https://github.com/EternalCoder454/Mutil-Refreshed), published to mavenLocal |
+
+* [DEV.md](DEV.md) is the developer guide: building, running, and the data formats.
+* [PORT-STATUS.md](PORT-STATUS.md) is the port handover, including what changed in behaviour on the
+  way to 26.1.2 and what is knowingly still missing.
+* [MODERNIZATION.md](MODERNIZATION.md) studies what would make Tetra easier to extend.
+
+## Upstream readme
 
 Source and issue tracker for tetra.
 
