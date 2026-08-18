@@ -110,7 +110,7 @@ public abstract class ItemModule implements IToolProvider {
 
     public VariantData getVariantData(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getString(variantTagKey))
+                .map(tag -> tag.getStringOr(variantTagKey, ""))
                 .map(key -> getVariantData(key))
                 .orElseGet(this::getDefaultData);
     }
@@ -299,7 +299,7 @@ public abstract class ItemModule implements IToolProvider {
 
     public boolean isTweakable(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            String variant = getTag(itemStack).getString(variantTagKey);
+            String variant = getTag(itemStack).getStringOr(variantTagKey, "");
             return Arrays.stream(tweaks)
                     .anyMatch(data -> variant.equals(data.variant));
         }
@@ -309,7 +309,7 @@ public abstract class ItemModule implements IToolProvider {
 
     public TweakData[] getTweaks(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            String variant = getTag(itemStack).getString(variantTagKey);
+            String variant = getTag(itemStack).getStringOr(variantTagKey, "");
             return Arrays.stream(tweaks)
                     .filter(tweak -> variant.equals(tweak.variant))
                     .toArray(TweakData[]::new);
@@ -325,7 +325,7 @@ public abstract class ItemModule implements IToolProvider {
 
     public int getTweakStep(ItemStack itemStack, TweakData tweak) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getInt(slotTagKey + "_tweak:" + tweak.key))
+                .map(tag -> tag.getIntOr(slotTagKey + "_tweak:" + tweak.key, 0))
                 .map(step -> Mth.clamp(step, -tweak.steps, tweak.steps))
                 .orElse(0);
     }

@@ -36,11 +36,11 @@ public class QuickslotInventory extends ToolbeltInventory {
     @Override
     public void readFromNBT(CompoundTag tagCompound) {
         super.readFromNBT(tagCompound);
-        ListTag shadows = tagCompound.getList(shadowsKey, Tag.TAG_COMPOUND);
+        ListTag shadows = tagCompound.getListOrEmpty(shadowsKey);
 
         for (int i = 0; i < shadows.size(); i++) {
-            CompoundTag item = shadows.getCompound(i);
-            int slot = item.getInt(slotKey);
+            CompoundTag item = shadows.getCompoundOrEmpty(i);
+            int slot = item.getIntOr(slotKey, 0);
 
             if (0 <= slot && slot < getContainerSize()) {
                 ItemStack shadowStack = ItemStackTagHelper.parseStack(registryAccess, item);

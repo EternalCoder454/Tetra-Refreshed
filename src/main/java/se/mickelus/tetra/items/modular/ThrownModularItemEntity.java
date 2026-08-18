@@ -445,14 +445,14 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains(stackKey, 10)) {
-            thrownStack = ItemStackTagHelper.parseStack(registryAccess(), compound.getCompound(stackKey));
+        if (compound.contains(stackKey)) {
+            thrownStack = ItemStackTagHelper.parseStack(registryAccess(), compound.getCompoundOrEmpty(stackKey));
         } else {
             thrownStack = ItemStack.EMPTY;
         }
 
-        dealtDamage = compound.getBoolean(dealtDamageKey);
-        preferredSlot = compound.contains(preferredSlotKey) ? compound.getInt(preferredSlotKey) : -1;
+        dealtDamage = compound.getBooleanOr(dealtDamageKey, false);
+        preferredSlot = compound.contains(preferredSlotKey) ? compound.getIntOr(preferredSlotKey, 0) : -1;
 
         setPickupItemStack(thrownStack);
         entityData.set(LOYALTY_LEVEL, getLoyaltyFromItem(thrownStack));

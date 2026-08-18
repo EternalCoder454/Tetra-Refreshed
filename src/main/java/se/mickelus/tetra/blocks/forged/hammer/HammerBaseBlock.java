@@ -239,12 +239,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult rayTraceResult) {
-        return switch (useInternal(blockState, world, pos, player, hand, rayTraceResult)) {
-            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
-            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
-            case FAIL -> InteractionResult.FAIL;
-            default -> InteractionResult.PASS;
-        };
+        return useInternal(blockState, world, pos, player, hand, rayTraceResult);
     }
 
     @Override

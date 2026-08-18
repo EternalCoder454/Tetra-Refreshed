@@ -264,13 +264,13 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
 
-        handler.deserializeNBT(registries, compound.getCompound(inventoryKey));
+        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
 
         for (int i = 0; i < lockIntegrity.length; i++) {
-            lockIntegrity[i] = compound.getInt("lock_integrity" + i);
+            lockIntegrity[i] = compound.getIntOr("lock_integrity" + i, 0);
         }
 
-        lidIntegrity = compound.getInt("lid_integrity");
+        lidIntegrity = compound.getIntOr("lid_integrity", 0);
     }
 
     @Override

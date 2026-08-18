@@ -172,7 +172,7 @@ public class ModularBowItem extends ModularItem {
         if (getEffectLevel(itemStack, ItemEffect.overbowed) > 0 && exceedsOverbowedLimit(entity, itemStack, usedTicks)) {
             entity.stopUsingItem();
             // trigger a small cooldown here to avoid the bow getting drawn again instantly
-            CastOptional.cast(entity, Player.class).ifPresent(player -> player.getCooldowns().addCooldown(this, 10));
+            CastOptional.cast(entity, Player.class).ifPresent(player -> player.getCooldowns().addCooldown(itemStack, 10));
         } else {
             fireArrow(itemStack, world, entity, timeLeft);
         }
@@ -187,7 +187,7 @@ public class ModularBowItem extends ModularItem {
             if (getEffectLevel(itemStack, ItemEffect.overbowed) > 0 && exceedsOverbowedLimit(entity, itemStack, usedTicks)) {
                 entity.stopUsingItem();
                 // trigger a small cooldown here to avoid the bow getting drawn again instantly
-                CastOptional.cast(entity, Player.class).ifPresent(player -> player.getCooldowns().addCooldown(this, 10));
+                CastOptional.cast(entity, Player.class).ifPresent(player -> player.getCooldowns().addCooldown(itemStack, 10));
             }
         }
     }
@@ -275,7 +275,7 @@ public class ModularBowItem extends ModularItem {
                     world.playSound(null, player.getX(), player.getY(), player.getZ(),
                             SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS,
                             0.8F + projectileVelocity * 0.2f,
-                            1.9f + world.random.nextFloat() * 0.2F - pitchBase * 0.8F);
+                            1.9f + world.getRandom().nextFloat() * 0.2F - pitchBase * 0.8F);
 
                     if (!infiniteAmmo && !player.getAbilities().instabuild) {
                         ammoStack.shrink(count);

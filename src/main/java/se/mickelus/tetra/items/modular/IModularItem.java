@@ -151,7 +151,7 @@ public interface IModularItem {
 
     static int getHoningSeed(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getInt(honeCountKey))
+                .map(tag -> tag.getIntOr(honeCountKey, 0))
                 .orElse(0);
     }
 
@@ -162,7 +162,7 @@ public interface IModularItem {
         mutate(itemStack, tag -> {
             tag.remove(honeAvailableKey);
             tag.remove(honeProgressKey);
-            tag.putInt(honeCountKey, tag.getInt(honeCountKey) + 1);
+            tag.putInt(honeCountKey, tag.getIntOr(honeCountKey, 0) + 1);
         });
     }
 
@@ -244,7 +244,7 @@ public interface IModularItem {
     @Nullable
     default String getIdentifier(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            return getTag(itemStack).getString(identifierKey);
+            return getTag(itemStack).getStringOr(identifierKey, "");
         }
 
         return null;
@@ -295,7 +295,7 @@ public interface IModularItem {
 
         if (tag != null) {
             for (int i = 0; i < majorModuleKeys.length; i++) {
-                String moduleName = tag.getString(majorModuleKeys[i]);
+                String moduleName = tag.getStringOr(majorModuleKeys[i], "");
                 ItemModule module = ItemUpgradeRegistry.instance.getModule(moduleName);
                 if (module instanceof ItemModuleMajor) {
                     modules[i] = (ItemModuleMajor) module;
@@ -312,7 +312,7 @@ public interface IModularItem {
 
         if (tag != null) {
             for (int i = 0; i < minorModuleKeys.length; i++) {
-                String moduleName = tag.getString(minorModuleKeys[i]);
+                String moduleName = tag.getStringOr(minorModuleKeys[i], "");
                 ItemModule module = ItemUpgradeRegistry.instance.getModule(moduleName);
                 modules[i] = module;
             }
@@ -347,7 +347,7 @@ public interface IModularItem {
 
     default ItemModule getModuleFromSlot(ItemStack itemStack, String slot) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getString(slot))
+                .map(tag -> tag.getStringOr(slot, ""))
                 .map(ItemUpgradeRegistry.instance::getModule)
                 .orElse(null);
     }
@@ -375,11 +375,11 @@ public interface IModularItem {
 
         // todo: store this in a separate data structure?
         mutate(itemStack, tag -> {
-            int honingProgress = tag.contains(honeProgressKey) ? tag.getInt(honeProgressKey) : getHoningLimit(itemStack);
+            int honingProgress = tag.contains(honeProgressKey) ? tag.getIntOr(honeProgressKey, 0) : getHoningLimit(itemStack);
             honingProgress -= multiplier;
             tag.putInt(honeProgressKey, honingProgress);
 
-            if (honingProgress <= 0 && !tag.getBoolean(honeAvailableKey)) {
+            if (honingProgress <= 0 && !tag.getBooleanOr(honeAvailableKey, false)) {
                 tag.putBoolean(honeAvailableKey, true);
 
                 if (entity instanceof ServerPlayer serverPlayer) {
@@ -392,7 +392,7 @@ public interface IModularItem {
     default int getHoningProgress(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
                 .filter(tag -> tag.contains(honeProgressKey))
-                .map(tag -> tag.getInt(honeProgressKey))
+                .map(tag -> tag.getIntOr(honeProgressKey, 0))
                 .orElseGet(() -> getHoningLimit(itemStack));
     }
 
@@ -422,7 +422,7 @@ public interface IModularItem {
 
     default int getHonedCount(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getInt(honeCountKey))
+                .map(tag -> tag.getIntOr(honeCountKey, 0))
                 .orElse(0);
     }
 
@@ -503,7 +503,7 @@ public interface IModularItem {
         if (amount > 0) {
             int level = getEffectLevel(itemStack, ItemEffect.unbreaking);
             int reduction = 0;
-            RandomSource random = responsibleEntity != null ? responsibleEntity.level().random : RandomSource.create();
+            RandomSource random = responsibleEntity != null ? responsibleEntity.level().getRandom() : RandomSource.create();
 
             if (level > 0) {
                 for (int i = 0; i < amount; i++) {
@@ -718,12 +718,12 @@ public interface IModularItem {
      */
     default int getRepairCount(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
-                .map(tag -> tag.getInt(repairCountKey))
+                .map(tag -> tag.getIntOr(repairCountKey, 0))
                 .orElse(0);
     }
 
     default void incrementRepairCount(ItemStack itemStack) {
-        mutate(itemStack, tag -> tag.putInt(repairCountKey, tag.getInt(repairCountKey) + 1));
+        mutate(itemStack, tag -> tag.putInt(repairCountKey, tag.getIntOr(repairCountKey, 0) + 1));
     }
 
     default void repair(ItemStack itemStack) {

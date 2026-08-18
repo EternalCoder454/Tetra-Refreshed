@@ -26,10 +26,10 @@ public class ExplosionOutcome implements CraftingEffectOutcome {
         if (consumeResources && !world.isClientSide()) {
             BlockPos origin = pos.above();
             if (randomOriginDistance > 0) {
-                origin = getRandomBlockPos(world.random, randomOriginDistance).offset(origin);
+                origin = getRandomBlockPos(world.getRandom(), randomOriginDistance).offset(origin);
             }
 
-            if (world.random.nextDouble() < chance) {
+            if (world.getRandom().nextDouble() < chance) {
                 world.explode(player, origin.getX(), origin.getY(), origin.getZ(), radius, type);
                 return true;
             }

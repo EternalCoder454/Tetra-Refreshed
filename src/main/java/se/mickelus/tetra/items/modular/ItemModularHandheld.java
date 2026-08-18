@@ -124,7 +124,7 @@ public class ItemModularHandheld extends ModularItem {
             item.itemInteractionForEntitySecondary(activeStack, player, target, hand);
 
             player.stopUsingItem();
-            player.getCooldowns().addCooldown(item, (int) Math.round(item.getCooldownBase(activeStack) * 20 * 1.5));
+            player.getCooldowns().addCooldown(activeStack, (int) Math.round(item.getCooldownBase(activeStack) * 20 * 1.5));
             player.swing(hand);
         }
     }
@@ -362,7 +362,7 @@ public class ItemModularHandheld extends ModularItem {
                     }
                 }
 
-                player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
+                player.getCooldowns().addCooldown(itemStack, (int) Math.round(getCooldownBase(itemStack) * 20));
 
                 return new InteractionResult<>(InteractionResult.SUCCESS, itemStack);
             }
@@ -373,7 +373,7 @@ public class ItemModularHandheld extends ModularItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity target, InteractionHand hand) {
-        if (!player.getCooldowns().isOnCooldown(this) && !isBroken(itemStack)) {
+        if (!player.getCooldowns().isOnCooldown(itemStack) && !isBroken(itemStack)) {
             if (getUseDuration(itemStack) == 0 || player.isCrouching()) {
                 int bashingLevel = getEffectLevel(itemStack, ItemEffect.bashing);
                 if (bashingLevel > 0) {
@@ -487,7 +487,7 @@ public class ItemModularHandheld extends ModularItem {
             player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 1.3f);
         }
 
-        player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
+        player.getCooldowns().addCooldown(itemStack, (int) Math.round(getCooldownBase(itemStack) * 20));
     }
 
     public void bashEntity(ItemStack itemStack, int bashingLevel, Player player, LivingEntity target) {
@@ -505,7 +505,7 @@ public class ItemModularHandheld extends ModularItem {
             player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.7f);
         }
 
-        player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
+        player.getCooldowns().addCooldown(itemStack, (int) Math.round(getCooldownBase(itemStack) * 20));
     }
 
     public void throwItem(Player player, ItemStack stack, int riptideLevel, float cooldownBase) {
@@ -534,7 +534,7 @@ public class ItemModularHandheld extends ModularItem {
             }
         }
 
-        player.getCooldowns().addCooldown(this, Math.round(cooldownBase * 20));
+        player.getCooldowns().addCooldown(itemStack, Math.round(cooldownBase * 20));
     }
 
     public void causeRiptideEffect(Player player, int riptideLevel) {
@@ -672,7 +672,7 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     public void onShieldDisabled(Player player, ItemStack itemStack) {
-        player.getCooldowns().addCooldown(this, (int) (getCooldownBase(itemStack) * 20 * 0.75));
+        player.getCooldowns().addCooldown(itemStack, (int) (getCooldownBase(itemStack) * 20 * 0.75));
     }
 
     @Override
@@ -712,7 +712,7 @@ public class ItemModularHandheld extends ModularItem {
                     if (blockingLevel > 0) {
                         double blockingCooldown = getEffectEfficiency(itemStack, ItemEffect.blocking);
                         if (blockingCooldown > 0) {
-                            player.getCooldowns().addCooldown(this, (int) Math.round(blockingCooldown * getCooldownBase(itemStack) * 20));
+                            player.getCooldowns().addCooldown(itemStack, (int) Math.round(blockingCooldown * getCooldownBase(itemStack) * 20));
                         }
 
                         if (player.isCrouching() && world.isClientSide()) {
@@ -746,7 +746,7 @@ public class ItemModularHandheld extends ModularItem {
             if (blockingLevel > 0) {
                 double blockingCooldown = getEffectEfficiency(itemStack, ItemEffect.blocking);
                 if (blockingCooldown > 0) {
-                    player.getCooldowns().addCooldown(this, (int) Math.round(blockingCooldown * cooldownBase * 20));
+                    player.getCooldowns().addCooldown(itemStack, (int) Math.round(blockingCooldown * cooldownBase * 20));
                 }
 
                 if (player.isCrouching()) {

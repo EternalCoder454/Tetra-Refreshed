@@ -21,7 +21,7 @@ public class JankEffect {
     public static void jankItems(ServerLevel level, BlockPos target, int effectLevel, float efficiency, Entity entity) {
         List<ItemEntity> items = level.getEntities(EntityType.ITEM, new AABB(target).inflate(effectLevel * 0.5), Entity::isAlive);
 
-        if (!items.isEmpty() && level.getRandom().nextFloat() < efficiency && level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+        if (!items.isEmpty() && level.getRandom().nextFloat() < efficiency && level.getGameRules().getBooleanOr(GameRules.RULE_DOMOBSPAWNING, false)) {
             Endermite endermite = EntityType.ENDERMITE.create(level);
             endermite.moveTo(target, 0, entity.getXRot() + 180);
             level.addFreshEntity(endermite);

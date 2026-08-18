@@ -174,12 +174,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult rayTrace) {
-        return switch (useInternal(state, world, pos, player, hand, rayTrace)) {
-            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
-            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
-            case FAIL -> InteractionResult.FAIL;
-            default -> InteractionResult.PASS;
-        };
+        return useInternal(state, world, pos, player, hand, rayTrace);
     }
 
     @Override

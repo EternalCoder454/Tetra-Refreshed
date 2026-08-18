@@ -126,8 +126,8 @@ public class TetraEnchantmentHelper {
 
     public static void mapEnchantment(ItemStack itemStack, String slot, Holder<Enchantment> enchantment) {
         mutate(itemStack, tag -> {
-            CompoundTag map = tag.contains("EnchantmentMapping", Tag.TAG_COMPOUND)
-                    ? tag.getCompound("EnchantmentMapping")
+            CompoundTag map = tag.contains("EnchantmentMapping")
+                    ? tag.getCompoundOrEmpty("EnchantmentMapping")
                     : new CompoundTag();
             map.putString(requireEnchantmentKey(enchantment).toString(), slot);
             tag.put("EnchantmentMapping", map);
@@ -147,8 +147,8 @@ public class TetraEnchantmentHelper {
 
         try {
             mutate(itemStack, tag -> {
-                CompoundTag mappings = tag.contains("EnchantmentMapping", Tag.TAG_COMPOUND)
-                        ? tag.getCompound("EnchantmentMapping")
+                CompoundTag mappings = tag.contains("EnchantmentMapping")
+                        ? tag.getCompoundOrEmpty("EnchantmentMapping")
                         : new CompoundTag();
                 Map<String, String> mapped = Optional.of(mappings)
                         .map(CompoundTag::getAllKeys)
@@ -210,13 +210,13 @@ public class TetraEnchantmentHelper {
 
     @Nullable
     public static Pair<String, Integer> getEnchantmentPrimitive(CompoundTag nbt) {
-        return Pair.of(nbt.getString("id"), nbt.getInt("lvl"));
+        return Pair.of(nbt.getStringOr("id", ""), nbt.getIntOr("lvl", 0));
     }
 
     @Nullable
     public static Pair<Enchantment, Integer> getEnchantment(CompoundTag nbt) {
-        return Optional.ofNullable(RegistryHelper.get(Registries.ENCHANTMENT, Identifier.parse(nbt.getString("id"))))
-                .map(enchantment -> Pair.of(enchantment, nbt.getInt("lvl")))
+        return Optional.ofNullable(RegistryHelper.get(Registries.ENCHANTMENT, Identifier.parse(nbt.getStringOr("id", ""))))
+                .map(enchantment -> Pair.of(enchantment, nbt.getIntOr("lvl", 0)))
                 .orElse(null);
     }
 
@@ -231,8 +231,8 @@ public class TetraEnchantmentHelper {
 
     public static void removeEnchantment(ItemStack itemStack, String enchantment) {
         mutate(itemStack, tag -> {
-            if (tag.contains("EnchantmentMapping", Tag.TAG_COMPOUND)) {
-                tag.getCompound("EnchantmentMapping").remove(enchantment);
+            if (tag.contains("EnchantmentMapping")) {
+                tag.getCompoundOrEmpty("EnchantmentMapping").remove(enchantment);
             }
         });
         EnchantmentHelper.updateEnchantments(itemStack, mutable -> mutable.removeIf(holder -> getEnchantmentKey(holder)
@@ -247,7 +247,7 @@ public class TetraEnchantmentHelper {
             return;
         }
         Set<String> matchingEnchantments = map.getAllKeys().stream()
-                .filter(ench -> slot.equals(map.getString(ench)))
+                .filter(ench -> slot.equals(map.getStringOr(ench, "")))
                 .collect(Collectors.toSet());
 
         EnchantmentHelper.updateEnchantments(itemStack, mutable -> mutable.removeIf(holder -> getEnchantmentKey(holder)
@@ -255,8 +255,8 @@ public class TetraEnchantmentHelper {
                 .filter(matchingEnchantments::contains)
                 .isPresent()));
         mutate(itemStack, tag -> {
-            if (tag.contains("EnchantmentMapping", Tag.TAG_COMPOUND)) {
-                CompoundTag liveMap = tag.getCompound("EnchantmentMapping");
+            if (tag.contains("EnchantmentMapping")) {
+                CompoundTag liveMap = tag.getCompoundOrEmpty("EnchantmentMapping");
                 matchingEnchantments.forEach(liveMap::remove);
             }
         });

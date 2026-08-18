@@ -25,7 +25,7 @@ public class DynamicModularItem extends ItemModularHandheld {
 
     public static String getArchetypeKey(@Nullable CompoundTag tag) {
         return Optional.ofNullable(tag)
-                .map(t -> t.getString(typeKey))
+                .map(t -> t.getStringOr(typeKey, ""))
                 .orElse(null);
     }
 

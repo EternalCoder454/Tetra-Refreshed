@@ -315,15 +315,15 @@ public class FracturedBedrockTile extends BlockEntity {
         super.loadAdditional(compound, registries);
 
         if (compound.contains(activityKey)) {
-            activity = compound.getInt(activityKey);
+            activity = compound.getIntOr(activityKey, 0);
         }
 
         if (compound.contains(stepKey)) {
-            step = compound.getInt(stepKey);
+            step = compound.getIntOr(stepKey, 0);
         }
 
         if (compound.contains(luckKey)) {
-            luck = compound.getInt(luckKey);
+            luck = compound.getIntOr(luckKey, 0);
         }
     }
 

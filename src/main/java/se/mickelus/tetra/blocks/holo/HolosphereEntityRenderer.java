@@ -74,8 +74,8 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
         entity.getScanResults().stream()
                 .filter(scan -> scan.timestamp() <= level.getGameTime())
                 .forEach(scan -> {
-                    int x = scan.chunkX() - chunkPos.x;
-                    int z = scan.chunkZ() - chunkPos.z;
+                    int x = scan.chunkX() - chunkPos.x();
+                    int z = scan.chunkZ() - chunkPos.z();
                     long openTimestamp = timestamp + (Math.abs(x) + Math.abs(z));
                     renderMarker(vertexBuilder, matrixStack, material.sprite(), rotation, level.getGameTime() + partialTicks, openTimestamp,
                             light, 0.5f + x * 1 / 16f, 0, 0.5f + z * 1 / 16f, scan);

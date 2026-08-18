@@ -48,7 +48,7 @@ public class ScanHelper {
                     return true;
                 }
 
-                ChunkAccess chunk = level.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS);
+                ChunkAccess chunk = level.getChunk(chunkPos.x(), chunkPos.z(), ChunkStatus.STRUCTURE_STARTS);
                 StructureStart structurestart = structureManager.getStartForStructure(SectionPos.bottomOf(chunk), holder.value(), chunk);
                 if (structurestart != null && structurestart.isValid()) {
                     return true;

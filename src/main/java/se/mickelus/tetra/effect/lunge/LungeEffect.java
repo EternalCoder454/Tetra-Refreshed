@@ -129,7 +129,7 @@ public class LungeEffect extends ChargedAbilityEffect {
         item.tickProgression(player, itemStack, 2);
         item.applyDamage(2, itemStack, player);
 
-        player.getCooldowns().addCooldown(item, (int) (instance.getCooldown(item, itemStack) * cooldownMultiplier));
+        player.getCooldowns().addCooldown(itemStack, (int) (instance.getCooldown(item, itemStack) * cooldownMultiplier));
 
         activeCache.invalidate(getIdentifier(player));
     }
@@ -293,7 +293,7 @@ public class LungeEffect extends ChargedAbilityEffect {
             attacker.move(MoverType.SELF, new Vec3(0, 0.4, 0));
 
             attacker.causeFoodExhaustion(overextendLevel > 0 ? 6 : 1);
-            attacker.getCooldowns().addCooldown(item, getCooldown(item, itemStack));
+            attacker.getCooldowns().addCooldown(itemStack, getCooldown(item, itemStack));
 
             attacker.level().playSound(attacker, BlockPos.containing(attacker.position().add(attacker.getDeltaMovement())), SoundEvents.UI_TOAST_IN,
                     SoundSource.PLAYERS, 1, 1.3f);

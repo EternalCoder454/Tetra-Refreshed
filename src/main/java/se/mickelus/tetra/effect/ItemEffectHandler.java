@@ -98,7 +98,7 @@ public class ItemEffectHandler {
                 BlockState blockState = serverLevel.getBlockState(BlockPos.containing(target.getX(), target.getY() - 1, target.getZ()));
                 serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, blockState),
                         target.getX(), target.getY() + 0.1, target.getZ(),
-                        16, 0, serverLevel.random.nextGaussian() * 0.2, 0, 0.1);
+                        16, 0, serverLevel.getRandom().nextGaussian() * 0.2, 0, 0.1);
             }
         }
 

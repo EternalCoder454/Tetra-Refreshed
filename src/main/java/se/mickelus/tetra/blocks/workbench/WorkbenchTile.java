@@ -491,13 +491,13 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
 
-        handler.deserializeNBT(registries, compound.getCompound(inventoryKey));
+        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
 
-        String schematicKey = compound.getString(WorkbenchTile.schematicKey);
+        String schematicKey = compound.getStringOr(WorkbenchTile.schematicKey, "");
         currentSchematic = SchematicRegistry.getSchematic(schematicKey);
 
         if (compound.contains(currentSlotKey)) {
-            currentSlot = compound.getString(currentSlotKey);
+            currentSlot = compound.getStringOr(currentSlotKey, "");
         }
 
         interaction = ActionInteraction.create(this);

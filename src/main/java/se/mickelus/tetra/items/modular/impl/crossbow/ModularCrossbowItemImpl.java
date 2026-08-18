@@ -309,7 +309,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                 setLoaded(itemStack, true);
                 SoundSource soundcategory = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
                 world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, soundcategory,
-                        1.0f, 1.0f / (world.random.nextFloat() * 0.5f + 1.0f) + 0.2f);
+                        1.0f, 1.0f / (world.getRandom().nextFloat() * 0.5f + 1.0f) + 0.2f);
             }
         }
 
@@ -471,7 +471,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     @Override
     public boolean isLoaded(ItemStack stack) {
         CompoundTag compoundnbt = ItemStackTagHelper.getTag(stack);
-        return compoundnbt != null && compoundnbt.getBoolean("Charged");
+        return compoundnbt != null && compoundnbt.getBooleanOr("Charged", false);
     }
 
     public void setLoaded(ItemStack stack, boolean chargedIn) {
@@ -487,8 +487,8 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     }
 
     private ListTag getProjectilesNBT(CompoundTag nbt) {
-        if (nbt.contains("ChargedProjectiles", 9)) {
-            return nbt.getList("ChargedProjectiles", 10);
+        if (nbt.contains("ChargedProjectiles")) {
+            return nbt.getListOrEmpty("ChargedProjectiles");
         }
         return new ListTag();
     }
@@ -518,7 +518,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     private ItemStack getFirstProjectile(ItemStack itemStack, HolderLookup.Provider registryAccess) {
         ListTag projectiles = getProjectilesNBT(itemStack);
         for (int i = 0; i < projectiles.size(); i++) {
-            ItemStack projectile = ItemStackTagHelper.parseStack(registryAccess, projectiles.getCompound(i));
+            ItemStack projectile = ItemStackTagHelper.parseStack(registryAccess, projectiles.getCompoundOrEmpty(i));
             if (!projectile.isEmpty()) {
                 return projectile;
             }
@@ -530,7 +530,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     private ItemStack getFirstProjectileByItemId(ItemStack itemStack) {
         ListTag projectiles = getProjectilesNBT(itemStack);
         for (int i = 0; i < projectiles.size(); i++) {
-            ItemStack projectile = getProjectileItemStack(projectiles.getCompound(i));
+            ItemStack projectile = getProjectileItemStack(projectiles.getCompoundOrEmpty(i));
             if (!projectile.isEmpty()) {
                 return projectile;
             }
@@ -544,7 +544,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
             return ItemStack.EMPTY;
         }
 
-        Identifier itemId = Identifier.tryParse(stackTag.getString("id"));
+        Identifier itemId = Identifier.tryParse(stackTag.getStringOr("id", ""));
         if (itemId == null) {
             return ItemStack.EMPTY;
         }
@@ -562,7 +562,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
         ListTag projectileTags = getProjectilesNBT(itemStack);
 
         for (int i = 0; i < projectileTags.size(); ++i) {
-            CompoundTag stackNbt = projectileTags.getCompound(i);
+            CompoundTag stackNbt = projectileTags.getCompoundOrEmpty(i);
             ItemStack projectile = ItemStackTagHelper.parseStack(registryAccess, stackNbt);
             if (!projectile.isEmpty()) {
                 result.add(projectile);
@@ -578,7 +578,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
         List<ItemStack> result = new ArrayList<>(size);
 
         for (int i = 0; i < size; ++i) {
-            CompoundTag stackNbt = nbtList.getCompound(0);
+            CompoundTag stackNbt = nbtList.getCompoundOrEmpty(0);
             nbtList.remove(0);
             ItemStack projectile = ItemStackTagHelper.parseStack(registryAccess, stackNbt);
             if (!projectile.isEmpty()) {

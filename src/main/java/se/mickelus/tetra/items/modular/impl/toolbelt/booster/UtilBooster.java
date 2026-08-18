@@ -66,17 +66,17 @@ public class UtilBooster {
 
     public static boolean hasFuel(CompoundTag tag, boolean charged) {
         if (charged) {
-            return tag.getInt(fuelKey) >= fuelCostCharged;
+            return tag.getIntOr(fuelKey, 0) >= fuelCostCharged;
         }
-        return tag.getInt(fuelKey) >= fuelCost;
+        return tag.getIntOr(fuelKey, 0) >= fuelCost;
     }
 
     public static int getFuel(CompoundTag tag) {
-        return tag.getInt(fuelKey);
+        return tag.getIntOr(fuelKey, 0);
     }
 
     public static float getFuelPercent(CompoundTag tag) {
-        return tag.getInt(fuelKey) * 1F / fuelCapacity;
+        return tag.getIntOr(fuelKey, 0) * 1F / fuelCapacity;
     }
 
     public static void boostPlayer(Player player, CompoundTag tag, int level) {
@@ -189,22 +189,22 @@ public class UtilBooster {
 
     public static void consumeFuel(CompoundTag tag, boolean charged) {
         if (charged) {
-            tag.putInt(fuelKey, tag.getInt(fuelKey) - fuelCostCharged);
+            tag.putInt(fuelKey, tag.getIntOr(fuelKey, 0) - fuelCostCharged);
         } else {
-            tag.putInt(fuelKey, tag.getInt(fuelKey) - fuelCost);
+            tag.putInt(fuelKey, tag.getIntOr(fuelKey, 0) - fuelCost);
         }
         tag.putInt(cooldownKey, cooldownTicks);
     }
 
     public static void consumeFuel(CompoundTag tag, int amount) {
-        tag.putInt(fuelKey, tag.getInt(fuelKey) - amount);
+        tag.putInt(fuelKey, tag.getIntOr(fuelKey, 0) - amount);
         tag.putInt(cooldownKey, cooldownTicks);
     }
 
     public static void rechargeFuel(CompoundTag tag, ItemStack itemStack, HolderLookup.Provider registryAccess) {
-        int fuel = tag.getInt(fuelKey);
-        int buffer = tag.getInt(bufferKey);
-        int cooldown = tag.getInt(cooldownKey);
+        int fuel = tag.getIntOr(fuelKey, 0);
+        int buffer = tag.getIntOr(bufferKey, 0);
+        int cooldown = tag.getIntOr(cooldownKey, 0);
         if (cooldown > 0) {
             tag.putInt(cooldownKey, cooldown - 1);
         } else if (fuel + fuelRecharge < fuelCapacity) {
@@ -238,7 +238,7 @@ public class UtilBooster {
     }
 
     public static boolean isActive(CompoundTag tag) {
-        return tag.getBoolean(activeKey);
+        return tag.getBooleanOr(activeKey, false);
     }
 
     public static void setActive(CompoundTag tag, boolean active, boolean charged) {

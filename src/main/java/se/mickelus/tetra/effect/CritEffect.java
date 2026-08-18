@@ -57,9 +57,9 @@ public class CritEffect {
                             pos.getY() + 0.5, // world.rand.nextGaussian(),
                             pos.getZ() + 0.5, // world.rand.nextGaussian(),
                             12,
-                            (world.random.nextDouble() * 2.0D - 1.0D) * 0.3D,
-                            0.3D + world.random.nextDouble() * 0.3D,
-                            (world.random.nextDouble() * 2.0D - 1.0D) * 0.3D,
+                            (world.getRandom().nextDouble() * 2.0D - 1.0D) * 0.3D,
+                            0.3D + world.getRandom().nextDouble() * 0.3D,
+                            (world.getRandom().nextDouble() * 2.0D - 1.0D) * 0.3D,
                             0.3);
                 }
 

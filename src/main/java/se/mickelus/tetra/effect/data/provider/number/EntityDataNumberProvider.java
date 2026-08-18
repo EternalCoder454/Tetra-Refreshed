@@ -13,8 +13,8 @@ public class EntityDataNumberProvider implements NumberProvider {
     @Override
     public float getValue(ItemEffectContext context) {
         CompoundTag data = entity.getEntity(context).getPersistentData();
-        if (data.contains(key, Tag.TAG_ANY_NUMERIC)) {
-            return data.getFloat(key);
+        if (data.contains(key)) {
+            return data.getFloatOr(key, 0.0F);
         }
         return defaultValue;
     }

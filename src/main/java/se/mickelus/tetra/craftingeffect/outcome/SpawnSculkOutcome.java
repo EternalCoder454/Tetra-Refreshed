@@ -32,7 +32,7 @@ public class SpawnSculkOutcome implements CraftingEffectOutcome {
     public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos origin, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float craftingSeverity) {
-        if (consumeResources && !world.isClientSide() && world.random.nextDouble() < chance) {
+        if (consumeResources && !world.isClientSide() && world.getRandom().nextDouble() < chance) {
             if (catalystSource) {
                 Optional<BlockPos> catalystOrigin = BlockPos.betweenClosedStream(new AABB(-2, 0, -2, 2, 5, 2))
                         .map(origin::offset)

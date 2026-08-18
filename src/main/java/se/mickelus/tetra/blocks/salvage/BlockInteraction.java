@@ -122,7 +122,7 @@ public class BlockInteraction {
                     return InteractionResult.PASS;
                 }
             } else {
-                if (player.getCooldowns().isOnCooldown(heldStack.getItem())) {
+                if (player.getCooldowns().isOnCooldown(heldStack)) {
                     return InteractionResult.FAIL;
                 }
             }
@@ -153,7 +153,7 @@ public class BlockInteraction {
                 int cooldown = CastOptional.cast(heldStack.getItem(), ItemModularHandheld.class)
                         .map(item -> (int) (20 * item.getCooldownBase(heldStack)))
                         .orElse(10);
-                player.getCooldowns().addCooldown(heldStack.getItem(), cooldown);
+                player.getCooldowns().addCooldown(heldStack, cooldown);
             }
 
             if (player.level().isClientSide()) {

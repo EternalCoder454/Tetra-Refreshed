@@ -259,8 +259,8 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
 
-        if (compound.contains("cell", Tag.TAG_COMPOUND)) {
-            ItemStack loadedCell = ItemStack.parseOptional(registries, compound.getCompound("cell"));
+        if (compound.contains("cell")) {
+            ItemStack loadedCell = ItemStack.parseOptional(registries, compound.getCompoundOrEmpty("cell"));
             cell = loadedCell.isEmpty() ? ItemStack.EMPTY : loadedCell;
         } else {
             cell = ItemStack.EMPTY;

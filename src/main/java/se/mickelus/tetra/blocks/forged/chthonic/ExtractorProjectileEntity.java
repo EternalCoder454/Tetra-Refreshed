@@ -329,8 +329,8 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
 
-        damage = compound.getInt(damageKey);
-        heat = compound.getInt(heatKey);
+        damage = compound.getIntOr(damageKey, 0);
+        heat = compound.getIntOr(heatKey, 0);
     }
 
     @Override

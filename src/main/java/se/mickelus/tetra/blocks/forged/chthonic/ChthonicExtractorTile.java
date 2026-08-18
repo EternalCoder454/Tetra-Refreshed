@@ -47,7 +47,7 @@ public class ChthonicExtractorTile extends BlockEntity {
         super.loadAdditional(compound, registries);
 
         if (compound.contains(damageKey)) {
-            damage = compound.getInt(damageKey);
+            damage = compound.getIntOr(damageKey, 0);
         }
     }
 

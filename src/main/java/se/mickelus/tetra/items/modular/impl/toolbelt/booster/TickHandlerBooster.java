@@ -25,7 +25,7 @@ public class TickHandlerBooster {
 
     public void tickItem(Player player, ItemStack stack, int level) {
         ItemStackTagHelper.mutate(stack, tag -> {
-            boolean charged = tag.getBoolean(UtilBooster.chargedKey);
+            boolean charged = tag.getBooleanOr(UtilBooster.chargedKey, false);
             if (!player.isInWater() && player.getVehicle() == null && UtilBooster.isActive(tag) && UtilBooster.hasFuel(tag, charged)) {
                 if (charged) {
                     UtilBooster.boostPlayerCharged(player, tag, level);

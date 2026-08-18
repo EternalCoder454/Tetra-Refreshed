@@ -92,7 +92,7 @@ public class ReapEffect extends ChargedAbilityEffect {
                 cooldown = (int) (cooldown * (1 - exhilarationEfficiency / 100d));
             }
 
-            attacker.getCooldowns().addCooldown(item, cooldown);
+            attacker.getCooldowns().addCooldown(itemStack, cooldown);
 
             int echoLevel = item.getEffectLevel(itemStack, ItemEffect.abilityEcho);
             if (echoLevel > 0) {

@@ -46,7 +46,7 @@ public class PunctureEffect extends ChargedAbilityEffect {
 
             // trigger no cooldown with the exhilaration mod if puncture brought the target's armor below 6
             if (!(item.getEffectLevel(itemStack, ItemEffect.abilityExhilaration) > 0 && armorBefore >= 6 && target.getArmorValue() < 6)) {
-                attacker.getCooldowns().addCooldown(item, getCooldown(item, itemStack) + target.getArmorValue() * 10);
+                attacker.getCooldowns().addCooldown(itemStack, getCooldown(item, itemStack) + target.getArmorValue() * 10);
             }
 
             item.tickProgression(attacker, itemStack, result == AbilityUseResult.fail ? 1 : 2);

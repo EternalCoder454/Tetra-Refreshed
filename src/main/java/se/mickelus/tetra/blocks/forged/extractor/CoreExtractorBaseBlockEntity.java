@@ -194,7 +194,7 @@ public class CoreExtractorBaseBlockEntity extends BlockEntity implements IHeatTr
         super.loadAdditional(compound, registries);
 
         if (compound.contains(chargeKey)) {
-            currentCharge = compound.getInt(chargeKey);
+            currentCharge = compound.getIntOr(chargeKey, 0);
         } else {
             currentCharge = 0;
         }

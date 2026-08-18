@@ -88,7 +88,7 @@ public class ScrollData {
     }
 
     public static ScrollData[] read(CompoundTag tag) {
-        return tag.getList("data", Tag.TAG_COMPOUND).stream()
+        return tag.getListOrEmpty("data").stream()
                 .map(nbt -> ScrollData.CODEC.decode(NbtOps.INSTANCE, nbt))
                 .map(DataResult::result)
                 .filter(Optional::isPresent)

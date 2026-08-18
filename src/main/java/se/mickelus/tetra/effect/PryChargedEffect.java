@@ -49,7 +49,7 @@ public class PryChargedEffect extends ChargedAbilityEffect {
 
         attacker.causeFoodExhaustion(1f);
         attacker.swing(hand, false);
-        attacker.getCooldowns().addCooldown(item, getCooldown(item, itemStack));
+        attacker.getCooldowns().addCooldown(itemStack, getCooldown(item, itemStack));
 
         if (ComboPoints.canSpend(item, itemStack)) {
             ComboPoints.reset(attacker);

@@ -76,7 +76,7 @@ public class LightningStrikeOutcome implements CraftingEffectOutcome {
         List<LivingEntity> entities = serverLevel.getEntitiesOfClass(LivingEntity.class, area,
                 entity -> entity.isAlive() && serverLevel.canSeeSky(entity.blockPosition()));
         if (!entities.isEmpty()) {
-            return entities.get(serverLevel.random.nextInt(entities.size())).blockPosition();
+            return entities.get(serverLevel.getRandom().nextInt(entities.size())).blockPosition();
         }
         return targetPos.getY() == serverLevel.getMinBuildHeight() - 1 ? targetPos.above(2) : targetPos;
     }

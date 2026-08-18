@@ -103,12 +103,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
-        return switch (useInternal(blockState, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
-            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
-            case FAIL -> InteractionResult.FAIL;
-            default -> InteractionResult.PASS;
-        };
+        return useInternal(blockState, world, pos, player, hand, hit);
     }
 
     @Override

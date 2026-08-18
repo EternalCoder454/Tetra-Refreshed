@@ -48,7 +48,7 @@ public class PryEffect {
 
             boolean overextended = item.getEffectLevel(itemStack, ItemEffect.abilityOverextend) > 0;
             attacker.causeFoodExhaustion(overextended ? 6f : 0.5f);
-            attacker.getCooldowns().addCooldown(item, getCooldown(item, itemStack));
+            attacker.getCooldowns().addCooldown(itemStack, getCooldown(item, itemStack));
 
             int echoLevel = item.getEffectLevel(itemStack, ItemEffect.abilityEcho);
             if (echoLevel > 0) {

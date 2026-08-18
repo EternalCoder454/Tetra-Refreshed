@@ -109,7 +109,7 @@ public class OverpowerEffect extends ChargedAbilityEffect {
             RevengeTracker.removeEnemy(attacker, target);
         }
 
-        attacker.getCooldowns().addCooldown(item, cooldown);
+        attacker.getCooldowns().addCooldown(itemStack, cooldown);
     }
 
     @Override

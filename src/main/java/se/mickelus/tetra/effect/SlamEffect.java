@@ -99,7 +99,7 @@ public class SlamEffect extends ChargedAbilityEffect {
         double overextendLevel = item.getEffectLevel(itemStack, ItemEffect.abilityOverextend);
         attacker.causeFoodExhaustion(overextendLevel > 0 ? 6 : 1);
         attacker.swing(hand, false);
-        attacker.getCooldowns().addCooldown(item, Math.round(getCooldown(item, itemStack) * 1.5f));
+        attacker.getCooldowns().addCooldown(itemStack, Math.round(getCooldown(item, itemStack) * 1.5f));
 
         int revengeLevel = item.getEffectLevel(itemStack, ItemEffect.abilityRevenge);
         if (revengeLevel > 0) {
@@ -238,7 +238,7 @@ public class SlamEffect extends ChargedAbilityEffect {
         }
 
         attacker.swing(hand, false);
-        attacker.getCooldowns().addCooldown(item, getCooldown(item, itemStack));
+        attacker.getCooldowns().addCooldown(itemStack, getCooldown(item, itemStack));
 
         item.tickProgression(attacker, itemStack, 2);
         item.applyDamage(2, itemStack, attacker);

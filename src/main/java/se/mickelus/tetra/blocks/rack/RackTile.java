@@ -79,7 +79,7 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
 
-        handler.deserializeNBT(registries, compound.getCompound(inventoryKey));
+        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
     }
 
     @Override

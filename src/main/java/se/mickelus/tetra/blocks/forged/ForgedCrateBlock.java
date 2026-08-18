@@ -153,12 +153,7 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
-        return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
-            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
-            case FAIL -> InteractionResult.FAIL;
-            default -> InteractionResult.PASS;
-        };
+        return useInternal(state, world, pos, player, hand, hit);
     }
 
     @Override

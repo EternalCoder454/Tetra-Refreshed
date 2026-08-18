@@ -65,7 +65,7 @@ public class HammerHeadBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
-        this.jammed = compound.contains(jamKey) && compound.getBoolean(jamKey);
+        this.jammed = compound.contains(jamKey) && compound.getBooleanOr(jamKey, false);
     }
 
     @Override

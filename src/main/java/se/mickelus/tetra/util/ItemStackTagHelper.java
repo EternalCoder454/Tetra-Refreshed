@@ -95,7 +95,7 @@ public final class ItemStackTagHelper {
     @Nullable
     public static CompoundTag getTagElement(ItemStack stack, String key) {
         CompoundTag tag = getTag(stack);
-        return tag != null && tag.contains(key, Tag.TAG_COMPOUND) ? tag.getCompound(key) : null;
+        return tag != null && tag.contains(key) ? tag.getCompoundOrEmpty(key) : null;
     }
 
     public static void removeTagKey(ItemStack stack, String key) {
@@ -110,7 +110,7 @@ public final class ItemStackTagHelper {
     }
 
     public static boolean isSerializedStack(CompoundTag tag) {
-        return tag != null && tag.contains("id", Tag.TAG_STRING);
+        return tag != null && tag.contains("id");
     }
 
     public static ItemStack parseStack(HolderLookup.Provider registryAccess, CompoundTag tag) {

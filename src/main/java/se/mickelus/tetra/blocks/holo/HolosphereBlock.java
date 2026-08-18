@@ -150,12 +150,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit) {
-        return switch (useInternal(blockState, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
-            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
-            case FAIL -> InteractionResult.FAIL;
-            default -> InteractionResult.PASS;
-        };
+        return useInternal(blockState, world, pos, player, hand, hit);
     }
 
     @Override
@@ -167,7 +162,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         BlockState result = super.playerWillDestroy(world, pos, state, player);
 
-        if (!world.isClientSide() && !player.isCreative() && world.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+        if (!world.isClientSide() && !player.isCreative() && world.getGameRules().getBooleanOr(GameRules.RULE_DOBLOCKDROPS, false)) {
             world.getBlockEntity(pos, HolosphereBlockEntity.type.get())
                     .ifPresent(blockEntity -> {
                         ItemStack itemStack = blockEntity.getItemStack();

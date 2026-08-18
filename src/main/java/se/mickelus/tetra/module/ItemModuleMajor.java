@@ -91,7 +91,7 @@ public abstract class ItemModuleMajor extends ItemModule {
     public int getSettleProgress(ItemStack itemStack) {
         return Optional.ofNullable(getTag(itemStack))
                 .filter(tag -> tag.contains(settleProgressKey))
-                .map(tag -> tag.getInt(settleProgressKey))
+                .map(tag -> tag.getIntOr(settleProgressKey, 0))
                 .orElseGet(() -> getSettleLimit(itemStack));
     }
 
@@ -136,7 +136,7 @@ public abstract class ItemModuleMajor extends ItemModule {
     public int getImprovementLevel(ItemStack itemStack, String improvementKey) {
         return Optional.ofNullable(getTag(itemStack))
                 .filter(tag -> tag.contains(slotTagKey + ":" + improvementKey))
-                .map(tag -> tag.getInt(slotTagKey + ":" + improvementKey))
+                .map(tag -> tag.getIntOr(slotTagKey + ":" + improvementKey, 0))
                 .orElse(-1);
     }
 
@@ -146,7 +146,7 @@ public abstract class ItemModuleMajor extends ItemModule {
             return Arrays.stream(improvements)
                     .filter(improvement -> improvementKey.equals(improvement.key))
                     .filter(improvement -> tag.contains(slotTagKey + ":" + improvement.key))
-                    .filter(improvement -> improvement.level == tag.getInt(slotTagKey + ":" + improvement.key))
+                    .filter(improvement -> improvement.level == tag.getIntOr(slotTagKey + ":" + improvement.key, 0))
                     .findAny()
                     .orElse(null);
         }
@@ -159,7 +159,7 @@ public abstract class ItemModuleMajor extends ItemModule {
             CompoundTag tag = getTag(itemStack);
             return Arrays.stream(improvements)
                     .filter(improvement -> tag.contains(slotTagKey + ":" + improvement.key))
-                    .filter(improvement -> improvement.level == tag.getInt(slotTagKey + ":" + improvement.key))
+                    .filter(improvement -> improvement.level == tag.getIntOr(slotTagKey + ":" + improvement.key, 0))
                     .toArray(ImprovementData[]::new);
         }
 
@@ -252,7 +252,7 @@ public abstract class ItemModuleMajor extends ItemModule {
         if (mappings != null) {
             return itemStack.getTagEnchantments().entrySet().stream()
                     .map(entry -> Pair.of(entry.getKey().unwrapKey().orElseThrow().location().toString(), entry.getIntValue()))
-                    .filter(entry -> getSlot().equals(mappings.getString(entry.getLeft())))
+                    .filter(entry -> getSlot().equals(mappings.getStringOr(entry.getLeft(), "")))
                     .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
         }
 
@@ -276,7 +276,7 @@ public abstract class ItemModuleMajor extends ItemModule {
             return itemStack.getTagEnchantments().entrySet().stream()
                     .filter(entry -> TetraEnchantmentHelper.getEnchantmentKey(entry.getKey())
                             .map(Object::toString)
-                            .map(key -> getSlot().equals(mappings.getString(key)))
+                            .map(key -> getSlot().equals(mappings.getStringOr(key, "")))
                             .orElse(false))
                     .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getIntValue(), Integer::max, LinkedHashMap::new));
         }
@@ -308,7 +308,7 @@ public abstract class ItemModuleMajor extends ItemModule {
     @Override
     public TweakData[] getTweaks(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            String variant = getTag(itemStack).getString(this.variantTagKey);
+            String variant = getTag(itemStack).getStringOr(this.variantTagKey, "");
             String[] improvementKeys = Arrays.stream(getImprovements(itemStack))
                     .map(improvement -> improvement.key)
                     .toArray(String[]::new);

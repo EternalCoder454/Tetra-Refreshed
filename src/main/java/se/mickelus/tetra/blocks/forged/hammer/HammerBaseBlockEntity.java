@@ -349,11 +349,11 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
         slots = new ItemStack[2];
         if (compound.contains(slotsKey)) {
-            ListTag tagList = compound.getList(slotsKey, 10);
+            ListTag tagList = compound.getListOrEmpty(slotsKey);
 
             for (int i = 0; i < tagList.size(); i++) {
-                CompoundTag itemCompound = tagList.getCompound(i);
-                int slot = itemCompound.getByte(indexKey) & 255;
+                CompoundTag itemCompound = tagList.getCompoundOrEmpty(i);
+                int slot = itemCompound.getByteOr(indexKey, (byte) 0) & 255;
 
                 if (slot < this.slots.length) {
                     ItemStack stack = ItemStack.parseOptional(registries, itemCompound);
@@ -364,7 +364,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
         moduleA = null;
         if (compound.contains(moduleAKey)) {
-            byte data = compound.getByte(moduleAKey);
+            byte data = compound.getByteOr(moduleAKey, (byte) 0);
             if (data < HammerEffect.values().length) {
                 moduleA = HammerEffect.values()[data];
             }
@@ -372,13 +372,13 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
         moduleB = null;
         if (compound.contains(moduleBKey)) {
-            byte data = compound.getByte(moduleBKey);
+            byte data = compound.getByteOr(moduleBKey, (byte) 0);
             if (data < HammerEffect.values().length) {
                 moduleB = HammerEffect.values()[data];
             }
         }
 
-        redstonePower = compound.getInt(redstoneKey);
+        redstonePower = compound.getIntOr(redstoneKey, 0);
     }
 
     private void sync() {

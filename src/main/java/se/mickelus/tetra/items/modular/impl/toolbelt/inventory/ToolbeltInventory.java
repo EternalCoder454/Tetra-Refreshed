@@ -58,11 +58,11 @@ public class ToolbeltInventory implements Container {
 
 
     public void readFromNBT(CompoundTag compound) {
-        ListTag items = compound.getList(inventoryKey, net.minecraft.nbt.Tag.TAG_COMPOUND);
+        ListTag items = compound.getListOrEmpty(inventoryKey);
 
         for (int i = 0; i < items.size(); i++) {
-            CompoundTag itemTag = items.getCompound(i);
-            int slot = itemTag.getByte(slotKey) & 255;
+            CompoundTag itemTag = items.getCompoundOrEmpty(i);
+            int slot = itemTag.getByteOr(slotKey, (byte) 0) & 255;
 
             if (0 <= slot && slot < maxSize) {
                 ItemStack stack = ItemStackTagHelper.parseStack(registryAccess, itemTag);

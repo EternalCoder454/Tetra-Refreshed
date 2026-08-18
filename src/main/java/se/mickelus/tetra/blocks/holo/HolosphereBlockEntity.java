@@ -110,25 +110,25 @@ public class HolosphereBlockEntity extends BlockEntity {
         AtomicInteger stagger = new AtomicInteger();
 
         ChunkPos.rangeClosed(new ChunkPos(-32, -32), new ChunkPos(32, 32))
-                .filter(pos -> Math.abs(Mth.atan2(pos.x, pos.z) - angle) < cone)
-                .sorted(Comparator.comparingInt(pos -> pos.x * pos.x + pos.z * pos.z))
-                .map(pos -> new ChunkPos(pos.x + ox, pos.z + oz))
-                .filter(pos -> Math.abs(pos.x - ox) + Math.abs(pos.z - oz) < 20)
-                .filter(pos -> scanResults.stream().noneMatch(result -> result.chunkX == pos.x && result.chunkZ == pos.z))
+                .filter(pos -> Math.abs(Mth.atan2(pos.x(), pos.z()) - angle) < cone)
+                .sorted(Comparator.comparingInt(pos -> pos.x() * pos.x() + pos.z() * pos.z()))
+                .map(pos -> new ChunkPos(pos.x() + ox, pos.z() + oz))
+                .filter(pos -> Math.abs(pos.x() - ox) + Math.abs(pos.z() - oz) < 20)
+                .filter(pos -> scanResults.stream().noneMatch(result -> result.chunkX == pos.x() && result.chunkZ == pos.z()))
                 .limit(count)
                 .forEach(pos -> {
 //                    boolean wasLoaded = serverLevel.hasChunk(pos.x, pos.z);
 //                    System.out.println("has chunk [" + pos.x + ", " + pos.z + "]: " + wasLoaded);
 //                    serverLevel.getChunkSource().getGenerator().findNearestMapStructure()
-                    long timestamp = this.getTimestamp(serverLevel.getGameTime(), pos.x - ox, pos.z - oz) + stagger.getAndIncrement() * 3L;
-                    int height = serverLevel.getChunk(pos.x, pos.z, ChunkStatus.SURFACE).getHeight(Heightmap.Types.WORLD_SURFACE_WG, pos.x, pos.z);
+                    long timestamp = this.getTimestamp(serverLevel.getGameTime(), pos.x() - ox, pos.z() - oz) + stagger.getAndIncrement() * 3L;
+                    int height = serverLevel.getChunk(pos.x(), pos.z(), ChunkStatus.SURFACE).getHeight(Heightmap.Types.WORLD_SURFACE_WG, pos.x(), pos.z());
 
                     BlockPos centerPos = pos.getMiddleBlockPosition(height);
                     float temperature = level.getBiome(centerPos).value().getBaseTemperature();
                     List<String> structures =
                             Arrays.stream(getScannableStructures())
                                     .filter(id -> ScanHelper.hasStructure(id, serverLevel, pos)).toList();
-                    scanResults.add(new ScanResult(pos.x, pos.z, height, temperature, structures, timestamp));
+                    scanResults.add(new ScanResult(pos.x(), pos.z(), height, temperature, structures, timestamp));
 
 
 //                    if (!wasLoaded) {
@@ -197,11 +197,11 @@ public class HolosphereBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.loadAdditional(compound, registries);
 
-        setItemTag(compound.contains("item", Tag.TAG_COMPOUND) ? compound.getCompound("item") : new CompoundTag());
+        setItemTag(compound.contains("item") ? compound.getCompoundOrEmpty("item") : new CompoundTag());
 
-        scanModeTimestamp = compound.getLong("timestamp");
+        scanModeTimestamp = compound.getLongOr("timestamp", 0L);
 
-        scanResults = compound.getList("scan", Tag.TAG_COMPOUND).stream()
+        scanResults = compound.getListOrEmpty("scan").stream()
                 .map(nbt -> ScanResult.codec.decode(NbtOps.INSTANCE, nbt))
                 .map(DataResult::result)
                 .filter(Optional::isPresent)
