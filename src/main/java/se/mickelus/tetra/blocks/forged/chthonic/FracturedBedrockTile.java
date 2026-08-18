@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -276,14 +277,14 @@ public class FracturedBedrockTile extends BlockEntity {
         Vec3 spawnPos = Vec3.atBottomCenterOf(pos);
 
         ServerLevel serverWorld = (ServerLevel) level;
-        if (mob.type.canSummon()
+        if (mob.type().canSummon()
 //                && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(mob.type), world, pos, mob.type)
-                && serverWorld.noCollision(mob.type.getSpawnAABB(spawnPos.x, spawnPos.y, spawnPos.z))
-                && SpawnPlacements.checkSpawnRules(mob.type, serverWorld, EntitySpawnReason.SPAWNER, pos, serverWorld.getRandom())) {
+                && serverWorld.noCollision(mob.type().getSpawnAABB(spawnPos.x, spawnPos.y, spawnPos.z))
+                && SpawnPlacements.checkSpawnRules(mob.type(), serverWorld, EntitySpawnReason.SPAWNER, pos, serverWorld.getRandom())) {
 
             Entity entity;
             try {
-                entity = mob.type.create(serverWorld.getLevel());
+                entity = mob.type().create(serverWorld.getLevel(), EntitySpawnReason.SPAWNER);
             } catch (Exception exception) {
                 logger.warn("Failed to create mob", exception);
                 return;

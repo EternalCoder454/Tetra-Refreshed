@@ -239,11 +239,6 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         Direction facing = state.getValue(facingProp);
 

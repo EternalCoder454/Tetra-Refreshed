@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.workbench.gui;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -153,34 +154,34 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (isNonTargetSlotUnderMouse()) {
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, doubleClick);
         }
 
-        defaultGui.updateFocusState(this.leftPos, this.topPos, (int) mouseX, (int) mouseY);
-        guiHandledMouseDown = defaultGui.onMouseClick((int) mouseX, (int) mouseY, button);
+        defaultGui.updateFocusState(this.leftPos, this.topPos, (int) event.x(), (int) event.y());
+        guiHandledMouseDown = defaultGui.onMouseClick((int) event.x(), (int) event.y(), event.button());
         if (guiHandledMouseDown) {
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (guiHandledMouseDown) {
-            defaultGui.onMouseRelease((int) mouseX, (int) mouseY, button);
+            defaultGui.onMouseRelease((int) event.x(), (int) event.y(), event.button());
             guiHandledMouseDown = false;
             return true;
         }
 
         if (isNonTargetSlotUnderMouse()) {
-            return super.mouseReleased(mouseX, mouseY, button);
+            return super.mouseReleased(event);
         }
 
-        defaultGui.onMouseRelease((int) mouseX, (int) mouseY, button);
-        return super.mouseReleased(mouseX, mouseY, button);
+        defaultGui.onMouseRelease((int) event.x(), (int) event.y(), event.button());
+        return super.mouseReleased(event);
     }
 
     @Override

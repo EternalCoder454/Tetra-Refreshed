@@ -334,7 +334,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
             }
             damage *= critModifier;
 
-            if (target.hurt(damagesource, (float) damage)) {
+            if (level() instanceof ServerLevel hurtLevel && target.hurtServer(hurtLevel, damagesource, (float) damage)) {
                 if (shooter instanceof LivingEntity livingShooter) {
                     if (level() instanceof ServerLevel serverLevel) {
                         EnchantmentHelper.doPostAttackEffectsWithItemSource(serverLevel, targetLivingEntity, damagesource, thrownStack);

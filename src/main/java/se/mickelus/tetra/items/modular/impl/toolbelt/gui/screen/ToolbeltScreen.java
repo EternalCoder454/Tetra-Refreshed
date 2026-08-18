@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.gui.screen;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -126,8 +127,8 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        return super.mouseClicked(event, doubleClick);
 
         // todo: clear shadow slot if rightclick and "normal" slot is empty
     }

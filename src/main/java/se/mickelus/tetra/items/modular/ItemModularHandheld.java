@@ -451,7 +451,7 @@ public class ItemModularHandheld extends ModularItem {
         float targetModifier = EffectHelper.getEnchantmentDamageBonus(itemStack, player, target, damageSource, baseDamage);
         float damage = baseDamage + targetModifier;
 
-        boolean success = target.hurt(damageSource, damage);
+        boolean success = player.level() instanceof ServerLevel serverLevel && target.hurtServer(serverLevel, damageSource, damage);
         if (success) {
             EffectHelper.applyEnchantmentHitEffects(itemStack, target, player);
 

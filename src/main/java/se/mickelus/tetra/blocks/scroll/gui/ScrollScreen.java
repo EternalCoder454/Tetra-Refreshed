@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.scroll.gui;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -76,10 +77,10 @@ public class ScrollScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        gui.onMouseClick((int) x, (int) y, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        gui.onMouseClick((int) event.x(), (int) event.y(), event.button());
 
-        return super.mouseClicked(x, y, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

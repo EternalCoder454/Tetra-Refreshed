@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
@@ -68,25 +69,25 @@ public class ForgedContainerScreen extends AbstractContainerScreen<ForgedContain
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        guiRoot.updateFocusState(this.leftPos, this.topPos, (int) mouseX, (int) mouseY);
-        guiHandledMouseDown = guiRoot.onMouseClick((int) mouseX, (int) mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        guiRoot.updateFocusState(this.leftPos, this.topPos, (int) event.x(), (int) event.y());
+        guiHandledMouseDown = guiRoot.onMouseClick((int) event.x(), (int) event.y(), event.button());
         if (guiHandledMouseDown) {
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        guiRoot.onMouseRelease((int) mouseX, (int) mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        guiRoot.onMouseRelease((int) event.x(), (int) event.y(), event.button());
         if (guiHandledMouseDown) {
             guiHandledMouseDown = false;
             return true;
         }
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

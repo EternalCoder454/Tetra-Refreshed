@@ -97,7 +97,7 @@ public class ConfigActionImpl extends ConfigAction {
             world.playSound(null, pos, SoundEvents.STONE_BREAK, player.getSoundSource(),
                     1.0F, 1.5f + (float) Math.random() * 0.5f);
 
-            world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, targetStack),
+            world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, targetStack.getItem()),
                     pos.getX() + 0.5d, pos.getY() + 1.1d, pos.getZ() + 0.5d,
                     4, 0, 0, 0,
                     0.1f);
@@ -121,7 +121,7 @@ public class ConfigActionImpl extends ConfigAction {
             world.playSound(null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS,
                     1.0F, 1.5f + (float) Math.random() * 0.5f);
 
-            world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, targetStack),
+            world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, targetStack.getItem()),
                     pos.getX() + 0.5d, pos.getY() + 1.1d, pos.getZ() + 0.5d,
                     4, 0, 0, 0,
                     0.1f);

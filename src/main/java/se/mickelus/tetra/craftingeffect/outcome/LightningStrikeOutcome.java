@@ -1,5 +1,6 @@
 package se.mickelus.tetra.craftingeffect.outcome;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.Identifier;
@@ -64,7 +65,7 @@ public class LightningStrikeOutcome implements CraftingEffectOutcome {
     }
 
     private static void spawnLightningBolt(ServerLevel serverLevel, BlockPos pos, ServerPlayer causingPlayer) {
-        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(serverLevel);
+        LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
         lightning.snapTo(Vec3.atBottomCenterOf(pos));
         lightning.setCause(causingPlayer);
         serverLevel.addFreshEntity(lightning);

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +23,7 @@ public class JankEffect {
         List<ItemEntity> items = level.getEntities(EntityType.ITEM, new AABB(target).inflate(effectLevel * 0.5), Entity::isAlive);
 
         if (!items.isEmpty() && level.getRandom().nextFloat() < efficiency && level.getGameRules().getBooleanOr(GameRules.RULE_DOMOBSPAWNING, false)) {
-            Endermite endermite = EntityType.ENDERMITE.create(level);
+            Endermite endermite = EntityType.ENDERMITE.create(level, EntitySpawnReason.TRIGGERED);
             endermite.moveTo(target, 0, entity.getXRot() + 180);
             level.addFreshEntity(endermite);
         }

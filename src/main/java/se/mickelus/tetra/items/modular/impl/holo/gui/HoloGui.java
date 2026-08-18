@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.holo.gui;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -144,12 +145,12 @@ public class HoloGui extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        if (defaultGui.onMouseClick((int) x, (int) y, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (defaultGui.onMouseClick((int) event.x(), (int) event.y(), event.button())) {
             return true;
         }
 
-        return super.mouseClicked(x, y, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

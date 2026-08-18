@@ -132,11 +132,6 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
         builder.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
-
     public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParams) {
         BlockEntity blockentity = lootParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (blockentity instanceof ScrollTile tile) {
