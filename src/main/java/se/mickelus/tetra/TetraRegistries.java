@@ -354,36 +354,34 @@ public class TetraRegistries {
         // BLOCK ENTITIES
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         WorkbenchTile.type = register(blockEntities, WorkbenchTile.identifier,
-                () -> BlockEntityType.Builder.of(WorkbenchTile::new, basicWorkbench.get(), forgedWorkbench.get()).build(null));
+                () -> new BlockEntityType<>(WorkbenchTile::new, basicWorkbench.get(), forgedWorkbench.get()));
         ChthonicExtractorTile.type = register(blockEntities, ChthonicExtractorBlock.identifier,
-                () -> BlockEntityType.Builder.of(ChthonicExtractorTile::new, chthonicExtractor.get()).build(null));
+                () -> new BlockEntityType<>(ChthonicExtractorTile::new, chthonicExtractor.get()));
         register(blockEntities, FracturedBedrockBlock.identifier,
-                () -> BlockEntityType.Builder.of(FracturedBedrockTile::new, fracturedBedrock.get()).build(null),
+                () -> new BlockEntityType<>(FracturedBedrockTile::new, fracturedBedrock.get()),
                 value -> FracturedBedrockTile.type = value);
         register(blockEntities, RackBlock.identifier,
-                () -> BlockEntityType.Builder.of(RackTile::new, rack.get()).build(null),
+                () -> new BlockEntityType<>(RackTile::new, rack.get()),
                 value -> RackTile.type = value);
         register(blockEntities, ScrollTile.identifier,
-                () -> BlockEntityType.Builder.of(ScrollTile::new, openScroll.get(), wallScroll.get(), rolledScroll.get()).build(null),
+                () -> new BlockEntityType<>(ScrollTile::new, openScroll.get(), wallScroll.get(), rolledScroll.get()),
                 value -> ScrollTile.type = value);
 
         HammerBaseBlockEntity.type = register(blockEntities, HammerBaseBlock.identifier,
-                () -> BlockEntityType.Builder.of(HammerBaseBlockEntity::new, HammerBaseBlock.instance).build(null));
+                () -> new BlockEntityType<>(HammerBaseBlockEntity::new, HammerBaseBlock.instance));
         HammerHeadBlockEntity.type = register(blockEntities, HammerHeadBlock.identifier,
-                () -> BlockEntityType.Builder.of(HammerHeadBlockEntity::new, HammerHeadBlock.instance).build(null));
+                () -> new BlockEntityType<>(HammerHeadBlockEntity::new, HammerHeadBlock.instance));
         TransferUnitBlockEntity.type = register(blockEntities, TransferUnitBlock.identifier,
-                () -> BlockEntityType.Builder.of(TransferUnitBlockEntity::new, transferUnit.get()).build(null));
+                () -> new BlockEntityType<>(TransferUnitBlockEntity::new, transferUnit.get()));
         register(blockEntities, CoreExtractorBaseBlock.identifier,
-                () -> BlockEntityType.Builder.of(CoreExtractorBaseBlockEntity::new, CoreExtractorBaseBlock.instance.get()).build(null),
+                () -> new BlockEntityType<>(CoreExtractorBaseBlockEntity::new, CoreExtractorBaseBlock.instance.get()),
                 value -> CoreExtractorBaseBlockEntity.type = value);
         CoreExtractorPistonBlockEntity.type = register(blockEntities, CoreExtractorPistonBlock.identifier,
-                () -> BlockEntityType.Builder.of(CoreExtractorPistonBlockEntity::new, CoreExtractorPistonBlock.instance.get()).build(null));
+                () -> new BlockEntityType<>(CoreExtractorPistonBlockEntity::new, CoreExtractorPistonBlock.instance.get()));
         ForgedContainerBlockEntity.type = register(blockEntities, ForgedContainerBlock.identifier,
-                () -> BlockEntityType.Builder.of(ForgedContainerBlockEntity::new, ForgedContainerBlock.instance.get())
-                        .build(null));
+                () -> new BlockEntityType<>(ForgedContainerBlockEntity::new, ForgedContainerBlock.instance.get()));
         HolosphereBlockEntity.type = register(blockEntities, HolosphereBlock.identifier,
-                () -> BlockEntityType.Builder.of(HolosphereBlockEntity::new, HolosphereBlock.instance.get())
-                        .build(null));
+                () -> new BlockEntityType<>(HolosphereBlockEntity::new, HolosphereBlock.instance.get()));
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // ENTITIES

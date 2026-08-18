@@ -59,10 +59,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     private boolean isDirty = false;
 
     public WorkbenchScreen(WorkbenchContainer container, Inventory playerInventory, Component title) {
-        super(container, playerInventory, title);
-
-        this.imageWidth = 320;
-        this.imageHeight = 240;
+        super(container, playerInventory, title, 320, 240);
 
         this.tileEntity = container.getTileEntity();
         this.container = container;

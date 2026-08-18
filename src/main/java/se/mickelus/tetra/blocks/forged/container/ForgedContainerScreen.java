@@ -37,10 +37,7 @@ public class ForgedContainerScreen extends AbstractContainerScreen<ForgedContain
     private boolean guiHandledMouseDown = false;
 
     public ForgedContainerScreen(ForgedContainerMenu container, Inventory playerInventory, Component title) {
-        super(container, playerInventory, title);
-
-        this.imageWidth = 179;
-        this.imageHeight = 176;
+        super(container, playerInventory, title, 179, 176);
 
         this.tileEntity = container.getTile();
         this.container = container;

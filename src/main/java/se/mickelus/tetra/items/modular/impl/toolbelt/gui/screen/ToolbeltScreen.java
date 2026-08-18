@@ -30,10 +30,7 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     private final GuiElement keybindGui;
 
     public ToolbeltScreen(ToolbeltContainer container, Inventory playerInventory, Component title) {
-        super(container, playerInventory, title);
-
-        this.imageWidth = 179;
-        this.imageHeight = 240;
+        super(container, playerInventory, title, 179, 240);
 
         int numQuickslots = container.getQuickslotInventory().getContainerSize();
         int numStorageSlots = container.getStorageInventory().getContainerSize();
