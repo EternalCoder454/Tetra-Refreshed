@@ -121,7 +121,7 @@ alongside.
 | Mod | Terms | State |
 |---|---|---|
 | <https://github.com/AceTheEldritchKing/Secrets-Of-Forging-Revelations> | MIT with restrictions, in its README | **bundled with jarJar, loads clean** |
-| <https://github.com/AceTheEldritchKing/art_of_forging> | none at all | not started |
+| <https://github.com/AceTheEldritchKing/art_of_forging> | none in the repo, MIT in gradle.properties | **ported and bundled with jarJar, never run** |
 
 **Ace granted permission on 2026-08-18, on Discord**, for both his mods, with two conditions. He
 asked that they be **separate projects included in the mod** rather than flattened into this source
@@ -144,9 +144,21 @@ cd "../Secrets-Of-Forging-Revelations" && ./gradlew.bat publishToMavenLocal
 A flat merge of it was tried first and is parked on the `flat-merge-sofr` branch. It works, and it
 is the wrong shape, so take integration decisions from it rather than files.
 
-Roughly a third of the addon is compatibility content for Art of Forging, 22 schematic files and 58
-references to a namespace that is not here. That half stays inert, the same way `tetra:draw_damage`
-does, until Art of Forging is ported. The same permission covers it.
+**Art of Forging is bundled too**, on the same terms and by the same mechanism, which settles the
+compatibility content Secrets of Forging carries for it. That namespace exists now.
+
+It is ported and it builds, and **it has never been run**. Its own `PORT-STATUS.md` records what
+changed and what is known to be wrong, including two things that predate the port: its loot
+modifiers read a field name none of their data files write, and its creative tab was registered by
+nothing.
+
+**Three jars write into `data/tetra` now.** That is the whole reason the arrangement works, and the
+one way it goes wrong: when two jars claim a path, load order decides. A file that sets
+`"replace": false` merges instead, and `variants` and `outcomes` concatenate, so an addon extending
+Tetra's own file loses nothing. Sixteen files are shared and eleven of them were replacing rather
+than merging, which meant the sword, single and double socket modules each kept one mod's variants
+and threw away two. `tools/check-bundle-collisions.py` reads the built jar and reports any path more
+than one jar claims, separating the deliberate merges from the ones load order decides.
 
 **Art of Forging has no licence at all.** No file, nothing in its README, and GitHub reports none,
 so no permission to reuse is granted by default. Ask before touching it.

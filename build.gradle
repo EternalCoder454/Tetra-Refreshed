@@ -136,6 +136,15 @@ dependencies {
             prefer "${sofr_version}"
         }
     }
+
+    // Art of Forging, bundled the same way and for the same reason. Publish it to mavenLocal
+    // before building here, or this embeds whatever build was published last.
+    jarJar(implementation("net.acetheeldritchking.art_of_forging:art_of_forging")) {
+        version {
+            strictly "[${aof_version},)"
+            prefer "${aof_version}"
+        }
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

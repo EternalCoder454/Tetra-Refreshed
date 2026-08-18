@@ -36,6 +36,7 @@ bash tools/port-compile.sh && bash tools/port-check.sh   # compile and count err
 python tools/check-at.py                                 # every access transformer entry still resolves
 python tools/check-data-fields.py                        # every data key is read by the codec that owns it
 python tools/check-material-tints.py                     # every tint still matches the item it is made from
+python tools/check-bundle-collisions.py                  # no two bundled jars claim the same path
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -46,6 +47,13 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-bundle-collisions.py` matters because this jar carries two other mods inside it, and all
+three write into `data/tetra` and `assets/tetra`, which is what makes the arrangement work at all.
+When two of them claim one path, load order decides which a player gets, and no mod controls load
+order. A data file that sets `"replace": false` merges into what is already there rather than
+throwing it away, so the checker separates those from the ones that really are a race. It reads the
+built jar, so build first.
 
 `check-material-tints.py` matters because nothing validates a tint. A material carrying another
 material's colours parses, loads and renders, it just renders wrong, and the only way to notice is to

@@ -16,6 +16,31 @@ known issues at the bottom before reporting.
 
 Requires **Mutil Refreshed 7.0.0-pre.0** or later.
 
+### Art of Forging ships inside Tetra too
+
+**Art of Forging arrives with Tetra now**, the same way Secrets of Forging does, which is the second
+half of what Ace asked for. **Remove any separate `art_of_forging` jar**, since two copies both
+register `tetra:modular_artifact` and fail to load.
+
+* It stays its own mod, by AceTheEldritchKing and MindFaer. The mod list shows it as its own entry,
+  loaded from inside Tetra's jar.
+* **The modular artifact is findable.** It was in no creative tab at all, not Tetra's and not its
+  own mod's, which lists thirty ingredients and not the item they are for. The only way to one was a
+  command. It is in Tetra's tab now, built with a casing and an internal so it works, and at the
+  front of Art of Forging's own tab.
+* **It is ninth in the holosphere**, after the single headed tool.
+* It brings its own material category, eight reagents, which is what the artifact's internal slot
+  takes.
+
+**Three jars sharing one namespace stopped fighting.** Sixteen data files are claimed by more than
+one of Tetra, Secrets of Forging and Art of Forging. Eleven of them had every copy asking to replace
+rather than merge, so whichever loaded last silently discarded the others and took their content
+with it. That included the sword, single and double socket modules, where all three mods add
+variants and only one survived. They merge now.
+
+**This has not been played.** Art of Forging loads and its data parses, and nothing in it has been
+crafted or held.
+
 ### Materials from other mods
 
 **37 new materials**, so tools can be built from what the rest of the pack already produces. Each is
