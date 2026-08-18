@@ -59,8 +59,10 @@ assembled some other way, which is most of the interesting cases.
 This depends on the palette work. Before it a generated material had no artist, so sixty eight
 generated materials would all have rendered as the fallback texture.
 
-**State: written, compiles, never successfully run.** Three files, uncommitted:
-`module/data/MaterialGenerator.java`, the `OutcomeMaterial.of` factory, and the event hook in
+**State: written, compiles, never successfully run, and taken back out of the branch.** It briefly
+landed in commit ffbfb19 by accident, wired into DataManager, which would have run it unverified in
+any build from that commit. The reverting commit says where the source is parked. Bring it back by
+restoring three things: the generator class, the `OutcomeMaterial.of` factory, and the event hook in
 `DataManager`.
 
 **Two questions to settle before it can be called done:**

@@ -73,8 +73,6 @@ import se.mickelus.tetra.module.schematic.requirement.ModuleRequirement;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Map;
-import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
-import se.mickelus.tetra.module.data.MaterialGenerator;
 
 @ParametersAreNonnullByDefault
 public class DataManager implements DataDistributor {
@@ -188,19 +186,6 @@ public class DataManager implements DataDistributor {
     public void addReloadListener(AddServerReloadListenersEvent event) {
         logger.debug("Setting up datastore reload listeners");
         Arrays.stream(dataStores).forEach(store -> event.addListener(store.getListenerId(), store));
-    }
-
-    /**
-     * Fill in a material for every tool shaped item no authored material covers.
-     *
-     * This cannot run while the materials themselves parse. An item's components are unbound for the
-     * duration of a datapack reload, and every stat the generator reads is a component, so it has to
-     * wait for the event that says they are bound. That event fires on both sides, once per data
-     * load and once per packet received, which is exactly when the material data has changed.
-     */
-    @SubscribeEvent
-    public void generateMaterials(DefaultDataComponentsBoundEvent event) {
-        MaterialGenerator.contribute(materialData.getData());
     }
 
     @SubscribeEvent
