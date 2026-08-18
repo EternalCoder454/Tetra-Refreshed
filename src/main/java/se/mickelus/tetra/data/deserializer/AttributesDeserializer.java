@@ -28,10 +28,13 @@ public class AttributesDeserializer implements JsonDeserializer<Multimap<Attribu
     // at JSON parse time. Keep the map in sync with upstream 1.20 — JSON authored against 1.20 still
     // uses these forge: keys, and rewriting to vanilla namespaces would diverge from upstream.
     private static final Map<String, Identifier> legacyAttributeIds = Map.of(
-            "forge:reach_distance", Identifier.withDefaultNamespace("player.block_interaction_range"),
-            "forge:block_reach", Identifier.withDefaultNamespace("player.block_interaction_range"),
-            "forge:attack_range", Identifier.withDefaultNamespace("player.entity_interaction_range"),
-            "forge:entity_reach", Identifier.withDefaultNamespace("player.entity_interaction_range"),
+            // 26.1 dropped the player prefix these carried in 1.21.1. Mapping to the old names
+            // parsed fine and then resolved to nothing, so every reach modifier in the mod was
+            // being discarded. The warning below is what surfaced it.
+            "forge:reach_distance", Identifier.withDefaultNamespace("block_interaction_range"),
+            "forge:block_reach", Identifier.withDefaultNamespace("block_interaction_range"),
+            "forge:attack_range", Identifier.withDefaultNamespace("entity_interaction_range"),
+            "forge:entity_reach", Identifier.withDefaultNamespace("entity_interaction_range"),
             // The generic prefix went in 1.21. These four parse as a valid identifier and simply
             // resolve to nothing, and getAttribute drops a modifier it cannot resolve without
             // saying so, which left every module contributing no damage, speed, armor or toughness.
