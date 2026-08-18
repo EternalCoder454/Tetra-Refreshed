@@ -13,11 +13,15 @@ import se.mickelus.tetra.util.RegistryHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Type;
 import java.util.Map;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 // Cross-version compat: this Gson deserializer mirrors upstream 1.20. Do not migrate to Codec /
 // MapCodec — rewriting forks the codebase from upstream Tetra.
 @ParametersAreNonnullByDefault
 public class AttributesDeserializer implements JsonDeserializer<Multimap<Attribute, AttributeModifier>> {
+    private static final Logger logger = LogManager.getLogger();
+
     public static final TypeToken<Multimap<Attribute, AttributeModifier>> typeToken = new TypeToken<Multimap<Attribute, AttributeModifier>>() {
     };
     // legacyAttributeIds: Forge-namespaced 1.20 attribute IDs that we translate into 1.21 vanilla IDs
@@ -27,7 +31,14 @@ public class AttributesDeserializer implements JsonDeserializer<Multimap<Attribu
             "forge:reach_distance", Identifier.withDefaultNamespace("player.block_interaction_range"),
             "forge:block_reach", Identifier.withDefaultNamespace("player.block_interaction_range"),
             "forge:attack_range", Identifier.withDefaultNamespace("player.entity_interaction_range"),
-            "forge:entity_reach", Identifier.withDefaultNamespace("player.entity_interaction_range"));
+            "forge:entity_reach", Identifier.withDefaultNamespace("player.entity_interaction_range"),
+            // The generic prefix went in 1.21. These four parse as a valid identifier and simply
+            // resolve to nothing, and getAttribute drops a modifier it cannot resolve without
+            // saying so, which left every module contributing no damage, speed, armor or toughness.
+            "generic.attack_damage", Identifier.withDefaultNamespace("attack_damage"),
+            "generic.attack_speed", Identifier.withDefaultNamespace("attack_speed"),
+            "generic.armor", Identifier.withDefaultNamespace("armor"),
+            "generic.armor_toughness", Identifier.withDefaultNamespace("armor_toughness"));
 
     private static AttributeModifier.Operation getOperation(String key) {
         if (key.startsWith("**")) {
@@ -53,7 +64,11 @@ public class AttributesDeserializer implements JsonDeserializer<Multimap<Attribu
 
         jsonObject.entrySet().forEach(entry -> {
             Attribute attribute = getAttribute(entry.getKey());
-            if (attribute != null) {
+            if (attribute == null) {
+                // Saying so, because dropping these in silence is what hid the missing generic
+                // prefix mapping and left every modular item without its module attributes.
+                logger.warn("Unknown attribute '{}', its modifier is ignored", entry.getKey());
+            } else {
                 result.put(attribute, new AttributeModifier(Identifier.fromNamespaceAndPath("tetra", "module_data"), entry.getValue().getAsDouble(), getOperation(entry.getKey())));
             }
         });

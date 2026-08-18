@@ -37,3 +37,4 @@ src/generated/resources/temp
 .DS_Store
 /reference/
 /mutil/
+tools/__pycache__/
