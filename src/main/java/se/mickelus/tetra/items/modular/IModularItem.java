@@ -243,23 +243,31 @@ public interface IModularItem {
 
     @Nullable
     default String getIdentifier(ItemStack itemStack) {
-        if (hasTag(itemStack)) {
-            return readTag(itemStack).getStringOr(identifierKey, "");
-        }
-
-        return null;
+        CompoundTag tag = readTag(itemStack);
+        return tag != null ? tag.getStringOr(identifierKey, "") : null;
     }
 
+    /**
+     * The identity of an item's data, and the key of every cache on this item.
+     *
+     * Asked once per cache per item per tick, six times over now, so it reads the tag once and
+     * allocates nothing at all on the path where the item carries an identifier. It used to ask the
+     * component for its tag up to four times and build two Optionals and a capturing lambda to
+     * decide between them.
+     */
     default String getDataCacheKey(ItemStack itemStack) {
-        return Optional.ofNullable(getIdentifier(itemStack))
-                .filter(id -> !id.isEmpty())
-                .orElseGet(() -> hasTag(itemStack) ? readTag(itemStack).toString() : "INVALID-" + getItem().toString());
+        CompoundTag tag = readTag(itemStack);
+        if (tag == null) {
+            return "INVALID-" + getItem();
+        }
+
+        String identifier = tag.getStringOr(identifierKey, "");
+        // An item mid craft has no identifier yet, so the tag itself stands in as its identity.
+        return identifier.isEmpty() ? tag.toString() : identifier;
     }
 
     default String getModelCacheKey(ItemStack itemStack, LivingEntity entity) {
-        return Optional.ofNullable(getIdentifier(itemStack))
-                .filter(id -> !id.isEmpty())
-                .orElseGet(() -> hasTag(itemStack) ? readTag(itemStack).toString() : "INVALID-" + getItem().toString());
+        return getDataCacheKey(itemStack);
     }
 
     void clearCaches();
