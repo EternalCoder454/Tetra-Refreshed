@@ -1,129 +1,122 @@
 package se.mickelus.tetra.data.provider;
 
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.generators.*;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import se.mickelus.tetra.blocks.forged.ForgedVentBlock;
 import se.mickelus.tetra.blocks.multischematic.MultiblockSchematicBlock;
 import se.mickelus.tetra.util.RegistryHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static se.mickelus.tetra.TetraMod.MOD_ID;
 
+/**
+ * Generates the multiblock schematic blockstates and models.
+ *
+ * NeoForge's model generators went away with the rest of its model system, so this sits on
+ * vanilla's ModelProvider now. The one thing worth naming is the rotation: the old call asked
+ * for a horizontal block with a 90 degree offset, and ROTATION_TORCH is the dispatch with
+ * exactly that mapping, east at zero through north at 270, despite what it is called.
+ */
 @ParametersAreNonnullByDefault
-public class TetraBlockStateProvider extends BlockStateProvider {
-    public TetraBlockStateProvider(PackOutput packOutput, String modid, ExistingFileHelper exFileHelper) {
-        super(packOutput, modid, exFileHelper);
+public class TetraBlockStateProvider extends ModelProvider {
+
+    private static final ModelTemplate schematicTemplate = new ModelTemplate(
+            Optional.of(Identifier.fromNamespaceAndPath(MOD_ID, "block/multi_schematic_base")),
+            Optional.empty(),
+            TextureSlot.PARTICLE, TextureSlot.SIDE, TextureSlot.FRONT, TextureSlot.BACK);
+
+    public TetraBlockStateProvider(PackOutput packOutput) {
+        super(packOutput, MOD_ID);
     }
 
     @Override
-    protected void registerStatesAndModels() {
-//        slabBlock(BlockForgedPlatformSlab.instance,
-//                new Identifier(MOD_ID, "block/forged_platform"),
-//                new Identifier(MOD_ID, "block/forged_platform_side"),
-//                new Identifier(MOD_ID, "block/forged_platform_bottom"),
-//                new Identifier(MOD_ID, "block/forged_platform_alternate"));
-
-//        setupVent();
-        setupMultiBlockSchematics();
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        setupMultiBlockSchematics(blockModels);
     }
 
-    private ConfiguredModel[] directionalBlock(BlockState state, ModelFile model) {
-        Direction dir = state.getValue(BlockStateProperties.FACING);
-        return ConfiguredModel.builder()
-                .modelFile(model)
-                .rotationX(dir == Direction.DOWN ? 180 : dir.getAxis().isHorizontal() ? 90 : 0)
-                .rotationY(dir.getAxis().isVertical() ? 0 : (int) dir.toYRot() % 360)
-                .build();
+    /** Only the blocks generated here, so the provider does not demand models for hand written blockstates. */
+    @Override
+    protected Stream<? extends Holder<Block>> getKnownBlocks() {
+        return schematicBlocks().stream().map(Block::builtInRegistryHolder);
     }
 
-    private void setupVent() {
-        VariantBlockStateBuilder builder = getVariantBuilder(ForgedVentBlock.instance);
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 0)
-                .with(ForgedVentBlock.propBroken, false)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent0"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 1)
-                .with(ForgedVentBlock.propBroken, false)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent1"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 2)
-                .with(ForgedVentBlock.propBroken, false)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent2"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 3)
-                .with(ForgedVentBlock.propBroken, false)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent3"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 0)
-                .with(ForgedVentBlock.propBroken, true)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent0_broken"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 1)
-                .with(ForgedVentBlock.propBroken, true)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent1_broken"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 2)
-                .with(ForgedVentBlock.propBroken, true)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent2_broken"))));
-
-        builder.partialState()
-                .with(ForgedVentBlock.propRotation, 3)
-                .with(ForgedVentBlock.propBroken, true)
-                .addModels(new ConfiguredModel(models().getExistingFile(Identifier.fromNamespaceAndPath(MOD_ID, "block/forged_vent3_broken"))));
+    private static List<Block> schematicBlocks() {
+        List<Block> blocks = new ArrayList<>();
+        collect(blocks, "stonecutter", 3, 2, true);
+        collect(blocks, "earthpiercer", 2, 2, true);
+        collect(blocks, "extractor", 3, 3, true);
+        return blocks;
     }
 
-    private void setupMultiBlockSchematics() {
-        setupMultiBlockSchematics("stonecutter", 3, 2, true);
-        setupMultiBlockSchematics("earthpiercer", 2, 2, true);
-        setupMultiBlockSchematics("extractor", 3, 3, true);
-    }
-
-    private void setupMultiBlockSchematics(String identifier, int width, int height, boolean ruinable) {
+    private static void collect(List<Block> blocks, String identifier, int width, int height, boolean ruinable) {
         for (int h = 0; h < width; h++) {
             for (int v = 0; v < height; v++) {
-                setupMultiBlockSchematic(identifier, "block/forged_schematic/", h, v);
+                blocks.add(blockFor(identifier, h, v));
                 if (ruinable) {
-                    setupMultiBlockSchematic(identifier + "_ruined", "block/forged_schematic/", h, v);
+                    blocks.add(blockFor(identifier + "_ruined", h, v));
                 }
             }
         }
     }
 
-    private void setupMultiBlockSchematic(String identifier, String modelPrefix, int h, int v) {
-        String id = String.format(MultiblockSchematicBlock.Builder.format, identifier, h, v);
-        Identifier rl = Identifier.fromNamespaceAndPath("tetra", id);
-        Identifier front = Identifier.fromNamespaceAndPath("tetra", modelPrefix + id);
-        Block block = Objects.requireNonNull(RegistryHelper.get(BuiltInRegistries.BLOCK, rl), "Unknown block: " + rl);
-        ModelFile model = getSchematicModel(id, front,
-                Identifier.fromNamespaceAndPath("tetra", modelPrefix + "side"),
-                Identifier.fromNamespaceAndPath("tetra", modelPrefix + "back"));
-        horizontalBlock(block, model, 90);
-
-        simpleBlockItem(block, model);
+    private static Block blockFor(String identifier, int h, int v) {
+        Identifier rl = Identifier.fromNamespaceAndPath(MOD_ID, String.format(MultiblockSchematicBlock.Builder.format, identifier, h, v));
+        return Objects.requireNonNull(RegistryHelper.get(BuiltInRegistries.BLOCK, rl), "Unknown block: " + rl);
     }
 
-    private ModelFile getSchematicModel(String name, Identifier front, Identifier side, Identifier back) {
-        return models().withExistingParent(name, "tetra:" + ModelProvider.BLOCK_FOLDER + "/multi_schematic_base")
-                .texture("particle", front)
-                .texture("side", side)
-                .texture("front", front)
-                .texture("back", back);
+    private void setupMultiBlockSchematics(BlockModelGenerators blockModels) {
+        setupMultiBlockSchematics(blockModels, "stonecutter", 3, 2, true);
+        setupMultiBlockSchematics(blockModels, "earthpiercer", 2, 2, true);
+        setupMultiBlockSchematics(blockModels, "extractor", 3, 3, true);
+    }
+
+    private void setupMultiBlockSchematics(BlockModelGenerators blockModels, String identifier, int width, int height, boolean ruinable) {
+        for (int h = 0; h < width; h++) {
+            for (int v = 0; v < height; v++) {
+                setupMultiBlockSchematic(blockModels, identifier, "block/forged_schematic/", h, v);
+                if (ruinable) {
+                    setupMultiBlockSchematic(blockModels, identifier + "_ruined", "block/forged_schematic/", h, v);
+                }
+            }
+        }
+    }
+
+    private void setupMultiBlockSchematic(BlockModelGenerators blockModels, String identifier, String modelPrefix, int h, int v) {
+        String id = String.format(MultiblockSchematicBlock.Builder.format, identifier, h, v);
+        Block block = blockFor(identifier, h, v);
+
+        TextureMapping textures = new TextureMapping()
+                .put(TextureSlot.PARTICLE, material(modelPrefix + id))
+                .put(TextureSlot.SIDE, material(modelPrefix + "side"))
+                .put(TextureSlot.FRONT, material(modelPrefix + id))
+                .put(TextureSlot.BACK, material(modelPrefix + "back"));
+
+        Identifier model = schematicTemplate.create(block, textures, blockModels.modelOutput);
+
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block, BlockModelGenerators.plainVariant(model))
+                        .with(BlockModelGenerators.ROTATION_TORCH));
+
+        blockModels.registerSimpleItemModel(block, model);
+    }
+
+    private static Material material(String path) {
+        return new Material(Identifier.fromNamespaceAndPath(MOD_ID, path));
     }
 }
