@@ -86,6 +86,11 @@ import se.mickelus.tetra.items.modular.impl.toolbelt.ToolbeltContainer;
 import se.mickelus.tetra.items.modular.impl.toolbelt.gui.screen.ToolbeltScreen;
 import se.mickelus.tetra.items.modular.impl.toolbelt.gui.overlay.ToolbeltOverlay;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
+import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
+import se.mickelus.tetra.client.model.ModularItemModel;
+import se.mickelus.tetra.client.model.ScrollMaterialProperty;
+import se.mickelus.tetra.client.model.CellChargedProperty;
 
 public class ClientSetup {
     public static void init(IEventBus modBus) {
@@ -144,9 +149,22 @@ public class ClientSetup {
         event.registerSpriteSet(Particles.sputteringPower.get(), SputteringPowerParticleProvider::new);
     }
 
+    // The geometry loader registry is gone. An item model type is a MapCodec registered by id and
+    // named in the item's model json, and the same shape covers tint sources and model properties.
     @SubscribeEvent
-    public static void modelRegistryReady(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "modular_loader"), new ModularModelLoader());
+    public static void registerItemModels(RegisterItemModelsEvent event) {
+        event.register(ModularItemModel.Unbaked.id, ModularItemModel.Unbaked.mapCodec);
+    }
+
+    @SubscribeEvent
+    public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSources event) {
+        event.register(ScrollItemColor.id, ScrollItemColor.mapCodec);
+    }
+
+    @SubscribeEvent
+    public static void registerItemModelProperties(RegisterRangeSelectItemModelPropertyEvent event) {
+        event.register(ScrollMaterialProperty.id, ScrollMaterialProperty.mapCodec);
+        event.register(CellChargedProperty.id, CellChargedProperty.mapCodec);
     }
 
     @SubscribeEvent
@@ -173,11 +191,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(CoreExtractorPistonBlockEntity.type.get(), CoreExtractorPistonRenderer::new);
         event.registerBlockEntityRenderer(HammerBaseBlockEntity.type.get(), HammerBaseRenderer::new);
         event.registerBlockEntityRenderer(HammerHeadBlockEntity.type.get(), HammerHeadRenderer::new);
-    }
-
-    @SubscribeEvent
-    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-        event.register(new ScrollItemColor(), ScrollItem.instance);
     }
 
     @SubscribeEvent

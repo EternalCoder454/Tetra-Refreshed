@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -89,12 +88,6 @@ public class ScrollItem extends BlockItem implements InitializableItem {
         howlingBlade = setupSchematic("sword/howling", null, false, 1, 0xfaf396, 8, 9, 10, 5);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void clientInit() {
-        ItemProperties.register(instance, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "scroll_mat"),
-                (itemStack, world, livingEntity, i) -> ScrollData.readMaterialFast(itemStack));
-    }
 
     public Collection<ItemStack> getCreativeTabItems() {
         return Lists.newArrayList(

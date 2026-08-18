@@ -2,7 +2,6 @@ package se.mickelus.tetra.items.cell;
 
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -24,7 +23,6 @@ public class ThermalCellItem extends TetraItem {
     public static final int maxCharge = 128;
     public static final String identifier = "thermal_cell";
     public static Supplier<ThermalCellItem> instance;
-    private final String chargedPropKey = "tetra:charged";
 
     public ThermalCellItem() {
         super(new Properties()
@@ -59,10 +57,6 @@ public class ThermalCellItem extends TetraItem {
         return overfill;
     }
 
-    @Override
-    public void clientInit() {
-        ItemProperties.register(this, Identifier.parse(chargedPropKey), (itemStack, world, livingEntity, i) -> getCharge(itemStack) > 0 ? 1 : 0);
-    }
 
     @Override
     public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
