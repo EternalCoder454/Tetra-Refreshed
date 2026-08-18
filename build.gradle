@@ -160,6 +160,11 @@ publishing {
     publications {
         register('mavenJava', MavenPublication) {
             from components.java
+            // Without these the artifactId defaults to the project directory name, which has a
+            // space in it and is not a valid maven identifier, so publishing failed outright.
+            groupId project.group
+            artifactId project.base.archivesName.get()
+            version project.version
         }
     }
     repositories {
