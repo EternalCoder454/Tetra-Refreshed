@@ -24,8 +24,8 @@ public class GeodeBlock extends TetraBlock {
 
     public static GeodeBlock instance;
 
-    public GeodeBlock() {
-        super(BlockBehaviour.Properties.of()
+    public GeodeBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .requiresCorrectToolForDrops()
                 .strength(3.0F, 6.0F)
                 .sound(SoundType.DEEPSLATE));

@@ -22,8 +22,8 @@ public class FracturedBedrockBlock extends TetraBlock implements EntityBlock {
 
     public static FracturedBedrockBlock instance;
 
-    public FracturedBedrockBlock() {
-        super(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable());
+    public FracturedBedrockBlock(BlockBehaviour.Properties properties) {
+        super(properties.strength(-1.0F, 3600000.0F).noLootTable());
     }
 
     public static boolean canPierce(Level world, BlockPos pos) {

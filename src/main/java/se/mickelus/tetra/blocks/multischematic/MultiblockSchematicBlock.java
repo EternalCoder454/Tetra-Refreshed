@@ -45,6 +45,7 @@ import se.mickelus.tetra.effect.EffectHelper;
 import java.util.Collection;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import java.util.function.UnaryOperator;
 
 public class MultiblockSchematicBlock extends HorizontalDirectionalBlock implements IInteractiveBlock {
     public static final EnumProperty<Direction> facingProp = BlockStateProperties.HORIZONTAL_FACING;
@@ -217,10 +218,12 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
         private final int height;
         private final int width;
 
-        private final Properties properties;
-        private Properties ruinedProperties;
+        // A Properties carries its block's registry id now, so the builder cannot hand the same
+        // instance to every block it makes. It holds a decorator and applies it to each one.
+        private final UnaryOperator<Properties> properties;
+        private UnaryOperator<Properties> ruinedProperties;
 
-        public Builder(String identifier, int width, int height, Properties properties) {
+        public Builder(String identifier, int width, int height, UnaryOperator<Properties> properties) {
             this.identifier = identifier;
             this.width = width;
             this.height = height;
@@ -229,12 +232,12 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
             ruinedProperties = properties;
         }
 
-        public Builder withRuinedProperties(Properties properties) {
+        public Builder withRuinedProperties(UnaryOperator<Properties> properties) {
             this.ruinedProperties = properties;
             return this;
         }
 
-        public void build(DeferredRegister<Block> blocks, DeferredRegister<Item> items) {
+        public void build(DeferredRegister.Blocks blocks, DeferredRegister.Items items) {
             if (FMLEnvironment.getDist().isClient()) {
                 MultiblockSchematicScrollHandler.setupSchematic(identifier, width * height);
             }
@@ -246,23 +249,23 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
                     String ruinedId = String.format(ruinedFormat, identifier, x, y);
                     Identifier brokenPryTable = Identifier.fromNamespaceAndPath("tetra", pryTablePrefix + ruinedId);
                     Supplier<RuinedMultiblockSchematicBlock> ruinedRef =
-                            blocks.register(ruinedId, () -> new RuinedMultiblockSchematicBlock(ruinedProperties, brokenPryTable));
+                            blocks.registerBlock(ruinedId, props -> new RuinedMultiblockSchematicBlock(ruinedProperties.apply(props), brokenPryTable));
 
                     String id = String.format(format, identifier, x, y);
                     Identifier pryTable = Identifier.fromNamespaceAndPath("tetra", pryTablePrefix + id);
                     Supplier<MultiblockSchematicBlock> ref = x == width / 2 && y == height / 2
-                            ? blocks.register(id, () -> new PrimaryMultiblockSchematicBlock(properties, identifier, ruinedRef, pryTable, x, y, height, width))
-                            : blocks.register(id, () -> new MultiblockSchematicBlock(properties, identifier, ruinedRef, pryTable, x, y, height, width));
+                            ? blocks.registerBlock(id, props -> new PrimaryMultiblockSchematicBlock(properties.apply(props), identifier, ruinedRef, pryTable, x, y, height, width))
+                            : blocks.registerBlock(id, props -> new MultiblockSchematicBlock(properties.apply(props), identifier, ruinedRef, pryTable, x, y, height, width));
 
 
-                    items.register(id, () -> {
-                        StackedMultiblockSchematicItem item = new StackedMultiblockSchematicItem(ref.get(), ruinedRef.get());
+                    items.registerItem(id, props -> {
+                        StackedMultiblockSchematicItem item = new StackedMultiblockSchematicItem(props, ref.get(), ruinedRef.get());
                         if (FMLEnvironment.getDist().isClient()) {
                             MultiblockSchematicScrollHandler.addSchematic(identifier, y * width + x, item);
                         }
                         return item;
                     });
-                    items.register(ruinedId, () -> new RuinedMultiblockSchematicItem(ruinedRef.get(), ref.get()));
+                    items.registerItem(ruinedId, props -> new RuinedMultiblockSchematicItem(props, ruinedRef.get(), ref.get()));
 
                 }
             }

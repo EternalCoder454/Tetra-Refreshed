@@ -63,8 +63,8 @@ public class ModularDoubleHeadedItem extends ItemModularHandheld {
 
     public static ModularDoubleHeadedItem instance;
 
-    public ModularDoubleHeadedItem() {
-        super(new Item.Properties().stacksTo(1).fireResistant());
+    public ModularDoubleHeadedItem(Properties properties) {
+        super(properties.stacksTo(1).fireResistant());
         instance = this;
 
         entityHitDamage = 2;

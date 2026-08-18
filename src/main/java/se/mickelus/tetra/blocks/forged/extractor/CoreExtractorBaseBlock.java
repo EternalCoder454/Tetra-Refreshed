@@ -40,6 +40,7 @@ import java.util.function.Supplier;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 import static net.minecraft.world.level.material.Fluids.WATER;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements EntityBlock, BlockTooltip {
@@ -57,8 +58,8 @@ public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements Ent
             = Shapes.or(Shapes.joinUnoptimized(smallCoverShapeX, largeCoverShapeX, BooleanOp.OR), capShape, shaftShape);
     public static Supplier<CoreExtractorBaseBlock> instance;
 
-    public CoreExtractorBaseBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public CoreExtractorBaseBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
     }
 
     @Override

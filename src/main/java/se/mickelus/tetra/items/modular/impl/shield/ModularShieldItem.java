@@ -45,8 +45,8 @@ public class ModularShieldItem extends ItemModularHandheld {
 
     public static ModularShieldItem instance;
 
-    public ModularShieldItem() {
-        super(new Properties()
+    public ModularShieldItem(Properties properties) {
+        super(properties
                 .stacksTo(1)
                 .fireResistant());
         instance = this;

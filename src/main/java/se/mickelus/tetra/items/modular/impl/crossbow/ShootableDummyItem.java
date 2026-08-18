@@ -18,8 +18,8 @@ public class ShootableDummyItem extends ProjectileWeaponItem {
             .or(stack -> stack.getItem() == ChthonicExtractorBlock.item)
             .or(stack -> stack.getItem() == ChthonicExtractorBlock.usedItem);
 
-    public ShootableDummyItem() {
-        super(new Properties().stacksTo(1));
+    public ShootableDummyItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override

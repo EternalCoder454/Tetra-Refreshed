@@ -51,6 +51,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, IToolProviderBlock, BlockTooltip {
@@ -64,8 +65,8 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     public static RackBlock instance;
 
 
-    public RackBlock() {
-        super(Block.Properties.of()
+    public RackBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .strength(1.0F)
                 .sound(SoundType.WOOD));
     }

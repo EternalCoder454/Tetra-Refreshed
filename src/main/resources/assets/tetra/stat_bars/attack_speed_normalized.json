@@ -8,7 +8,7 @@
     "generateSorter": true,
     "stat": {
         "type": "tetra:attribute",
-        "attribute": "generic.attack_speed",
+        "attribute": "attack_speed",
         "ignoreBase": true,
         "ignoreBonuses": true
     },
@@ -23,7 +23,7 @@
         "stats": [
             {
                 "type": "tetra:attribute",
-                "attribute": "generic.attack_speed",
+                "attribute": "attack_speed",
                 "ignoreBase": true,
                 "ignoreBonuses": true
             }

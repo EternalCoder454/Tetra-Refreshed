@@ -19,8 +19,8 @@ public class DynamicModularItem extends ItemModularHandheld {
     public static final String identifier = "dynamic_handheld";
     public static final String typeKey = "archetype";
 
-    public DynamicModularItem() {
-        super(new Item.Properties().stacksTo(1).fireResistant());
+    public DynamicModularItem(Properties properties) {
+        super(properties.stacksTo(1).fireResistant());
     }
 
     public static String getArchetypeKey(@Nullable CompoundTag tag) {

@@ -24,8 +24,8 @@ public class StonecutterItem extends TetraItem {
     public static final String identifier = "stonecutter";
     public static StonecutterItem instance;
 
-    public StonecutterItem() {
-        super(new Properties());
+    public StonecutterItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -52,8 +52,8 @@ public class ModularToolbeltItem extends ModularItem implements MenuProvider {
 
     public static Supplier<ModularToolbeltItem> instance;
 
-    public ModularToolbeltItem() {
-        super(new Properties()
+    public ModularToolbeltItem(Properties properties) {
+        super(properties
                 .stacksTo(1)
 
                 .fireResistant());

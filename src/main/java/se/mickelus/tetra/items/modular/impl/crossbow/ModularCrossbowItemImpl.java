@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import se.mickelus.tetra.util.NonNullLazy;
 
 @ParametersAreNonnullByDefault
 public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
@@ -79,16 +80,16 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     public static ModularCrossbowItemImpl instance;
     public static double multishotDefaultSpread = 10;
     // used to pick projectiles from the player inventory
-    protected ItemStack shootableDummy;
+    protected NonNullLazy<ItemStack> shootableDummy;
     // todo: based on vanilla, uses bool in singleton to keep track of which sound to play. Would break if multiple entities use this simultaneously
     private boolean isLoadingStart = false;
     private boolean isLoadingMiddle = false;
 
-    public ModularCrossbowItemImpl(@NotNull Item shootableDummy) {
-        super(new Properties().stacksTo(1).fireResistant());
+    public ModularCrossbowItemImpl(Properties properties, @NotNull Item shootableDummy) {
+        super(properties.stacksTo(1).fireResistant());
         instance = this;
 
-        this.shootableDummy = new ItemStack(shootableDummy);
+        this.shootableDummy = NonNullLazy.of(() -> new ItemStack(shootableDummy));
     }
 
     /**
@@ -469,7 +470,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     }
 
     private ItemStack findAmmo(LivingEntity entity) {
-        return entity.getProjectile(shootableDummy);
+        return entity.getProjectile(shootableDummy.get());
     }
 
     @Override

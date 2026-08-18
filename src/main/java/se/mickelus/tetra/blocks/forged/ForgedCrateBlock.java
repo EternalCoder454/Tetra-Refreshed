@@ -53,10 +53,11 @@ import java.util.List;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 import static net.minecraft.world.level.material.Fluids.WATER;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedCrateBlock extends FallingBlock implements InitializableBlock, IInteractiveBlock, SimpleWaterloggedBlock, BlockTooltip {
-    public static final MapCodec<ForgedCrateBlock> CODEC = simpleCodec(properties -> new ForgedCrateBlock());
+    public static final MapCodec<ForgedCrateBlock> CODEC = simpleCodec(ForgedCrateBlock::new);
     public static final EnumProperty<Direction> propFacing = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty propStacked = BooleanProperty.create("stacked");
     public static final IntegerProperty propIntegrity = IntegerProperty.create("integrity", 0, 3);
@@ -84,8 +85,8 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
         }
     }
 
-    public ForgedCrateBlock() {
-        super(Properties.of()
+    public ForgedCrateBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .sound(SoundType.METAL)
                 .strength(5));
 

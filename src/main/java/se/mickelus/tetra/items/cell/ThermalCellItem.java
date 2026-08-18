@@ -24,8 +24,8 @@ public class ThermalCellItem extends TetraItem {
     public static final String identifier = "thermal_cell";
     public static Supplier<ThermalCellItem> instance;
 
-    public ThermalCellItem() {
-        super(new Properties()
+    public ThermalCellItem(Properties properties) {
+        super(properties
                 .stacksTo(1)
                 .durability(maxCharge)
         );

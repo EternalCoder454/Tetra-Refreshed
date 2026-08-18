@@ -9,7 +9,7 @@
         "stats": [
             {
                 "type": "tetra:attribute",
-                "attribute": "generic.attack_damage"
+                "attribute": "attack_damage"
             },
             {
                 "type": "tetra:sum",
@@ -43,7 +43,7 @@
                 "stats": [
                     {
                         "type": "tetra:attribute",
-                        "attribute": "generic.attack_damage"
+                        "attribute": "attack_damage"
                     },
                     {
                         "type": "tetra:sum",
@@ -62,7 +62,7 @@
                         "offset": 0.5
                     }
                 ],
-                "attribute": "generic.attack_damage"
+                "attribute": "attack_damage"
             }
         ],
         "formatters": [

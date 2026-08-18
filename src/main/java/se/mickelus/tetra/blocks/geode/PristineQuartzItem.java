@@ -20,8 +20,8 @@ public class PristineQuartzItem extends TetraItem {
 
     public static PristineQuartzItem instance;
 
-    public PristineQuartzItem() {
-        super(new Properties());
+    public PristineQuartzItem(Properties properties) {
+        super(properties);
     }
 
     @Override

@@ -16,8 +16,8 @@ import java.util.StringJoiner;
 public class BaseMultiblockSchematicItem extends BlockItem {
     MultiblockSchematicBlock schematicBlock;
 
-    public BaseMultiblockSchematicItem(Block placedBlock, MultiblockSchematicBlock tooltipBlock) {
-        super(placedBlock, new Properties());
+    public BaseMultiblockSchematicItem(Properties properties, Block placedBlock, MultiblockSchematicBlock tooltipBlock) {
+        super(placedBlock, properties);
         this.schematicBlock = tooltipBlock;
     }
 

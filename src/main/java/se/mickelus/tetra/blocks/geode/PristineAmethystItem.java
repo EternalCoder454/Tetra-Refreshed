@@ -20,8 +20,8 @@ public class PristineAmethystItem extends TetraItem {
 
     public static PristineAmethystItem instance;
 
-    public PristineAmethystItem() {
-        super(new Properties());
+    public PristineAmethystItem(Properties properties) {
+        super(properties);
     }
 
     @Override

@@ -17,8 +17,8 @@ public class StackedMultiblockSchematicItem extends BaseMultiblockSchematicItem 
 
     Block ruinedBlock;
 
-    public StackedMultiblockSchematicItem(MultiblockSchematicBlock block, Block ruinedBlock) {
-        super(block, block);
+    public StackedMultiblockSchematicItem(Properties properties, MultiblockSchematicBlock block, Block ruinedBlock) {
+        super(properties, block, block);
         this.ruinedBlock = ruinedBlock;
     }
 

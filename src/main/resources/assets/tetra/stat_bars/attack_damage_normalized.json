@@ -10,7 +10,7 @@
         "stats": [
             {
                 "type": "tetra:attribute",
-                "attribute": "generic.attack_damage",
+                "attribute": "attack_damage",
                 "ignoreBase": true
             },
             {
@@ -45,7 +45,7 @@
                 "stats": [
                     {
                         "type": "tetra:attribute",
-                        "attribute": "generic.attack_damage",
+                        "attribute": "attack_damage",
                         "ignoreBase": true
                     },
                     {

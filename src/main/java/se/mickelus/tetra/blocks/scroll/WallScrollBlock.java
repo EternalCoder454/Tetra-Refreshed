@@ -14,6 +14,7 @@ import se.mickelus.mutil.util.RotationHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumMap;
 import java.util.Map;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class WallScrollBlock extends ScrollBlock {
@@ -24,8 +25,8 @@ public class WallScrollBlock extends ScrollBlock {
             Block.box(1.0, 14.0, 0.0, 15.0, 16.0, 2.0),
             Block.box(1.0, 1.0, 0.0, 15.0, 14.0, 0.1));
 
-    public WallScrollBlock() {
-        super(Arrangement.wall);
+    public WallScrollBlock(BlockBehaviour.Properties properties) {
+        super(properties, Arrangement.wall);
 
         shapes = new EnumMap<>(Direction.class);
         for (int i = 0; i < 4; i++) {

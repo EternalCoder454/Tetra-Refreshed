@@ -21,8 +21,8 @@ public class BoltItem extends TetraItem {
     public static final String identifier = "forged_bolt";
     public static BoltItem instance;
 
-    public BoltItem() {
-        super(new Properties());
+    public BoltItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

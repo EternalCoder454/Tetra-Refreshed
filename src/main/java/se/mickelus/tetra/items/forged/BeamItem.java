@@ -21,8 +21,8 @@ public class BeamItem extends TetraItem {
     public static final String identifier = "forged_beam";
     public static BeamItem instance;
 
-    public BeamItem() {
-        super(new Properties());
+    public BeamItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

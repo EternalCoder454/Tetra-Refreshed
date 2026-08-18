@@ -55,6 +55,7 @@ import java.util.stream.Stream;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 import static net.minecraft.world.level.material.Fluids.WATER;
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -72,8 +73,8 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     };
     public static HammerBaseBlock instance;
 
-    public HammerBaseBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public HammerBaseBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
         instance = this;
     }
 

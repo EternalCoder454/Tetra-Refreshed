@@ -48,64 +48,32 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     public static ScrollItem instance;
 
 
-    public static ItemStack gemExpertise;
-    public static ItemStack metalExpertise;
-    public static ItemStack woodExpertise;
-    public static ItemStack stoneExpertise;
-    public static ItemStack fibreExpertise;
-    public static ItemStack skinExpertise;
-    public static ItemStack boneExpertise;
-    public static ItemStack fabricExpertise;
-    public static ItemStack scaleExpertise;
-    public static ItemStack hammerEfficiency;
-    public static ItemStack axeEfficiency;
-    public static ItemStack cutEfficiency;
-    public static ItemStack sturdyGuard;
-    public static ItemStack throwingKnife;
-    public static ItemStack howlingBlade;
-
-    public ScrollItem(Block block) {
-        super(block, new Properties().stacksTo(1));
+    public ScrollItem(Properties properties, Block block) {
+        super(block, properties.stacksTo(1));
     }
 
-    @Override
-    public void commonInit(PacketHandler packetHandler) {
-        gemExpertise = setupTreatise("gem_expertise", false, 0, 0x2bffee, 14, 13, 14, 15);
-        metalExpertise = setupTreatise("metal_expertise", false, 0, 0xffffff, 4, 6, 6, 5);
-        woodExpertise = setupTreatise("wood_expertise", false, 0, 0xbf934b, 2, 1, 2, 1);
-        stoneExpertise = setupTreatise("stone_expertise", false, 0, 0x9a9a9a, 2);
-        fibreExpertise = setupTreatise("fibre_expertise", false, 0, 0xa88054, 5, 10, 11, 4);
-        skinExpertise = setupTreatise("skin_expertise", false, 0, 0xbf6930, 0, 1, 1, 1);
-        boneExpertise = setupTreatise("bone_expertise", false, 0, 0xfff193, 12, 14, 12, 14);
-        fabricExpertise = setupTreatise("fabric_expertise", false, 0, 0xff3333, 5, 3, 6, 4);
-        scaleExpertise = setupTreatise("scale_expertise", false, 0, 0x75a03e, 6, 7, 6, 8);
-        hammerEfficiency = setupTreatise("hammer_efficiency", false, 0, 0xff6666, 6, 7, 6, 11);
-        axeEfficiency = setupTreatise("axe_efficiency", false, 0, 0x66ff66, 0, 1, 3, 3);
-        cutEfficiency = setupTreatise("cut_efficiency", false, 0, 0x6666ff, 4, 0, 3, 5);
-
-        sturdyGuard = setupSchematic("sword/sturdy_guard", null, false, 1, 0xbcb8b5, 3, 2, 2, 1);
-        throwingKnife = setupSchematic("sword/throwing_knife", null, false, 1, 0xb8ced9, 4, 1, 0, 5);
-        howlingBlade = setupSchematic("sword/howling", null, false, 1, 0xfaf396, 8, 9, 10, 5);
-    }
-
-
+    /**
+     * These used to be built in commonInit and held in static fields. Building a stack reads the
+     * item's data components, and those are not bound until after common setup runs, so they are
+     * built here instead, when the creative tab asks for them.
+     */
     public Collection<ItemStack> getCreativeTabItems() {
         return Lists.newArrayList(
-                sturdyGuard,
-                throwingKnife,
-                howlingBlade,
-                gemExpertise,
-                metalExpertise,
-                woodExpertise,
-                stoneExpertise,
-                fibreExpertise,
-                skinExpertise,
-                boneExpertise,
-                fabricExpertise,
-                scaleExpertise,
-                hammerEfficiency,
-                axeEfficiency,
-                cutEfficiency,
+                setupSchematic("sword/sturdy_guard", null, false, 1, 0xbcb8b5, 3, 2, 2, 1),
+                setupSchematic("sword/throwing_knife", null, false, 1, 0xb8ced9, 4, 1, 0, 5),
+                setupSchematic("sword/howling", null, false, 1, 0xfaf396, 8, 9, 10, 5),
+                setupTreatise("gem_expertise", false, 0, 0x2bffee, 14, 13, 14, 15),
+                setupTreatise("metal_expertise", false, 0, 0xffffff, 4, 6, 6, 5),
+                setupTreatise("wood_expertise", false, 0, 0xbf934b, 2, 1, 2, 1),
+                setupTreatise("stone_expertise", false, 0, 0x9a9a9a, 2),
+                setupTreatise("fibre_expertise", false, 0, 0xa88054, 5, 10, 11, 4),
+                setupTreatise("skin_expertise", false, 0, 0xbf6930, 0, 1, 1, 1),
+                setupTreatise("bone_expertise", false, 0, 0xfff193, 12, 14, 12, 14),
+                setupTreatise("fabric_expertise", false, 0, 0xff3333, 5, 3, 6, 4),
+                setupTreatise("scale_expertise", false, 0, 0x75a03e, 6, 7, 6, 8),
+                setupTreatise("hammer_efficiency", false, 0, 0xff6666, 6, 7, 6, 11),
+                setupTreatise("axe_efficiency", false, 0, 0x66ff66, 0, 1, 3, 3),
+                setupTreatise("cut_efficiency", false, 0, 0x6666ff, 4, 0, 3, 5),
                 setupSchematic("hone/gild_1", null, true, 2, 0xc9ae69, 15, 14, 15, 15),
                 setupSchematic("hone/gild_5", null,
                         new String[] { "hone/gild_1", "hone/gild_2", "hone/gild_3", "hone/gild_4", "hone/gild_5" },

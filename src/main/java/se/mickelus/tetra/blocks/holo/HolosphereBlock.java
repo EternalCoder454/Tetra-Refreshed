@@ -49,8 +49,8 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
     private static final VoxelShape shape = Block.box(5.5, 0, 5.5, 10.5, 5, 10.5);
     public static Supplier<HolosphereBlock> instance;
 
-    public HolosphereBlock() {
-        super(BlockBehaviour.Properties.of()
+    public HolosphereBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .strength(0, 20.0F)
                 .sound(SoundType.DEEPSLATE));
     }

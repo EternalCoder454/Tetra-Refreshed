@@ -113,10 +113,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.Function;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class TetraRegistries {
-    public static final DeferredRegister<Block> blocks = DeferredRegister.create(BuiltInRegistries.BLOCK, TetraMod.MOD_ID);
-    public static final DeferredRegister<Item> items = DeferredRegister.create(BuiltInRegistries.ITEM, TetraMod.MOD_ID);
+    // Blocks and items carry their registry id on their Properties now, and Properties#setId mutates,
+    // so a Properties cannot be shared between two of them. These two registers build a fresh one per
+    // entry and stamp the id on it before handing it to the constructor, which is why every block and
+    // item factory takes its Properties rather than building its own.
+    public static final DeferredRegister.Blocks blocks = DeferredRegister.createBlocks(TetraMod.MOD_ID);
+    public static final DeferredRegister.Items items = DeferredRegister.createItems(TetraMod.MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> blockEntities = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,
             TetraMod.MOD_ID);
     public static final DeferredRegister<MenuType<?>> containers = DeferredRegister.create(BuiltInRegistries.MENU, TetraMod.MOD_ID);
@@ -260,7 +266,7 @@ public class TetraRegistries {
         registerBlockItem(forgedPlatformSlab);
         forgedVent = register(blocks, ForgedVentBlock.identifier, ForgedVentBlock::new, value -> ForgedVentBlock.instance = value);
         registerBlockItem(forgedVent);
-        blocks.register(HammerHeadBlock.identifier, HammerHeadBlock::new);
+        blocks.registerBlock(HammerHeadBlock.identifier, HammerHeadBlock::new);
         forgeHammer = register(blocks, HammerBaseBlock.identifier, HammerBaseBlock::new);
         registerBlockItem(forgeHammer);
         forgedWorkbench = register(blocks, ForgedWorkbenchBlock.identifier, ForgedWorkbenchBlock::new);
@@ -294,13 +300,13 @@ public class TetraRegistries {
         registerBlockItem(seepingBedrock);
 
         // multiblock schematics
-        new MultiblockSchematicBlock.Builder("stonecutter", 3, 2, ForgedBlockCommon.propertiesSolid)
+        new MultiblockSchematicBlock.Builder("stonecutter", 3, 2, ForgedBlockCommon::solid)
                 .build(blocks, items);
 
-        new MultiblockSchematicBlock.Builder("earthpiercer", 2, 2, ForgedBlockCommon.propertiesSolid)
+        new MultiblockSchematicBlock.Builder("earthpiercer", 2, 2, ForgedBlockCommon::solid)
                 .build(blocks, items);
 
-        new MultiblockSchematicBlock.Builder("extractor", 3, 3, ForgedBlockCommon.propertiesSolid)
+        new MultiblockSchematicBlock.Builder("extractor", 3, 3, ForgedBlockCommon::solid)
                 .build(blocks, items);
 
         // misc
@@ -311,17 +317,17 @@ public class TetraRegistries {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // modular items
-        items.register(ModularBladedItem.identifier, ModularBladedItem::new);
-        items.register(ModularDoubleHeadedItem.identifier, ModularDoubleHeadedItem::new);
-        items.register(ModularBowItem.identifier, ModularBowItem::new);
+        items.registerItem(ModularBladedItem.identifier, ModularBladedItem::new);
+        items.registerItem(ModularDoubleHeadedItem.identifier, ModularDoubleHeadedItem::new);
+        items.registerItem(ModularBowItem.identifier, ModularBowItem::new);
         var shootableDummy = register(items, ShootableDummyItem.identifier, ShootableDummyItem::new);
-        items.register(ModularCrossbowItemImpl.identifier, () -> new ModularCrossbowItemImpl(shootableDummy.get()));
-        items.register(ModularSingleHeadedItem.identifier, ModularSingleHeadedItem::new);
-        items.register(ModularShieldItem.identifier, ModularShieldItem::new);
+        items.registerItem(ModularCrossbowItemImpl.identifier, properties -> new ModularCrossbowItemImpl(properties, shootableDummy.get()));
+        items.registerItem(ModularSingleHeadedItem.identifier, ModularSingleHeadedItem::new);
+        items.registerItem(ModularShieldItem.identifier, ModularShieldItem::new);
         ModularToolbeltItem.instance = register(items, ModularToolbeltItem.identifier, ModularToolbeltItem::new);
         modularHolosphere = register(items, ModularHolosphereItem.identifier, ModularHolosphereItem::new,
                 value -> ModularHolosphereItem.instance = value);
-        items.register(DynamicModularItem.identifier, DynamicModularItem::new);
+        items.registerItem(DynamicModularItem.identifier, DynamicModularItem::new);
 
         // random loot
         geode = register(items, GeodeItem.identifier, GeodeItem::new, value -> GeodeItem.instance = value);
@@ -352,7 +358,7 @@ public class TetraRegistries {
         earthpiercer = register(items, EarthpiercerItem.identifier, EarthpiercerItem::new, value -> EarthpiercerItem.instance = value);
         stonecutter = register(items, StonecutterItem.identifier, StonecutterItem::new, value -> StonecutterItem.instance = value);
 
-        register(items, ScrollItem.identifier, () -> new ScrollItem(rolledScroll.get()), value -> ScrollItem.instance = value);
+        register(items, ScrollItem.identifier, properties -> new ScrollItem(properties, rolledScroll.get()), value -> ScrollItem.instance = value);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // BLOCK ENTITIES
@@ -504,10 +510,10 @@ public class TetraRegistries {
     }
 
     public static <B extends Block> DeferredHolder<Item, BlockItem> registerBlockItem(DeferredHolder<Block, B> block) {
-        return register(items, block.getId().getPath(),
-                () -> block.get() instanceof BlockTooltip
-                        ? new TooltipBlockItem(block.get(), itemProperties)
-                        : new BlockItem(block.get(), itemProperties));
+        return items.registerItem(block.getId().getPath(),
+                properties -> block.get() instanceof BlockTooltip
+                        ? new TooltipBlockItem(block.get(), properties)
+                        : new BlockItem(block.get(), properties));
     }
 
     public static <P extends StructureProcessor> DeferredHolder<StructureProcessorType<?>, StructureProcessorType<P>> registerStructureProcessor(
@@ -636,6 +642,34 @@ public class TetraRegistries {
     private static <R, T extends R> DeferredHolder<R, T> register(DeferredRegister<R> registry, String id, Supplier<T> supplier,
             Consumer<? super T> assignment) {
         return registry.register(id, assigning(supplier, assignment));
+    }
+
+    private static <P, T> Function<P, T> assigning(Function<P, T> factory, Consumer<? super T> assignment) {
+        return properties -> {
+            T value = factory.apply(properties);
+            assignment.accept(value);
+            return value;
+        };
+    }
+
+    private static <T extends Block> DeferredHolder<Block, T> register(DeferredRegister.Blocks registry, String id,
+            Function<BlockBehaviour.Properties, T> factory) {
+        return registry.registerBlock(id, factory);
+    }
+
+    private static <T extends Block> DeferredHolder<Block, T> register(DeferredRegister.Blocks registry, String id,
+            Function<BlockBehaviour.Properties, T> factory, Consumer<? super T> assignment) {
+        return registry.registerBlock(id, assigning(factory, assignment));
+    }
+
+    private static <T extends Item> DeferredHolder<Item, T> register(DeferredRegister.Items registry, String id,
+            Function<Item.Properties, T> factory) {
+        return registry.registerItem(id, factory);
+    }
+
+    private static <T extends Item> DeferredHolder<Item, T> register(DeferredRegister.Items registry, String id,
+            Function<Item.Properties, T> factory, Consumer<? super T> assignment) {
+        return registry.registerItem(id, assigning(factory, assignment));
     }
 
     private static void validateTierOrdering() {

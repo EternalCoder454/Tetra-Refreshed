@@ -22,8 +22,8 @@ public class PlanarStabilizerItem extends TetraItem {
     public static final String identifier = "planar_stabilizer";
     public static PlanarStabilizerItem instance;
 
-    public PlanarStabilizerItem() {
-        super(new Properties());
+    public PlanarStabilizerItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

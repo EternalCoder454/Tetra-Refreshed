@@ -20,8 +20,8 @@ public class PristineLapisItem extends TetraItem {
 
     public static PristineLapisItem instance;
 
-    public PristineLapisItem() {
-        super(new Properties());
+    public PristineLapisItem(Properties properties) {
+        super(properties);
     }
 
     @Override

@@ -22,8 +22,8 @@ public class InsulatedPlateItem extends TetraItem {
     public static final String identifier = "vent_plate";
     public static InsulatedPlateItem instance;
 
-    public InsulatedPlateItem() {
-        super(new Properties());
+    public InsulatedPlateItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

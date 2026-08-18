@@ -30,8 +30,8 @@ public class SeepingBedrockBlock extends TetraBlock implements BlockTooltip {
 
     public static SeepingBedrockBlock instance;
 
-    public SeepingBedrockBlock() {
-        super(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable());
+    public SeepingBedrockBlock(BlockBehaviour.Properties properties) {
+        super(properties.strength(-1.0F, 3600000.0F).noLootTable());
 
         registerDefaultState(defaultBlockState().setValue(activeProp, 1));
     }

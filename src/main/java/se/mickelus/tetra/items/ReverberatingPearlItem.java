@@ -19,8 +19,8 @@ import java.util.List;
 public class ReverberatingPearlItem extends TetraItem {
     private static final String unlocalizedName = "reverberating_pearl";
 
-    public ReverberatingPearlItem() {
-        super(new Properties());
+    public ReverberatingPearlItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

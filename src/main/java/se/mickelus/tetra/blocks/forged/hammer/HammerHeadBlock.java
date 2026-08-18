@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteractiveBlock, IToolProviderBlock, EntityBlock, BlockTooltip {
@@ -63,8 +64,8 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
     };
     public static HammerHeadBlock instance;
 
-    public HammerHeadBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public HammerHeadBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
         instance = this;
     }
 

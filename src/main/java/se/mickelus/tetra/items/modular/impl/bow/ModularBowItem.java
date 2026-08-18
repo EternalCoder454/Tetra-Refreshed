@@ -62,6 +62,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import se.mickelus.tetra.util.NonNullLazy;
 
 @ParametersAreNonnullByDefault
 public class ModularBowItem extends ModularItem {
@@ -78,10 +79,10 @@ public class ModularBowItem extends ModularItem {
     protected GridTextureModelData arrowModel0 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_0"));
     protected GridTextureModelData arrowModel1 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_1"));
     protected GridTextureModelData arrowModel2 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_2"));
-    protected ItemStack vanillaBow;
+    protected NonNullLazy<ItemStack> vanillaBow;
 
-    public ModularBowItem() {
-        super(new Properties().stacksTo(1).fireResistant());
+    public ModularBowItem(Properties properties) {
+        super(properties.stacksTo(1).fireResistant());
         instance = this;
 
         majorModuleKeys = new String[] { stringKey, staveKey };
@@ -89,7 +90,8 @@ public class ModularBowItem extends ModularItem {
 
         requiredModules = new String[] { stringKey, staveKey };
 
-        vanillaBow = new ItemStack(Items.BOW);
+        // Built on first use: item data components are not bound while items are being registered.
+        vanillaBow = NonNullLazy.of(() -> new ItemStack(Items.BOW));
 
         updateConfig(ConfigHandler.HONE_BOW_BASE_DEFAULT, ConfigHandler.HONE_BOW_INTEGRITY_MULTIPLIER_DEFAULT);
 
@@ -197,7 +199,7 @@ public class ModularBowItem extends ModularItem {
     protected void fireArrow(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            ItemStack ammoStack = player.getProjectile(vanillaBow);
+            ItemStack ammoStack = player.getProjectile(vanillaBow.get());
 
             boolean playerInfinite = isInfinite(player, itemStack, ammoStack);
 
@@ -444,7 +446,7 @@ public class ModularBowItem extends ModularItem {
 
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack bowStack = player.getItemInHand(hand);
-        boolean hasAmmo = !player.getProjectile(vanillaBow).isEmpty();
+        boolean hasAmmo = !player.getProjectile(vanillaBow.get()).isEmpty();
 
         if (isBroken(bowStack)) {
             return InteractionResult.PASS;

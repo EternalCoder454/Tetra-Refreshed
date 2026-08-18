@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Predicates.equalTo;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -96,8 +97,8 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     private static final VoxelShape shapeX2Open = box(1, 0, 1, 31, 9, 15);
     public static Supplier<ForgedContainerBlock> instance;
 
-    public ForgedContainerBlock() {
-        super(ForgedBlockCommon.propertiesSolid);
+    public ForgedContainerBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.solid(properties));
 
         registerDefaultState(defaultBlockState()
                 .setValue(facingProp, Direction.EAST)

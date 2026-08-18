@@ -6,7 +6,7 @@
     "max": 4,
     "stat": {
         "type": "tetra:attribute",
-        "attribute": "generic.attack_speed"
+        "attribute": "attack_speed"
     },
     "label": {
         "type": "tetra:basic",

@@ -49,8 +49,8 @@ public class ModularHolosphereItem extends ModularItem {
 
     public static ModularHolosphereItem instance;
 
-    public ModularHolosphereItem() {
-        super(new Properties()
+    public ModularHolosphereItem(Properties properties) {
+        super(properties
                 .stacksTo(1)
 
                 .fireResistant());

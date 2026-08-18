@@ -55,6 +55,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -80,8 +81,8 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
     public static Item item;
     public static Item usedItem;
 
-    public ChthonicExtractorBlock() {
-        super(Block.Properties.of()
+    public ChthonicExtractorBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .mapColor(MapColor.COLOR_GRAY)
                 .sound(SoundType.NETHERITE_BLOCK)
                 .strength(2.5F, 2400.0F));
@@ -110,13 +111,13 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
                 .orElseGet(() -> FracturedBedrockBlock.canPierce(world, pos.below()) ? 0 : -1);
     }
 
-    public static DeferredHolder<Item, BlockItem> registerItems(DeferredRegister<Item> registry) {
-        registry.register(usedIdentifier, () -> {
-            usedItem = new TooltipBlockItem(instance, new Item.Properties().durability(maxDamage));
+    public static DeferredHolder<Item, BlockItem> registerItems(DeferredRegister.Items registry) {
+        registry.registerItem(usedIdentifier, properties -> {
+            usedItem = new TooltipBlockItem(instance, properties.durability(maxDamage));
             return (BlockItem) usedItem;
         });
-        return registry.register(identifier, () -> {
-            item = new TooltipBlockItem(instance, new Item.Properties().stacksTo(64));
+        return registry.registerItem(identifier, properties -> {
+            item = new TooltipBlockItem(instance, properties.stacksTo(64));
             return (BlockItem) item;
         });
     }

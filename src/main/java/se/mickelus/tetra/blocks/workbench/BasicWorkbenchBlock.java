@@ -23,14 +23,15 @@ import se.mickelus.tetra.advancements.BlockUseCriterion;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class BasicWorkbenchBlock extends AbstractWorkbenchBlock implements BlockTooltip {
     public static final String identifier = "basic_workbench";
     public static AbstractWorkbenchBlock instance;
 
-    public BasicWorkbenchBlock() {
-        super(Properties.of()
+    public BasicWorkbenchBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .strength(2.5f)
                 .sound(SoundType.WOOD));
     }

@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 import static net.minecraft.world.level.material.Fluids.WATER;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements SimpleWaterloggedBlock, BlockTooltip {
@@ -54,8 +55,8 @@ public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements Simp
             box(4, 2, 2, 12, 9, 14),
             box(2, 9, 0, 14, 16, 16));
 
-    public ForgedWorkbenchBlock() {
-        super(ForgedBlockCommon.propertiesSolid);
+    public ForgedWorkbenchBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.solid(properties));
 
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(axis, Direction.Axis.X));
     }

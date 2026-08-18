@@ -31,8 +31,8 @@ public class ModularSingleHeadedItem extends ItemModularHandheld {
 
     public static ModularSingleHeadedItem instance;
 
-    public ModularSingleHeadedItem() {
-        super(new Properties().stacksTo(1).fireResistant());
+    public ModularSingleHeadedItem(Properties properties) {
+        super(properties.stacksTo(1).fireResistant());
         instance = this;
 
         entityHitDamage = 1;

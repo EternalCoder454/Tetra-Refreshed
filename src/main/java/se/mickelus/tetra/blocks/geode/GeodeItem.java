@@ -18,8 +18,8 @@ public class GeodeItem extends TetraItem {
 
     public static GeodeItem instance;
 
-    public GeodeItem() {
-        super(new Properties());
+    public GeodeItem(Properties properties) {
+        super(properties);
     }
 
     @Override

@@ -25,8 +25,8 @@ public class DragonSinewItem extends TetraItem {
     static final Component tooltip = Component.translatable("item.tetra." + identifier + ".description")
             .withStyle(ChatFormatting.GRAY);
 
-    public DragonSinewItem() {
-        super(new Properties());
+    public DragonSinewItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

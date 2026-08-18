@@ -22,8 +22,8 @@ public class CombustionChamberItem extends TetraItem {
     public static final String identifier = "combustion_chamber";
     public static Supplier<CombustionChamberItem> instance;
 
-    public CombustionChamberItem() {
-        super(new Properties());
+    public CombustionChamberItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

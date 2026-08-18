@@ -56,6 +56,7 @@ import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class TransferUnitBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -82,8 +83,8 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
 
     public static TransferUnitBlock instance;
 
-    public TransferUnitBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public TransferUnitBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
 
         registerDefaultState(defaultBlockState()
                 .setValue(plateProp, false)

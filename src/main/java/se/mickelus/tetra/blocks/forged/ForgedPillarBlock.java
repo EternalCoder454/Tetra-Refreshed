@@ -12,13 +12,14 @@ import se.mickelus.tetra.blocks.InitializableBlock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedPillarBlock extends RotatedPillarBlock implements InitializableBlock, BlockTooltip {
     public static final String identifier = "forged_pillar";
 
-    public ForgedPillarBlock() {
-        super(ForgedBlockCommon.propertiesSolid);
+    public ForgedPillarBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.solid(properties));
     }
 
     public void appendBlockHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {

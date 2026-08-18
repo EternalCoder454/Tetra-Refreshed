@@ -25,6 +25,7 @@ import se.mickelus.tetra.blocks.forged.ForgedBlockCommon;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorPipeBlock extends TetraBlock implements BlockTooltip {
@@ -35,8 +36,8 @@ public class CoreExtractorPipeBlock extends TetraBlock implements BlockTooltip {
 
     public static CoreExtractorPipeBlock instance;
 
-    public CoreExtractorPipeBlock() {
-        super(ForgedBlockCommon.propertiesSolid);
+    public CoreExtractorPipeBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.solid(properties));
     }
 
     public static boolean isPowered(Level world, BlockPos pos) {

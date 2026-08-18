@@ -32,8 +32,8 @@ public class ModularBladedItem extends ItemModularHandheld {
 
     public static ModularBladedItem instance;
 
-    public ModularBladedItem() {
-        super(new Item.Properties().stacksTo(1).fireResistant());
+    public ModularBladedItem(Properties properties) {
+        super(properties.stacksTo(1).fireResistant());
         instance = this;
 
         blockDestroyDamage = 2;

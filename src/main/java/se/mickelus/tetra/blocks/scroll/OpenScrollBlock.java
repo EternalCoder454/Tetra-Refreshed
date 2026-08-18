@@ -12,14 +12,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import se.mickelus.mutil.util.RotationHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class OpenScrollBlock extends ScrollBlock {
     public static final String identifier = "scroll_open";
     public static ScrollBlock instance;
 
-    public OpenScrollBlock() {
-        super(Arrangement.open);
+    public OpenScrollBlock(BlockBehaviour.Properties properties) {
+        super(properties, Arrangement.open);
     }
 
     @Override

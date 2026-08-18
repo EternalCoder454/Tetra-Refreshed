@@ -30,8 +30,8 @@ public class QuickLatchItem extends TetraItem {
     public static final String identifier = "quick_latch";
     public static QuickLatchItem instance;
 
-    public QuickLatchItem() {
-        super(new Properties());
+    public QuickLatchItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

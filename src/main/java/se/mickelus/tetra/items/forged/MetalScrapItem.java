@@ -22,8 +22,8 @@ public class MetalScrapItem extends TetraItem {
     public static final String identifier = "metal_scrap";
     public static Supplier<MetalScrapItem> instance;
 
-    public MetalScrapItem() {
-        super(new Properties());
+    public MetalScrapItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -49,8 +49,8 @@ public class ArcaneFireBlock extends BaseFireBlock {
     public static Supplier<ArcaneFireBlock> instance;
     private final MapCodec<ArcaneFireBlock> codec = MapCodec.unit(this);
 
-    public ArcaneFireBlock() {
-        super(BlockBehaviour.Properties.of()
+    public ArcaneFireBlock(BlockBehaviour.Properties properties) {
+        super(properties
                 .noCollision()
                 .instabreak()
                 .replaceable()

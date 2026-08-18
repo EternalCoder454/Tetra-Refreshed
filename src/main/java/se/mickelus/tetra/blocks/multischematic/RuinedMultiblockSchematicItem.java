@@ -13,8 +13,8 @@ import java.util.List;
 
 public class RuinedMultiblockSchematicItem extends BaseMultiblockSchematicItem {
 
-    public RuinedMultiblockSchematicItem(Block ruinedBlock, MultiblockSchematicBlock block) {
-        super(ruinedBlock, block);
+    public RuinedMultiblockSchematicItem(Properties properties, Block ruinedBlock, MultiblockSchematicBlock block) {
+        super(properties, ruinedBlock, block);
     }
 
     @Override

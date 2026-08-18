@@ -45,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteractiveBlock, BlockTooltip {
@@ -90,8 +91,8 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     };
     public static ForgedVentBlock instance;
 
-    public ForgedVentBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public ForgedVentBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
     }
 
     private static boolean breakBolt(Level world, BlockPos pos, BlockState blockState, @Nullable Player player, @Nullable InteractionHand hand, Direction hitFace) {

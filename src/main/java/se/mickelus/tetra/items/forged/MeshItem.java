@@ -21,8 +21,8 @@ public class MeshItem extends TetraItem {
     public static final String identifier = "forged_mesh";
     public static MeshItem instance;
 
-    public MeshItem() {
-        super(new Properties());
+    public MeshItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

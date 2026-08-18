@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicProviderBlock, ICraftingEffectProviderBlock {
@@ -42,8 +43,8 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
             SoundEvents.BOOK_PAGE_TURN, SoundEvents.BOOK_PAGE_TURN, SoundEvents.BOOK_PAGE_TURN);
     private final Arrangement arrangement;
 
-    public ScrollBlock(Arrangement arrangement) {
-        super(Properties.of().sound(sound).instabreak().pushReaction(PushReaction.DESTROY));
+    public ScrollBlock(BlockBehaviour.Properties properties, Arrangement arrangement) {
+        super(properties.sound(sound).instabreak().pushReaction(PushReaction.DESTROY));
 
         this.arrangement = arrangement;
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST));

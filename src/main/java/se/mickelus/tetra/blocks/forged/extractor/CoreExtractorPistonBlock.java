@@ -30,6 +30,7 @@ import se.mickelus.tetra.blocks.forged.ForgedBlockCommon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorPistonBlock extends TetraWaterloggedBlock implements EntityBlock {
@@ -39,8 +40,8 @@ public class CoreExtractorPistonBlock extends TetraWaterloggedBlock implements E
 
     public static Supplier<CoreExtractorPistonBlock> instance;
 
-    public CoreExtractorPistonBlock() {
-        super(ForgedBlockCommon.propertiesNotSolid);
+    public CoreExtractorPistonBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.notSolid(properties));
     }
 
     @Override

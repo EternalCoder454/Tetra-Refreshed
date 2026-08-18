@@ -16,6 +16,7 @@ import se.mickelus.mutil.util.TileEntityOptional;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumMap;
 import java.util.Map;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class RolledScrollBlock extends ScrollBlock {
@@ -24,8 +25,8 @@ public class RolledScrollBlock extends ScrollBlock {
 
     private final Map<Direction, VoxelShape[]> shapes;
 
-    public RolledScrollBlock() {
-        super(Arrangement.rolled);
+    public RolledScrollBlock(BlockBehaviour.Properties properties) {
+        super(properties, Arrangement.rolled);
 
         shapes = new EnumMap<>(Direction.class);
         for (int i = 0; i < 4; i++) {

@@ -11,6 +11,7 @@ import se.mickelus.tetra.blocks.TetraBlock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
 public class ForgedPlatformBlock extends TetraBlock implements BlockTooltip {
@@ -18,8 +19,8 @@ public class ForgedPlatformBlock extends TetraBlock implements BlockTooltip {
 
     public static ForgedPlatformBlock instance;
 
-    public ForgedPlatformBlock() {
-        super(ForgedBlockCommon.propertiesSolid);
+    public ForgedPlatformBlock(BlockBehaviour.Properties properties) {
+        super(ForgedBlockCommon.solid(properties));
     }
 
     public void appendBlockHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {

@@ -20,8 +20,8 @@ public class PristineDiamondItem extends TetraItem {
 
     public static PristineDiamondItem instance;
 
-    public PristineDiamondItem() {
-        super(new Properties());
+    public PristineDiamondItem(Properties properties) {
+        super(properties);
     }
 
     @Override

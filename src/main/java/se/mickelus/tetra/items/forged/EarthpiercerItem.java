@@ -24,8 +24,8 @@ public class EarthpiercerItem extends TetraItem {
     public static final String identifier = "earthpiercer";
     public static EarthpiercerItem instance;
 
-    public EarthpiercerItem() {
-        super(new Properties());
+    public EarthpiercerItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

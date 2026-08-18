@@ -22,8 +22,8 @@ public class LubricantDispenserItem extends TetraItem {
     public static final String identifier = "lubricant_dispenser";
     public static Supplier<LubricantDispenserItem> instance;
 
-    public LubricantDispenserItem() {
-        super(new Properties());
+    public LubricantDispenserItem(Properties properties) {
+        super(properties);
     }
 
     @OnlyIn(Dist.CLIENT)

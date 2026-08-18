@@ -12,19 +12,28 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ForgedBlockCommon {
-    public static final Block.Properties propertiesSolid = Block.Properties.of()
-            .requiresCorrectToolForDrops()
-            .sound(SoundType.NETHERITE_BLOCK)
-            .strength(12F, 2400.0F);
+    /**
+     * These were shared Properties constants. A Properties carries its block's registry id now and
+     * setId mutates, so one instance cannot serve two blocks. They decorate the Properties the
+     * register built for each block instead.
+     */
+    public static Block.Properties solid(Block.Properties properties) {
+        return properties
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.NETHERITE_BLOCK)
+                .strength(12F, 2400.0F);
+    }
 
-    public static final Block.Properties propertiesNotSolid = Block.Properties.of()
-            .requiresCorrectToolForDrops()
-            .noOcclusion()
-            .sound(SoundType.NETHERITE_BLOCK)
-            .isRedstoneConductor(ForgedBlockCommon::notSolid)
-            .isSuffocating(ForgedBlockCommon::notSolid)
-            .isViewBlocking(ForgedBlockCommon::notSolid)
-            .strength(12F, 600.0F);
+    public static Block.Properties notSolid(Block.Properties properties) {
+        return properties
+                .requiresCorrectToolForDrops()
+                .noOcclusion()
+                .sound(SoundType.NETHERITE_BLOCK)
+                .isRedstoneConductor(ForgedBlockCommon::notSolid)
+                .isSuffocating(ForgedBlockCommon::notSolid)
+                .isViewBlocking(ForgedBlockCommon::notSolid)
+                .strength(12F, 600.0F);
+    }
 
     public static final Component locationTooltip = Component.translatable("item.tetra.forged_description")
             .withStyle(ChatFormatting.GRAY);
