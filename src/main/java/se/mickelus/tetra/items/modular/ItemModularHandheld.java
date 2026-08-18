@@ -98,7 +98,15 @@ public class ItemModularHandheld extends ModularItem {
     public static final TagKey<Block> nailedTag = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "nailed"));
     // if the blocking level exceeds this value the item has an infinite blocking duration
     public static final int blockingDurationLimit = 16;
-    static final ChargedAbilityEffect[] abilities = new ChargedAbilityEffect[] {
+    /**
+     * The charged abilities, in the order they are offered. The first one that can perform wins, so
+     * order matters, and Tetra's own are added first.
+     *
+     * <p>An addon appends to this through {@link #registerAbility}. It used to have to mix in an
+     * accessor and replace the array from a hook on this class's static initialiser, which is two
+     * mixins into Tetra's internals for what is really a list.
+     */
+    static final List<ChargedAbilityEffect> abilities = new ArrayList<>(Arrays.asList(
             ExecuteEffect.instance,
             LungeEffect.instance,
             SlamEffect.instance,
@@ -106,7 +114,21 @@ public class ItemModularHandheld extends ModularItem {
             OverpowerEffect.instance,
             ReapEffect.instance,
             PryChargedEffect.instance
-    };
+    ));
+
+    /**
+     * Offer a charged ability on every handheld modular item. Call it while the mod loads, before
+     * anything is held, and expect it to run once. A null is ignored rather than stored, because an
+     * addon that registers before its own effects exist would otherwise fail much later and
+     * somewhere else.
+     *
+     * @param ability the ability to offer, after the ones already registered
+     */
+    public static void registerAbility(ChargedAbilityEffect ability) {
+        if (ability != null && !abilities.contains(ability)) {
+            abilities.add(ability);
+        }
+    }
     // the base amount of damage the item should take after destroying a block
     protected int blockDestroyDamage = 1;
     // the base amount of damage the item should take after hitting an entity
@@ -127,7 +149,7 @@ public class ItemModularHandheld extends ModularItem {
         if (!activeStack.isEmpty() && activeStack.getItem() instanceof ItemModularHandheld) {
             ItemModularHandheld item = (ItemModularHandheld) activeStack.getItem();
 
-            Arrays.stream(abilities)
+            abilities.stream()
                     .filter(ability -> ability.canPerform(player, item, activeStack, target, targetPos, ticksUsed))
                     .findFirst()
                     .ifPresent(ability -> ability.perform(player, hand, item, activeStack, target, targetPos, hitVec, ticksUsed));
@@ -709,7 +731,7 @@ public class ItemModularHandheld extends ModularItem {
 
         if (getEffectLevel(itemStack, ItemEffect.throwable) > 0
                 || EffectHelper.getEnchantmentLevel(Enchantments.RIPTIDE, itemStack) > 0
-                || Arrays.stream(abilities).anyMatch(ability -> ability.isAvailable(this, itemStack))) {
+                || abilities.stream().anyMatch(ability -> ability.isAvailable(this, itemStack))) {
             return 72000;
         }
 
@@ -787,7 +809,7 @@ public class ItemModularHandheld extends ModularItem {
 
 
     public ChargedAbilityEffect getChargeableAbility(ItemStack itemStack) {
-        return Arrays.stream(abilities)
+        return abilities.stream()
                 .filter(ability -> ability.canCharge(this, itemStack))
                 .findFirst()
                 .orElse(null);
