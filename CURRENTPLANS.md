@@ -105,7 +105,6 @@ pile of things that each half work. Test feedback should interrupt anything on t
 `CHANGELOG.md` lists the eight known gaps a tester will hit, of which villager trades selling nothing
 and the block overlay not drawing are the two anybody will notice first.
 
-**Distribution is unresolved.** Tetra's terms forbid redistributing it as compiled code, which is
-what handing a tester a jar is. Forking and modifying is permitted and that is what this repository
-is. Until that question is answered with Mikael, the feedback loop the whole list depends on does
-not really exist. Mutil is MIT and has no such problem.
+**Distribution: asked and waiting.** Mikael was emailed on 2026-08-18 for permission to hand
+testers a jar, since Tetra's terms forbid redistributing it as compiled code. Do not raise this
+again until there is a reply. Mutil is MIT and has no such problem.
