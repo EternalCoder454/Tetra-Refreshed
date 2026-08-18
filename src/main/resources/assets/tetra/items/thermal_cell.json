@@ -1,0 +1,19 @@
+{
+    "model": {
+        "type": "minecraft:range_dispatch",
+        "property": "tetra:charged",
+        "entries": [
+            {
+                "threshold": 1,
+                "model": {
+                    "type": "minecraft:model",
+                    "model": "tetra:item/thermal_cell_charged"
+                }
+            }
+        ],
+        "fallback": {
+            "type": "minecraft:model",
+            "model": "tetra:item/thermal_cell"
+        }
+    }
+}
