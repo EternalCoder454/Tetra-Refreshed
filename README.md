@@ -19,7 +19,7 @@ system and on redistribution. Read them before using anything here.
 * [DEV.md](DEV.md) is the developer guide: building, running, and the data formats.
 * [PORT-STATUS.md](PORT-STATUS.md) is the port handover, including what changed in behaviour on the
   way to 26.1.2 and what is knowingly still missing.
-* [MODERNIZATION.md](MODERNIZATION.md) studies what would make Tetra easier to extend.
+* [CURRENTPLANS.md](CURRENTPLANS.md) is where the project is going after the port.
 
 ## Upstream readme
 

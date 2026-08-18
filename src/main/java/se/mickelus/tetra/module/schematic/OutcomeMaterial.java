@@ -29,6 +29,7 @@ import java.util.stream.StreamSupport;
 
 import static se.mickelus.tetra.util.ItemStackTagHelper.setTag;
 import se.mickelus.tetra.util.NonNullLazy;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class OutcomeMaterial {
@@ -123,6 +124,19 @@ public class OutcomeMaterial {
         }
 
         return new ItemStack[0];
+    }
+
+    /**
+     * A material accepting exactly the given items, built in code rather than parsed.
+     *
+     * The generated materials need this: they are derived from an item's own components at load
+     * time, so there is no json for the deserializer to read.
+     */
+    public static OutcomeMaterial of(Collection<Item> items) {
+        OutcomeMaterial material = new OutcomeMaterial();
+        material.items = List.copyOf(items);
+        material.predicate = itemStack -> material.items.contains(itemStack.getItem());
+        return material;
     }
 
     @Nullable

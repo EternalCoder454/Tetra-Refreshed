@@ -1,7 +1,7 @@
 # Developer guide
 
 Building, running, and the data formats. For the port itself see [PORT-STATUS.md](PORT-STATUS.md),
-and for where the design is going see [MODERNIZATION.md](MODERNIZATION.md).
+and for where the design is going see [CURRENTPLANS.md](CURRENTPLANS.md).
 
 ## Building
 

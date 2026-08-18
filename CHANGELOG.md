@@ -59,8 +59,7 @@ detail is in `PORT-STATUS.md`. The parts worth knowing as a player:
   artwork. Where both exist the layer uses a sprite the atlas recoloured for that material, so a
   material can define its own look without artwork. Nothing uses it yet, and every existing material
   is untouched. `DEV.md` explains the intent.
-* **`DEV.md`**, a developer guide, and **`MODERNIZATION.md`**, a study of what would make Tetra
-  easier to extend.
+* **`DEV.md`**, a developer guide, and **`CURRENTPLANS.md`**, where the project goes after the port.
 
 ### Known issues
 
