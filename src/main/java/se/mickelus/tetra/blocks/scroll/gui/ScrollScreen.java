@@ -73,7 +73,7 @@ public class ScrollScreen extends Screen {
     protected void renderHoveredToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = gui.getTooltipLines();
         if (tooltipLines != null) {
-            graphics.renderTooltip(font, tooltipLines, Optional.empty(), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, tooltipLines, Optional.empty(), mouseX, mouseY);
         }
     }
 

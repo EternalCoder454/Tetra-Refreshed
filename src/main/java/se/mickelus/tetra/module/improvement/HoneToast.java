@@ -30,10 +30,10 @@ public class HoneToast implements Toast {
             graphics.blit(texture, 0, 0, 0, 0, 160, 32);
 
             String itemName = toastGui.getMinecraft().font.plainSubstrByWidth(itemStack.getHoverName().getString(), 125);
-            graphics.drawString(toastGui.getMinecraft().font, I18n.get("tetra.hone.available"), 30, 7, SchematicRarity.hone.tint);
-            graphics.drawString(toastGui.getMinecraft().font, itemName, 30, 18, GuiColors.muted);
+            graphics.text(toastGui.getMinecraft().font, I18n.get("tetra.hone.available"), 30, 7, SchematicRarity.hone.tint);
+            graphics.text(toastGui.getMinecraft().font, itemName, 30, 18, GuiColors.muted);
 
-            graphics.renderItem(itemStack, 8, 8);
+            graphics.item(itemStack, 8, 8);
             graphics.renderItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8);
 
             if (!this.hasPlayedSound && delta > 0L) {

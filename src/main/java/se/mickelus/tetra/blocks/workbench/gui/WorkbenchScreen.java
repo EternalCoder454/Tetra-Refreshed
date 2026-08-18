@@ -125,7 +125,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     public void render(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
         this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
-        renderTooltip(graphics, mouseX, mouseY);
+        extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -142,13 +142,13 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     }
 
     @Override
-    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.renderTooltip(graphics, mouseX, mouseY);
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractTooltip(graphics, mouseX, mouseY);
 
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
             // Math.max magic to stop tooltip from rendering outside screen
-            graphics.renderTooltip(font, tooltipLines, Optional.empty(), mouseX, Math.max(mouseY, 14));
+            graphics.setTooltipForNextFrame(font, tooltipLines, Optional.empty(), mouseX, Math.max(mouseY, 14));
         }
 
         updateMaterialHoverPreview();

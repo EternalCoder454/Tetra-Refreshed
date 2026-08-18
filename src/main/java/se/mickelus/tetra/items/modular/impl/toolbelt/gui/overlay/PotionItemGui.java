@@ -69,7 +69,7 @@ public class PotionItemGui extends GuiElement {
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
-        graphics.renderItem(itemStack, x, y);
+        graphics.item(itemStack, x, y);
         graphics.renderItemDecorations(mc.font, itemStack, x, y, "");
         RenderSystem.disableDepthTest();
     }

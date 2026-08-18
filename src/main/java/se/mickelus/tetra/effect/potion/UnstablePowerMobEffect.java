@@ -244,11 +244,11 @@ public class UnstablePowerMobEffect extends MobEffect {
             Font font = Minecraft.getInstance().font;
             String amplifierText = StringHelper.toRoman(amplifier + 1);
             int xo = 12 - font.width(amplifierText) / 2;
-            guiGraphics.drawString(font, amplifierText, x + xo + 1, y + 18, 0x212121, false);
-            guiGraphics.drawString(font, amplifierText, x + xo - 1, y + 18, 0x212121, false);
-            guiGraphics.drawString(font, amplifierText, x + xo, y + 19, 0x212121, false);
-            guiGraphics.drawString(font, amplifierText, x + xo, y + 17, 0x212121, false);
-            guiGraphics.drawString(font, amplifierText, x + xo, y + 18, 0xffffff, false);
+            guiGraphics.text(font, amplifierText, x + xo + 1, y + 18, 0x212121, false);
+            guiGraphics.text(font, amplifierText, x + xo - 1, y + 18, 0x212121, false);
+            guiGraphics.text(font, amplifierText, x + xo, y + 19, 0x212121, false);
+            guiGraphics.text(font, amplifierText, x + xo, y + 17, 0x212121, false);
+            guiGraphics.text(font, amplifierText, x + xo, y + 18, 0xffffff, false);
         }
     }
 }

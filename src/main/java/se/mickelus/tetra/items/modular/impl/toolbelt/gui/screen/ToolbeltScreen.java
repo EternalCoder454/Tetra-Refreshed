@@ -118,7 +118,7 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
         super.renderTooltip(graphics, mouseX, mouseY);
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
-            graphics.renderTooltip(font, tooltipLines, Optional.empty(), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, tooltipLines, Optional.empty(), mouseX, mouseY);
         }
     }
 

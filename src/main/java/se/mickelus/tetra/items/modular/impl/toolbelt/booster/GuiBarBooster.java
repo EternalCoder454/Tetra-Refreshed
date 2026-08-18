@@ -28,7 +28,7 @@ public class GuiBarBooster extends GuiElement {
     public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         opacity = filter.apply(visibleIndicators) * opacity;
         if (opacity > 0) {
-            graphics.pose().translate(opacity * -10, 0, 0);
+            graphics.pose().translate(opacity * -10, 0);
 
 
             for (int i = 0; i < visibleIndicators; i++) {
@@ -62,7 +62,7 @@ public class GuiBarBooster extends GuiElement {
                     refX + x + 10,
                     refY + y + 6,
                     0xffffff, opacity * 0.3f);
-            graphics.pose().translate(opacity * 10, 0, 0);
+            graphics.pose().translate(opacity * 10, 0);
         }
     }
 }

@@ -55,10 +55,10 @@ public class SettleToast implements Toast {
                 glyph.draw(graphics, 19, 14, 260, 43, -1, -1, 1);
             }
 
-            graphics.drawString(toastGui.getMinecraft().font, I18n.get(TetraMod.MOD_ID + ".settled.toast"), 30, 7, SchematicRarity.hone.tint);
-            graphics.drawString(toastGui.getMinecraft().font, toastGui.getMinecraft().font.plainSubstrByWidth(moduleName, 118), 37, 18, GuiColors.muted);
+            graphics.text(toastGui.getMinecraft().font, I18n.get(TetraMod.MOD_ID + ".settled.toast"), 30, 7, SchematicRarity.hone.tint);
+            graphics.text(toastGui.getMinecraft().font, toastGui.getMinecraft().font.plainSubstrByWidth(moduleName, 118), 37, 18, GuiColors.muted);
 
-            graphics.renderItem(itemStack, 8, 8);
+            graphics.item(itemStack, 8, 8);
             graphics.renderItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8);
 
             if (!this.hasPlayedSound && delta > 0L) {

@@ -34,11 +34,11 @@ public class GuiModuleGlyph extends GuiTexture {
     @Override
     public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (shift) {
-            graphics.pose().pushPose();
-            graphics.pose().translate(0.5, 0.5, 0);
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(0.5, 0.5);
             drawTexture(graphics, textureLocation, refX + x, refY + y, width - 1, height - 1, textureX, textureY,
                     color, getOpacity() * opacity);
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         } else {
             drawTexture(graphics, textureLocation, refX + x, refY + y, width - 1, height - 1, textureX, textureY,
                     color, getOpacity() * opacity);
