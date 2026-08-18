@@ -1,6 +1,7 @@
 package se.mickelus.tetra.blocks.multischematic;
 
 
+import net.minecraft.util.ARGB;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -192,9 +193,9 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
         Vec3 facePos = Vec3.atCenterOf(pos).add(face.scale(0.52));
         DustParticleOptions particle;
         if (blockState.getBlock() instanceof MultiblockSchematicBlock block && block.x == basePos.getX() && block.y == basePos.getY()) {
-            particle = new DustParticleOptions(new Vector3f(0.1f, 0.9f, 0.5f), 1f);
+            particle = new DustParticleOptions(ARGB.color(26, 230, 128), 1f);
         } else {
-            particle = new DustParticleOptions(new Vector3f(0.9f, 0.3f, 0.3f), 1f);
+            particle = new DustParticleOptions(ARGB.color(230, 76, 76), 1f);
         }
 
         spawnParticle(level, particle, facePos);

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect.vexing;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.minecraft.core.BlockPos;
@@ -48,7 +49,7 @@ public class VexingEffect {
                 int effectLevel = EffectHelper.getEffectLevel(itemStack, ItemEffect.vexing);
                 BlockPos origin = entity.blockPosition();
 
-                Vex vex = EntityType.VEX.create(level);
+                Vex vex = EntityType.VEX.create(level, EntitySpawnReason.MOB_SUMMONED);
                 if (vex != null) {
                     vex.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copy());
                     vex.setDropChance(EquipmentSlot.MAINHAND, 0);

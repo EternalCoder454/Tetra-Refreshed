@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks;
 
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ScheduledTickAccess;
 import com.mojang.serialization.MapCodec;
@@ -88,7 +89,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
     private static void spawnDust(Level level, BlockPos pos, float spread) {
         RandomSource random = level.getRandom();
         ((ServerLevel) level).sendParticles(
-                new DustColorTransitionOptions(new Vector3f(1, 0.5f, 0.725f), new Vector3f(1, 0.738f, 0.578f), 0.8f + random.nextFloat() * 0.4f),
+                new DustColorTransitionOptions(ARGB.color(255, 128, 185), ARGB.color(255, 188, 147), 0.8f + random.nextFloat() * 0.4f),
                 pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f,
                 8, spread, spread, spread, 0.1);
     }
@@ -196,7 +197,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
         }
 
         for (int i = 0; i < 4; ++i) {
-            level.addParticle(new DustColorTransitionOptions(new Vector3f(1, 0.5f, 0.725f), new Vector3f(1, 0.738f, 0.578f),
+            level.addParticle(new DustColorTransitionOptions(ARGB.color(255, 128, 185), ARGB.color(255, 188, 147),
                             0.8f + random.nextFloat() * 0.4f),
                     x + random.nextDouble(), y + random.nextDouble() * 0.5 + 0.5, z + random.nextDouble(), 0, 0, 0);
         }

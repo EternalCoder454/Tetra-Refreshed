@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect.potion;
 
+import net.minecraft.util.ARGB;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +33,7 @@ public class SeveredPotionEffect extends MobEffect {
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
-            ((ServerLevel) entity.level()).sendParticles(new DustParticleOptions(new Vector3f(0.5f, 0, 0), 0.5f),
+            ((ServerLevel) entity.level()).sendParticles(new DustParticleOptions(ARGB.color(128, 0, 0), 0.5f),
                     entity.getX() + entity.getBbWidth() * (0.3 + rand.nextGaussian() * 0.4),
                     entity.getY() + entity.getBbHeight() * (0.2 + rand.nextGaussian() * 0.4),
                     entity.getZ() + entity.getBbWidth() * (0.3 + rand.nextGaussian() * 0.4),

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -358,7 +359,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         if (!level().isClientSide() && level().isThundering() && EffectHelper.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.CHANNELING, thrownStack) > 0) {
             BlockPos blockpos = target.blockPosition();
             if (level().canSeeSky(blockpos)) {
-                LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level());
+                LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level(), EntitySpawnReason.TRIGGERED);
                 lightning.snapTo(Vec3.atBottomCenterOf(blockpos));
                 lightning.setCause(shooter instanceof ServerPlayer ? (ServerPlayer) shooter : null);
                 this.level().addFreshEntity(lightning);

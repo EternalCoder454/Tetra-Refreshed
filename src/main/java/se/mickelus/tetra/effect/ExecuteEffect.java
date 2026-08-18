@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect;
 
+import net.minecraft.util.ARGB;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -199,7 +200,7 @@ public class ExecuteEffect extends ChargedAbilityEffect {
 
             RandomSource rand = target.getRandom();
             CastOptional.cast(target.level(), ServerLevel.class).ifPresent(world ->
-                    world.sendParticles(new DustParticleOptions(new Vector3f(0.6f, 0, 0), 0.8f),
+                    world.sendParticles(new DustParticleOptions(ARGB.color(153, 0, 0), 0.8f),
                             hitVec.x, hitVec.y, hitVec.z, 10,
                             rand.nextGaussian() * 0.3, rand.nextGaussian() * 0.3, rand.nextGaussian() * 0.3, 0.1f));
         } else {

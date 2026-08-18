@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect;
 
+import net.minecraft.util.ARGB;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -31,7 +32,7 @@ public class SeveringEffect {
                 RandomSource rand = target.getRandom();
                 target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PLAYER_ATTACK_STRONG,
                         SoundSource.PLAYERS, 0.8f, 0.9f);
-                ((ServerLevel) target.level()).sendParticles(new DustParticleOptions(new Vector3f(0.5f, 0, 0), 0.5f),
+                ((ServerLevel) target.level()).sendParticles(new DustParticleOptions(ARGB.color(128, 0, 0), 0.5f),
                         target.getX() + target.getBbWidth() * (0.3 + rand.nextGaussian() * 0.4),
                         target.getY() + target.getBbHeight() * (0.2 + rand.nextGaussian() * 0.4),
                         target.getZ() + target.getBbWidth() * (0.3 + rand.nextGaussian() * 0.4),

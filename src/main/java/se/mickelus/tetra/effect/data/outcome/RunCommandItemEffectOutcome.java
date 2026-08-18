@@ -1,5 +1,6 @@
 package se.mickelus.tetra.effect.data.outcome;
 
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +20,7 @@ public class RunCommandItemEffectOutcome extends ItemEffectOutcome {
 
             CommandSourceStack commandSourceStack = server.createCommandSourceStack()
                     .withLevel(serverLevel)
-                    .withPermission(2)
+                    .withPermission(LevelBasedPermissionSet.GAMEMASTER)
                     .withSuppressedOutput();
 
             if (position != null) {

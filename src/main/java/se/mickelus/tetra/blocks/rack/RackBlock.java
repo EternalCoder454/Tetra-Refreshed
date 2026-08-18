@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.rack;
 
+import net.minecraft.util.ARGB;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.ChatFormatting;
@@ -264,7 +265,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
                 particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getUnitVec3i()).scale(0.25));
             }
 
-            ((ServerLevel) world).sendParticles(new DustParticleOptions(new Vector3f(0.0f, 0.66f, 0.66f), 1f), particlePos.x(), particlePos.y(), particlePos.z(), 2, 0, 0, 0, 0f);
+            ((ServerLevel) world).sendParticles(new DustParticleOptions(ARGB.color(0, 168, 168), 1f), particlePos.x(), particlePos.y(), particlePos.z(), 2, 0, 0, 0, 0f);
         }
     }
 

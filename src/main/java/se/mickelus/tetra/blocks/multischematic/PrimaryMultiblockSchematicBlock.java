@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.multischematic;
 
+import net.minecraft.util.ARGB;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,7 +117,7 @@ public class PrimaryMultiblockSchematicBlock extends MultiblockSchematicBlock im
 
     private void spawnParticle(ServerLevel level, Vec3 pos, int delay) {
         ServerScheduler.schedule(delay, () ->
-                level.sendParticles(new DustParticleOptions(new Vector3f(0.1f, 0.9f, 0.5f), 1f),
+                level.sendParticles(new DustParticleOptions(ARGB.color(26, 230, 128), 1f),
                         pos.x, pos.y, pos.z, 1, 0, 0, 0, 1));
     }
 
