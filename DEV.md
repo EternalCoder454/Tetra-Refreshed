@@ -34,6 +34,7 @@ is short enough to read whole.
 ```bash
 bash tools/port-compile.sh && bash tools/port-check.sh   # compile and count errors honestly
 python tools/check-at.py                                 # every access transformer entry still resolves
+python tools/check-data-fields.py                        # every data key is read by the codec that owns it
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -44,6 +45,12 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-data-fields.py` matters for the same reason one level up. A data file that fails to parse is
+logged and dropped, which gets noticed. A field that was renamed is ignored, which does not: the
+constraint it expressed disappears and whatever it guarded now always passes. That is how the Long
+Gone advancement came to be granted on world join. It reports candidates rather than verdicts, so
+read each one, and note that authoring labels show up here too.
 
 ## Looking things up
 

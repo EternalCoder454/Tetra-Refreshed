@@ -190,7 +190,15 @@ Things that will bite somebody later if nobody writes them down.
   So the audit is wider than the deserializers. Tetra's own deserializers resolve names and return
   null on a miss, and should log a warning at each one. Vanilla's codecs ignore unknown fields
   entirely, which means every renamed field in ported data fails open and looks like nothing
-  happened. Advancements are now checked. Loot tables, recipes and predicates are not.
+  happened.
+
+  **The vanilla half is now checked and clean.** `tools/check-data-fields.py` resolves each object
+  to its own codec and reports keys nothing reads, across all 163 advancement, loot table, loot
+  modifier and recipe files. It is verified against the Long Gone bug itself. What it found was two
+  authoring labels and no defects. Most loot and recipe fields turn out to be required rather than
+  optional, so they fail loudly, which is why the damage concentrated in an optional predicate
+  field. **Tetra's own deserializers are still unchecked**, and no tool can check them, because
+  returning null on a miss is their own code rather than a codec.
 * **Upstream issues are now in scope.** Rule 5 held them until the port was done. It is done. See
   <https://github.com/mickelus/tetra/issues>.
 * **Mutil has no developer documentation.** It is the shared library and the generic half of the api
