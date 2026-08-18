@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +26,6 @@ import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.gui.GuiModuleOffsets;
 import se.mickelus.tetra.items.modular.IModularItem;
 import se.mickelus.tetra.items.modular.ModularItem;
-import se.mickelus.tetra.items.modular.impl.holo.gui.HoloGui;
 import se.mickelus.tetra.items.modular.impl.holo.gui.scan.ScannerOverlayGui;
 import se.mickelus.tetra.items.modular.impl.toolbelt.ToolbeltHelper;
 import se.mickelus.tetra.properties.TetraAttributes;
@@ -92,14 +90,6 @@ public class ModularHolosphereItem extends ModularItem {
                 .orElse(ItemStack.EMPTY);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void showGui() {
-        HoloGui gui = HoloGui.getInstance();
-
-        Minecraft.getInstance().setScreen(gui);
-        gui.onShow();
-    }
-
     @Override
     public void commonInit(PacketHandler packetHandler) {
         DataManager.instance.synergyData.onReload(() -> synergies = DataManager.instance.synergyData.getOrdered("holo/"));
@@ -135,7 +125,7 @@ public class ModularHolosphereItem extends ModularItem {
     @Override
     public InteractionResult use(Level world, Player player, InteractionHand hand) {
         if (world.isClientSide()) {
-            showGui();
+            HolosphereGuiOpener.showGui();
         }
 
         return InteractionResult.SUCCESS;

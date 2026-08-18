@@ -2,7 +2,6 @@ package se.mickelus.tetra.effect.lunge;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -144,8 +143,10 @@ public class LungeEffect extends ChargedAbilityEffect {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void onRightClick(LocalPlayer player) {
+    // Takes a Player rather than a LocalPlayer. NeoForge does not strip @OnlyIn from mod classes,
+    // so naming a client type here stopped the whole class loading on a dedicated server, and the
+    // body only ever needed a Player.
+    public static void onRightClick(Player player) {
         LungeData data = activeCache.getIfPresent(getIdentifier(player));
         if (data != null && data.echoCount > 0) {
             TetraMod.packetHandler.sendToServer(new LungeEchoPacket());
@@ -153,8 +154,7 @@ public class LungeEffect extends ChargedAbilityEffect {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void onJump(LocalPlayer player) {
+    public static void onJump(Player player) {
         LungeData data = activeCache.getIfPresent(getIdentifier(player));
         if (data != null && data.echoCount > 0) {
             TetraMod.packetHandler.sendToServer(new LungeEchoPacket(true));

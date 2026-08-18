@@ -172,9 +172,11 @@ public class SchematicRegistry {
                                         return "!" + path;
                                     });
                         } else if (outcome.material.isValid()) {
-                            ItemStack[] applicableItemStacks = outcome.material.getApplicableItemStacks();
-                            if (applicableItemStacks.length > 0) {
-                                return Stream.of(BuiltInRegistries.ITEM.getKey(applicableItemStacks[0].getItem()).toString());
+                            // Items rather than stacks: this runs during a data reload, and item
+                            // components are unbound until it finishes.
+                            var applicableItems = outcome.material.getApplicableItems();
+                            if (!applicableItems.isEmpty()) {
+                                return Stream.of(BuiltInRegistries.ITEM.getKey(applicableItems.get(0)).toString());
                             }
                         }
 

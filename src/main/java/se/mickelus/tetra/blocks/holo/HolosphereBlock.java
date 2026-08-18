@@ -43,6 +43,7 @@ import java.util.Map;
 import static se.mickelus.tetra.util.ItemStackTagHelper.getTag;
 import static se.mickelus.tetra.util.ItemStackTagHelper.hasTag;
 import net.minecraft.server.level.ServerLevel;
+import se.mickelus.tetra.items.modular.impl.holo.HolosphereGuiOpener;
 
 public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBlock {
     public static final String identifier = "holosphere";
@@ -138,7 +139,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
         }
 
         if (world.isClientSide()) {
-            ModularHolosphereItem.showGui();
+            HolosphereGuiOpener.showGui();
         } else {
             Map<String, String> data = new HashMap<>();
             data.put("holosphere_open", "true");

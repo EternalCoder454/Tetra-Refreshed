@@ -58,6 +58,12 @@ neoForge {
         client {
             client()
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // Loading a world is what exercises the data stores, and a datapack reload is where
+            // the item component binding trips. quickPlay gets there without a person clicking.
+            if (project.hasProperty('quickPlay')) {
+                programArgument '--quickPlaySingleplayer'
+                programArgument project.property('quickPlay').toString()
+            }
         }
 
         server {
@@ -104,7 +110,10 @@ configurations {
 dependencies {
     implementation "se.mickelus.mutil:mutil:${mutil_version}"
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    // The published curios jar is built for 1.21.1 and refuses to load on 26.1.2, which stops
+    // runClient and runServer before they start. The dependency is optional in the mods.toml, and
+    // the api stays on the compile classpath, so dropping it from the dev runtime costs nothing.
+    // compileOnly above is what the integration is written against.
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

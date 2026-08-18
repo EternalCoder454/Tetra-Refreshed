@@ -1,7 +1,5 @@
 package se.mickelus.tetra.effect;
 
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -388,38 +386,6 @@ public class ItemEffectHandler {
                         CritEffect.critEntity(event, itemStack, critLevel);
                     }
                 });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-        Minecraft mc = Minecraft.getInstance();
-        ItemStack itemStack = mc.player.getMainHandItem();
-        if (event.isAttack()
-                && !event.isCanceled()
-                && itemStack.getItem() instanceof ItemModularHandheld
-                && mc.hitResult != null
-                && HitResult.Type.MISS.equals(mc.hitResult.getType())) {
-            if (getEffectLevel(itemStack, ItemEffect.truesweep) > 0) {
-                SweepingEffect.triggerTruesweep();
-            }
-            if (getEffectLevel(itemStack, ItemEffect.howling) > 0) {
-                HowlingEffect.sendPacket();
-            }
-        }
-
-        if (event.isUseItem()) {
-            LungeEffect.onRightClick(mc.player);
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onKeyInput(InputEvent.Key event) {
-        KeyMapping jumpKey = Minecraft.getInstance().options.keyJump;
-        if (jumpKey.matches(event.getKeyEvent()) && jumpKey.isDown()) {
-            LungeEffect.onJump(Minecraft.getInstance().player);
-        }
     }
 
     @SubscribeEvent

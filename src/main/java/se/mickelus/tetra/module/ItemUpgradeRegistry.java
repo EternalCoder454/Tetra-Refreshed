@@ -55,7 +55,7 @@ public class ItemUpgradeRegistry {
     public ItemStack getReplacement(ItemStack itemStack) {
         for (ReplacementDefinition replacementDefinition : replacementDefinitions) {
             if (replacementDefinition.predicate.matches(itemStack)) {
-                ItemStack replacementStack = replacementDefinition.itemStack.copy();
+                ItemStack replacementStack = replacementDefinition.itemStack.get().copy();
 
                 replacementStack.setDamageValue(itemStack.getDamageValue());
 

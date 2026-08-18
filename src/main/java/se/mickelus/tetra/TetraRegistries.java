@@ -435,11 +435,11 @@ public class TetraRegistries {
 
         // workbench
         WorkbenchContainer.containerType = register(containers, WorkbenchTile.identifier,
-                () -> IMenuTypeExtension.create((windowId, inv, data) -> WorkbenchContainer.create(windowId, data.readBlockPos(), inv)));
+                () -> IMenuTypeExtension.create((windowId, inv, data) -> ClientMenuFactory.workbench(windowId, data.readBlockPos(), inv)));
 
         // forged container
         ForgedContainerMenu.type = register(containers, ForgedContainerBlock.identifier,
-                () -> IMenuTypeExtension.create((windowId, inv, data) -> ForgedContainerMenu.create(windowId, data.readBlockPos(), inv)));
+                () -> IMenuTypeExtension.create((windowId, inv, data) -> ClientMenuFactory.forgedContainer(windowId, data.readBlockPos(), inv)));
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

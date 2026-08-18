@@ -5,8 +5,6 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +32,6 @@ import se.mickelus.mutil.network.PacketHandler;
 import se.mickelus.mutil.util.TileEntityOptional;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.Tooltips;
-import se.mickelus.tetra.blocks.scroll.gui.ScrollScreen;
 import se.mickelus.tetra.blocks.workbench.AbstractWorkbenchBlock;
 import se.mickelus.tetra.items.InitializableItem;
 
@@ -194,18 +191,12 @@ public class ScrollItem extends BlockItem implements InitializableItem {
         ScrollData data = ScrollData.read(itemStack);
         if (data.details != null) {
             if (isRemote) {
-                showDetailsScreen(data.details);
+                ScrollScreenOpener.showDetails(data.details);
             }
             return true;
         }
 
         return false;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private void showDetailsScreen(String detailsKey) {
-        ScrollScreen screen = new ScrollScreen(detailsKey);
-        Minecraft.getInstance().setScreen(screen);
     }
 
     @Override

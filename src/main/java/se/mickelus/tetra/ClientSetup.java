@@ -94,11 +94,13 @@ import se.mickelus.tetra.client.model.CellChargedProperty;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import se.mickelus.tetra.client.model.HandheldStateProperty;
+import se.mickelus.tetra.effect.ClientInputHandler;
 
 public class ClientSetup {
     public static void init(IEventBus modBus) {
         modBus.register(ClientSetup.class);
         NeoForge.EVENT_BUS.register(ClientScheduler.class);
+        NeoForge.EVENT_BUS.register(new ClientInputHandler());
 
         StatRegistry.init();
         new StatIndicatorStore();

@@ -1,6 +1,5 @@
 package se.mickelus.tetra.blocks.forged.container;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -67,12 +66,6 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(playerInventoryHandler, i, i * 17 + 12, 171));
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static ForgedContainerMenu create(int windowId, BlockPos pos, Inventory inv) {
-        ForgedContainerBlockEntity te = (ForgedContainerBlockEntity) Minecraft.getInstance().level.getBlockEntity(pos);
-        return new ForgedContainerMenu(windowId, te, inv, Minecraft.getInstance().player);
     }
 
     public void changeCompartment(int compartmentIndex) {

@@ -1,6 +1,5 @@
 package se.mickelus.tetra.blocks.workbench;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -64,12 +63,6 @@ public class WorkbenchContainer extends AbstractContainerMenu {
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(playerInventoryHandler, i, i * 17 + 84, 221));
         }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static WorkbenchContainer create(int windowId, BlockPos pos, Inventory inv) {
-        WorkbenchTile te = (WorkbenchTile) Minecraft.getInstance().level.getBlockEntity(pos);
-        return new WorkbenchContainer(windowId, te, inv, Minecraft.getInstance().player);
     }
 
     private int getSlots() {

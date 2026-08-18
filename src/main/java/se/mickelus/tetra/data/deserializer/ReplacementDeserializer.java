@@ -24,6 +24,7 @@ import se.mickelus.tetra.util.RegistryHelper;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Type;
 import java.util.Map;
+import se.mickelus.tetra.util.NonNullLazy;
 
 @ParametersAreNonnullByDefault
 public class ReplacementDeserializer implements JsonDeserializer<ReplacementDefinition> {
@@ -56,30 +57,45 @@ public class ReplacementDeserializer implements JsonDeserializer<ReplacementDefi
         if (item == null) {
             throw new JsonSyntaxException("Failed to parse replacement data, missing (or faulty) item in " + jsonObject.getAsString());
         }
-        replacement.itemStack = new ItemStack(item);
-
+        // Assembled on first use. Data is parsed while item components are unbound, because a
+        // datapack reload rebinds them, so building a stack here throws "Components not bound yet".
+        // The module lookups still happen at parse time so faulty data is still reported then.
         if (item instanceof IModularItem) {
             for (Map.Entry<String, JsonElement> moduleDefinition : GsonHelper.getAsJsonObject(jsonObject, "modules").entrySet()) {
                 String moduleKey = moduleDefinition.getValue().getAsJsonArray().get(0).getAsString();
-                String moduleVariant = moduleDefinition.getValue().getAsJsonArray().get(1).getAsString();
-                ItemModule module = ItemUpgradeRegistry.instance.getModule(moduleKey);
-                if (module == null) {
+                if (ItemUpgradeRegistry.instance.getModule(moduleKey) == null) {
                     throw new JsonSyntaxException("Failed to parse replacement data due to missing module: " + moduleKey);
                 }
-                module.addModule(replacement.itemStack, moduleVariant, null);
             }
+        }
 
-            if (jsonObject.has("improvements")) {
-                for (Map.Entry<String, JsonElement> improvement : GsonHelper.getAsJsonObject(jsonObject, "improvements").entrySet()) {
-                    String[] temp = improvement.getKey().split(":");
-                    ItemModuleMajor.addImprovement(replacement.itemStack, temp[0], temp[1], improvement.getValue().getAsInt());
+        replacement.itemStack = NonNullLazy.of(() -> {
+            ItemStack itemStack = new ItemStack(item);
+
+            if (item instanceof IModularItem) {
+                for (Map.Entry<String, JsonElement> moduleDefinition : GsonHelper.getAsJsonObject(jsonObject, "modules").entrySet()) {
+                    String moduleVariant = moduleDefinition.getValue().getAsJsonArray().get(1).getAsString();
+                    ItemModule module = ItemUpgradeRegistry.instance.getModule(
+                            moduleDefinition.getValue().getAsJsonArray().get(0).getAsString());
+                    if (module != null) {
+                        module.addModule(itemStack, moduleVariant, null);
+                    }
+                }
+
+                if (jsonObject.has("improvements")) {
+                    for (Map.Entry<String, JsonElement> improvement : GsonHelper.getAsJsonObject(jsonObject, "improvements").entrySet()) {
+                        String[] temp = improvement.getKey().split(":");
+                        ItemModuleMajor.addImprovement(itemStack, temp[0], temp[1], improvement.getValue().getAsInt());
+                    }
+                }
+
+                if (jsonObject.has("archetype")) {
+                    DynamicModularItem.setArchetypeKey(itemStack, jsonObject.get("archetype").getAsString());
                 }
             }
 
-            if (jsonObject.has("archetype")) {
-                DynamicModularItem.setArchetypeKey(replacement.itemStack, jsonObject.get("archetype").getAsString());
-            }
-        }
+            return itemStack;
+        });
 
         return replacement;
     }

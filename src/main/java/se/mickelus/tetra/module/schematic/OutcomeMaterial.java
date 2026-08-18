@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static se.mickelus.tetra.util.ItemStackTagHelper.setTag;
+import se.mickelus.tetra.util.NonNullLazy;
 
 @ParametersAreNonnullByDefault
 public class OutcomeMaterial {
@@ -35,8 +36,32 @@ public class OutcomeMaterial {
 
     public int count = 1;
 
-    protected Collection<ItemStack> itemStacks = Collections.emptyList();
+    /**
+      * The items this material accepts, and the stacks built from them.
+      *
+      * Data is parsed while item components are unbound, because a datapack reload rebinds them, so
+      * building a stack in a deserializer throws "Components not bound yet". The parsed inputs are
+      * held instead and the stacks are built the first time something reads them.
+      */
+    protected Collection<Item> items = Collections.emptyList();
+    protected CompoundTag itemTag;
+    private NonNullLazy<Collection<ItemStack>> itemStacks = NonNullLazy.of(this::buildItemStacks);
     protected TagKey<Item> tagLocation;
+
+    private Collection<ItemStack> buildItemStacks() {
+        return items.stream()
+                .map(item -> new ItemStack(item, count))
+                .peek(itemStack -> {
+                    if (itemTag != null) {
+                        setTag(itemStack, itemTag.copy());
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    protected Collection<ItemStack> getItemStacks() {
+        return itemStacks.get();
+    }
 
     private TetraItemPredicate predicate;
 
@@ -44,10 +69,8 @@ public class OutcomeMaterial {
         OutcomeMaterial result = new OutcomeMaterial();
         result.count = Math.round(count * multiplier) + offset;
 
-        result.itemStacks = itemStacks.stream()
-                .map(ItemStack::copy)
-                .peek(result::setCount)
-                .collect(Collectors.toList());
+        result.items = items;
+        result.itemTag = itemTag;
 
         result.tagLocation = tagLocation;
         result.predicate = predicate;
@@ -59,8 +82,8 @@ public class OutcomeMaterial {
     public Component[] getDisplayNames() {
         if (getPredicate() == null) {
             return new Component[] { Component.literal("Unknown material") };
-        } else if (itemStacks != null) {
-            return itemStacks.stream().map(ItemStack::getHoverName).toArray(Component[]::new);
+        } else if (!getItemStacks().isEmpty()) {
+            return getItemStacks().stream().map(ItemStack::getHoverName).toArray(Component[]::new);
         } else if (tagLocation != null) {
             return RegistryHelper.streamTag(BuiltInRegistries.ITEM, tagLocation)
                     .map(item -> item.getName(item.getDefaultInstance()))
@@ -70,11 +93,28 @@ public class OutcomeMaterial {
         return new Component[] { Component.literal("Unknown material") };
     }
 
+    /**
+     * The applicable items, without building a stack for any of them. Callers that run during a data
+     * reload have to use this: item components are unbound while the reload runs, so constructing a
+     * stack there throws.
+     */
+    public java.util.List<Item> getApplicableItems() {
+        if (getPredicate() == null) {
+            return java.util.Collections.emptyList();
+        } else if (!items.isEmpty()) {
+            return java.util.List.copyOf(items);
+        } else if (tagLocation != null) {
+            return RegistryHelper.streamTag(BuiltInRegistries.ITEM, tagLocation).collect(Collectors.toList());
+        }
+
+        return java.util.Collections.emptyList();
+    }
+
     public ItemStack[] getApplicableItemStacks() {
         if (getPredicate() == null) {
             return new ItemStack[0];
-        } else if (itemStacks != null && !itemStacks.isEmpty()) {
-            return itemStacks.toArray(ItemStack[]::new);
+        } else if (!getItemStacks().isEmpty()) {
+            return getItemStacks().toArray(ItemStack[]::new);
         } else if (tagLocation != null) {
             return RegistryHelper.streamTag(BuiltInRegistries.ITEM, tagLocation)
                     .map(Item::getDefaultInstance)
@@ -116,21 +156,19 @@ public class OutcomeMaterial {
 
                 if (jsonObject.has("items")) {
                     try {
-                        material.itemStacks = StreamSupport.stream(GsonHelper.getAsJsonArray(jsonObject, "items", emptyArray).spliterator(), false)
+                        material.items = StreamSupport.stream(GsonHelper.getAsJsonArray(jsonObject, "items", emptyArray).spliterator(), false)
                                 .map(jsonElement -> GsonHelper.convertToString(jsonElement, "item"))
                                 .map(Identifier::parse)
                                 .map(itemId -> RegistryHelper.get(BuiltInRegistries.ITEM, itemId))
                                 .filter(Objects::nonNull)
-                                .map(item -> new ItemStack(item, material.count))
                                 .collect(Collectors.toList());
                     } catch (JsonSyntaxException e) {
-                        material.itemStacks = Collections.emptyList();
+                        material.items = Collections.emptyList();
                     }
 
-                    if (!material.itemStacks.isEmpty() && jsonObject.has("nbt")) {
+                    if (!material.items.isEmpty() && jsonObject.has("nbt")) {
                         try {
-                            CompoundTag compoundnbt = TagParser.parseCompoundFully(GsonHelper.convertToString(jsonObject.get("nbt"), "nbt"));
-                            material.itemStacks.forEach(itemStack -> setTag(itemStack, compoundnbt.copy()));
+                            material.itemTag = TagParser.parseCompoundFully(GsonHelper.convertToString(jsonObject.get("nbt"), "nbt"));
                         } catch (CommandSyntaxException exception) {
                             throw new JsonSyntaxException("Encountered invalid nbt tag when parsing material: " + exception.getMessage());
                         }
