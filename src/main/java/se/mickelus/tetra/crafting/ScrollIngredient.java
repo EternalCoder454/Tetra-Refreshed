@@ -4,10 +4,14 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import java.util.function.Supplier;
+import se.mickelus.tetra.TetraRegistries;
 import se.mickelus.tetra.blocks.scroll.ScrollData;
 import se.mickelus.tetra.blocks.scroll.ScrollItem;
 
@@ -39,11 +43,27 @@ public class ScrollIngredient implements ICustomIngredient {
 
     /**
      * ICustomIngredient.items lists item holders rather than stacks, so the scroll data this
-     * ingredient matches on cannot be carried here. test still checks it.
+     * ingredient matches on cannot be carried here. test still checks it, and display carries it.
      */
     @Override
     public Stream<Holder<Item>> items() {
         return Stream.of(ScrollItem.instance.builtInRegistryHolder());
+    }
+
+    /**
+     * What a recipe shows for this ingredient. Without this it is whatever items() lists, which is a
+     * scroll carrying no data at all, so every scroll ingredient read as the generic "Scroll" rather
+     * than naming the schematic it holds.
+     *
+     * A template rather than a stack on purpose. Displays are built while recipes load, and item
+     * components are unbound for the whole of a reload, so constructing a stack here would throw.
+     */
+    @Override
+    public SlotDisplay display() {
+        return new SlotDisplay.ItemStackSlotDisplay(new ItemStackTemplate(
+                ScrollItem.instance.builtInRegistryHolder(),
+                1,
+                DataComponentPatch.builder().set(TetraRegistries.scrollData.get(), data).build()));
     }
 
     @Override
