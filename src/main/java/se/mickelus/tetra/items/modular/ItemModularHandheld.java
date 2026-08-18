@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.core.HolderSet;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -260,8 +262,6 @@ public class ItemModularHandheld extends ModularItem {
 
             applyNegativeUsageEffects(attacker, itemStack, 1);
         }
-
-        return true;
     }
 
     @Override
@@ -535,7 +535,7 @@ public class ItemModularHandheld extends ModularItem {
             }
         }
 
-        player.getCooldowns().addCooldown(itemStack, Math.round(cooldownBase * 20));
+        player.getCooldowns().addCooldown(stack, Math.round(cooldownBase * 20));
     }
 
     public void causeRiptideEffect(Player player, int riptideLevel) {
@@ -674,11 +674,6 @@ public class ItemModularHandheld extends ModularItem {
 
     public void onShieldDisabled(Player player, ItemStack itemStack) {
         player.getCooldowns().addCooldown(itemStack, (int) (getCooldownBase(itemStack) * 20 * 0.75));
-    }
-
-    @Override
-    public boolean canDisableShield(ItemStack itemStack, ItemStack shieldStack, LivingEntity target, LivingEntity attacker) {
-        return getEffectLevel(itemStack, ItemEffect.shieldbreaker) > 0;
     }
 
     /**
@@ -889,7 +884,7 @@ public class ItemModularHandheld extends ModularItem {
             return null;
         }
 
-        return new Tool(List.copyOf(rules), 1.0F, getBlockDestroyDamage());
+        return new Tool(List.copyOf(rules), 1.0F, getBlockDestroyDamage(), true);
     }
 
     private void addMiningRule(Map<TagKey<Block>, Float> miningRules, ItemStack itemStack, ItemAbility toolAction, @Nullable TagKey<Block> blockTag) {
@@ -976,11 +971,8 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
-        if (getItemAbilities(stack).contains(toolAction)) {
-            return true;
-        }
-        if (ItemAbilities.DEFAULT_SHIELD_ACTIONS.contains(toolAction) && isShield(stack)) {
+    public boolean canPerformAction(ItemInstance stack, ItemAbility toolAction) {
+        if (stack instanceof ItemStack itemStack && getItemAbilities(itemStack).contains(toolAction)) {
             return true;
         }
 
@@ -1071,20 +1063,24 @@ public class ItemModularHandheld extends ModularItem {
         return super.onCraftConsume(providerStack, targetStack, player, tool, toolLevel, consumeResources);
     }
 
+    /**
+     * The remainder is a template rather than a stack now, so the damaged copy is built as before
+     * and then described as one.
+     */
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return true;
-    }
+    public ItemStackTemplate getCraftingRemainder(ItemInstance stack) {
+        if (!(stack instanceof ItemStack itemStack)) {
+            return null;
+        }
 
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
         ItemStack result = itemStack.copy();
         if (isDamageable(result)) {
-            int amount = damageItem(result, 1, null, stack -> {
+            int amount = damageItem(result, 1, null, ignored -> {
             });
             result.setDamageValue(result.getDamageValue() + amount);
             tickHoningProgression(null, result, 1);
         }
-        return result;
+
+        return new ItemStackTemplate(result.typeHolder(), result.getCount(), result.getComponentsPatch());
     }
 }
