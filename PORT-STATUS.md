@@ -263,10 +263,29 @@ after the tool materials are all it. Rendering moved to extract a render state, 
   The shape it wants: an `ItemModel.Unbaked` with a `MapCodec` registered into the item model
   type registry, baking to an `ItemModel` whose `update` appends layers to the
   `ItemStackRenderState` it is handed. `LayerRenderState.prepareQuadList()` returns a list to
-  add `BakedQuad`s to, which is where the existing quad building in `ItemLayerModel` lands, and
-  `setItemTransform` carries what `ItemTransforms` used to. `ItemOverrides` has no replacement
-  because it does not need one: picking a model per stack is what `update` does, so
-  `ModularOverrideList` collapses into it, cache and all.
+  add `BakedQuad`s to, and `setItemTransform` carries what `ItemTransforms` used to.
+  `ItemOverrides` has no replacement because it does not need one: picking a model per stack is
+  what `update` does, so `ModularOverrideList` collapses into it, cache and all.
+
+  Read `net.minecraft.client.renderer.item.CuboidItemModelWrapper` first. It is the whole
+  pattern in one small class, unbaked record with a codec, a bake that resolves and builds a
+  `QuadCollection`, and an `update` that appends one layer.
+
+  **The piece that was not obvious.** `UnbakedGeometryHelper.createUnbakedItemElements`, which
+  is what turned a module's sprite into the extruded item quads, is gone with the rest of
+  NeoForge's model package. Vanilla still does exactly that job in
+  `client.resources.model.cuboid.ItemModelGenerator`, whose
+  `bake(TextureSlots, ModelBaker, ModelState, ModelDebugName)` takes texture slots and returns a
+  `QuadCollection`. It is private, so it needs an access transformer entry, which is what
+  `tools/check-at.py` is there to keep honest. Build a `TextureSlots` with `layer0` set to the
+  module's material and that method gives back the same geometry the old helper did, per layer,
+  at runtime. `ItemModel.BakingContext` hands over both the `ModelBaker` and the `SpriteGetter`
+  at bake time and both can be held for later, which is what makes the runtime cache possible.
+
+  Tetra's per layer work then applies to the resulting quads: the tint, emissivity and transform
+  in `ModularOverrideList.createLayerModel`, and the per display context filtering that
+  `TetraSeparateTransformsModel` handled. `BakedQuad` is a different class now, in
+  `client.resources.model.geometry`, reached through `position(int)` and `materialInfo()`.
 
 Read `client/particle/SweepingStrikeParticle.java` and any of the ported renderers first. They
 are the same change already made, at a size you can hold in your head.
