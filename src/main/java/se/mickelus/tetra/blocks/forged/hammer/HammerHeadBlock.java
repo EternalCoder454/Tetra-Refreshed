@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -65,7 +67,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
     private static boolean unjam(Level world, BlockPos pos, Player playerEntity) {
         TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(tile -> tile.setJammed(false));
-        world.playSound(playerEntity, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 1, 0.5f);
+        world.playSound(playerEntity, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR.value(), SoundSource.PLAYERS, 1, 0.5f);
         return true;
     }
 
@@ -136,7 +138,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
         if (consumeResources) {
             TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(HammerHeadBlockEntity::activate);
-            world.playSound(player, pos, SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 0.2f, (float) (0.5 + Math.random() * 0.2));
+            world.playSound(player, pos, SoundEvents.ANVIL_LAND.value(), SoundSource.PLAYERS, 0.2f, (float) (0.5 + Math.random() * 0.2));
         }
 
         return upgradedStack;
@@ -163,18 +165,19 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
 
         if (consumeResources) {
             TileEntityOptional.from(world, pos, HammerHeadBlockEntity.class).ifPresent(HammerHeadBlockEntity::activate);
-            world.playSound(player, pos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
+            world.playSound(player, pos, SoundEvents.ANVIL_LAND.value(), SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
         }
         return upgradedStack;
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-        if (Direction.UP.equals(facing) && !HammerBaseBlock.instance.equals(facingState.getBlock())) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (Direction.UP.equals(direction) && !HammerBaseBlock.instance.equals(neighbourState.getBlock())) {
             return state.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     @Override

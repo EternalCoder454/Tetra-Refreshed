@@ -491,7 +491,7 @@ public interface IModularItem {
             }
 
             if (isBroken(damage + reducedAmount, maxDamage) && responsibleEntity != null && !responsibleEntity.level().isClientSide()) {
-                responsibleEntity.playSound(SoundEvents.SHIELD_BREAK, 1, 1);
+                responsibleEntity.playSound(SoundEvents.SHIELD_BREAK.value(), 1, 1);
             }
         }
     }

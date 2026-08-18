@@ -60,10 +60,10 @@ public class CoreExtractorPistonBlockEntity extends BlockEntity {
                     5, 0, 0, 0, 0.02f);
         }
 
-        level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,
+        level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH.value(), SoundSource.BLOCKS,
                 0.1f, 1);
 
-        level.playSound(null, worldPosition, SoundEvents.METAL_FALL, SoundSource.BLOCKS,
+        level.playSound(null, worldPosition, SoundEvents.METAL_FALL.value(), SoundSource.BLOCKS,
                 0.2f, 0.5f);
     }
 

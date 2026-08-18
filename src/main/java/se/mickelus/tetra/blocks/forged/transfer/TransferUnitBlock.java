@@ -97,21 +97,21 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
             }
         }
 
-        world.playSound(player, pos, SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1, 0.5f);
+        world.playSound(player, pos, SoundEvents.SHIELD_BREAK.value(), SoundSource.PLAYERS, 1, 0.5f);
         world.setBlock(pos, blockState.setValue(plateProp, false), 3);
 
         return true;
     }
 
     public static void attachPlate(Level world, BlockPos pos, BlockState blockState, Player player) {
-        world.playSound(player, pos, SoundEvents.METAL_PLACE, SoundSource.PLAYERS, 0.5f, 1);
+        world.playSound(player, pos, SoundEvents.METAL_PLACE.value(), SoundSource.PLAYERS, 0.5f, 1);
         world.setBlock(pos, blockState.setValue(plateProp, true), 3);
     }
 
     public static boolean reconfigure(Level world, BlockPos pos, BlockState blockState, @Nullable Player player, @Nullable InteractionHand hand, Direction hitFace) {
         EnumTransferConfig config = EnumTransferConfig.getNextConfiguration(blockState.getValue(configProp));
 
-        world.playSound(player, pos, SoundEvents.ANVIL_HIT, SoundSource.PLAYERS, 1, 1);
+        world.playSound(player, pos, SoundEvents.ANVIL_HIT.value(), SoundSource.PLAYERS, 1, 1);
         world.setBlock(pos, blockState.setValue(configProp, config), 3);
 
         world.getBlockEntity(pos, TransferUnitBlockEntity.type.get()).ifPresent(TransferUnitBlockEntity::updateTransferState);
@@ -198,7 +198,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
                         popResource(world, pos.above(), cell);
                     }
 
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.6f);
                     world.sendBlockUpdated(pos, state, state, 3);
                     BlockUseCriterion.trigger((ServerPlayer) player, state, ItemStack.EMPTY);
                 }
@@ -211,7 +211,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
 
                 if (tile.putCell(heldStack)) {
                     player.setItemInHand(hand, ItemStack.EMPTY);
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.5f);
                     world.sendBlockUpdated(pos, state, state, 3);
                     BlockUseCriterion.trigger((ServerPlayer) player, state, ItemStack.EMPTY);
 

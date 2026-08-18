@@ -1,5 +1,6 @@
 package se.mickelus.tetra;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -390,14 +391,14 @@ public class TetraRegistries {
         register(entities, ThrownModularItemEntity.unlocalizedName, () ->
                 EntityType.Builder.<ThrownModularItemEntity>of(ThrownModularItemEntity::new, MobCategory.MISC)
                         .sized(0.5F, 0.5F)
-                        .build(ThrownModularItemEntity.unlocalizedName),
+                        .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, ThrownModularItemEntity.unlocalizedName))),
                 value -> ThrownModularItemEntity.type = value
         );
 
         register(entities, ExtractorProjectileEntity.unlocalizedName, () ->
                 EntityType.Builder.<ExtractorProjectileEntity>of(ExtractorProjectileEntity::new, MobCategory.MISC)
                         .sized(0.5F, 0.5F)
-                        .build(ExtractorProjectileEntity.unlocalizedName),
+                        .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, ExtractorProjectileEntity.unlocalizedName))),
                 value -> ExtractorProjectileEntity.type = value
         );
 

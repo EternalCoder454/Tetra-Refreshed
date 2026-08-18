@@ -125,9 +125,9 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
                 if (canSwing) {
                     item.tickProgression(player, itemStack, 2);
                     item.applyDamage(2, itemStack, player);
-                    world.playSound(player, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.PLAYERS, 0.3f, 1f + 0.5f * (float) Math.random());
+                    world.playSound(player, pos, SoundEvents.NETHERITE_BLOCK_HIT.value(), SoundSource.PLAYERS, 0.3f, 1f + 0.5f * (float) Math.random());
                 } else {
-                    world.playSound(player, pos, SoundEvents.SNOWBALL_THROW, SoundSource.PLAYERS, 0.2f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.SNOWBALL_THROW.value(), SoundSource.PLAYERS, 0.2f, 0.5f);
                 }
 
                 player.resetAttackStrengthTicker();

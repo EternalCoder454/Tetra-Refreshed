@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.scroll.gui;
 
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -89,7 +90,8 @@ public class ScrollScreen extends Screen {
     }
 
     @Override
-    public boolean charTyped(char typedChar, int keyCode) {
+    public boolean charTyped(CharacterEvent event) {
+        char typedChar = (char) event.codepoint();
         if (ConfigHandler.development.get()) {
             switch (typedChar) {
                 case 'a':

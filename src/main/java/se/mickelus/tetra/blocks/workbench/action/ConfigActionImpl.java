@@ -118,7 +118,7 @@ public class ConfigActionImpl extends ConfigAction {
             table.getRandomItems(context).forEach(itemStack -> Block.popResource(world, workbench.getBlockPos().above(), itemStack));
 
             BlockPos pos = workbench.getBlockPos();
-            world.playSound(null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS,
+            world.playSound(null, pos, SoundEvents.STONE_BREAK.value(), SoundSource.BLOCKS,
                     1.0F, 1.5f + (float) Math.random() * 0.5f);
 
             world.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, targetStack.getItem()),

@@ -241,7 +241,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
                     return;
                 }
                 if (shooter instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.playNotifySound(SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 0.5f, 0.5f);
+                    serverPlayer.playNotifySound(SoundEvents.ITEM_BREAK.value(), SoundSource.BLOCKS, 0.5f, 0.5f);
                 }
             }
 

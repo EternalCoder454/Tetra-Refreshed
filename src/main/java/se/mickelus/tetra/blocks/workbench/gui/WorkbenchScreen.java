@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.workbench.gui;
 
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -185,12 +186,13 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     }
 
     @Override
-    public boolean charTyped(char typecChar, int keyCode) {
+    public boolean charTyped(CharacterEvent event) {
+        char typecChar = (char) event.codepoint();
         if (slotDetail.keyTyped(typecChar)) {
             return true;
         }
 
-        return super.charTyped(typecChar, keyCode);
+        return super.charTyped(event);
     }
 
     @Override

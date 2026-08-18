@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -91,12 +92,13 @@ public class ForgedContainerScreen extends AbstractContainerScreen<ForgedContain
     }
 
     @Override
-    public boolean charTyped(char typecChar, int keyCode) {
+    public boolean charTyped(CharacterEvent event) {
+        char typecChar = (char) event.codepoint();
         if (compartmentButtons.keyTyped(typecChar)) {
             return true;
         }
 
-        return super.charTyped(typecChar, keyCode);
+        return super.charTyped(event);
     }
 
     @Override

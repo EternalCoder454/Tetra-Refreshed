@@ -102,7 +102,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
                 BlockInteraction.dropLoot(ventLootTable, serverWorld, pos, blockState);
             }
 
-            serverWorld.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 0.4f, 0.5f);
+            serverWorld.playSound(null, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR.value(), SoundSource.PLAYERS, 0.4f, 0.5f);
         }
 
         return true;
@@ -113,7 +113,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
 
         if (connectedVents.stream().anyMatch(blockPos -> !world.getBlockState(blockPos).getValue(propBroken))) {
             if (!world.isClientSide()) {
-                world.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.4f, 2);
+                world.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.4f, 2);
             }
             return false;
         }

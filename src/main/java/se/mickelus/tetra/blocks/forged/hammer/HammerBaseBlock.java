@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,7 +87,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
             }
         }
 
-        world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
+        world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.6f);
 
         return true;
     }
@@ -189,7 +191,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                     }
 
                     BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), ItemStack.EMPTY, getAdvancementData(world, pos));
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.6f);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -201,7 +203,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                 if (te.putCellInSlot(heldStack, slotIndex)) {
                     player.setItemInHand(hand, ItemStack.EMPTY);
                     BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), heldStack, getAdvancementData(world, pos));
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.5f);
 
                     return InteractionResult.CONSUME;
                 }
@@ -216,7 +218,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                         BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), heldStack, getAdvancementData(world, pos));
                     }
 
-                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
+                    world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE.value(), SoundSource.PLAYERS, 0.5f, 0.5f);
                     heldStack.shrink(1);
 
                     if (world.isClientSide()) {
@@ -272,13 +274,14 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-        TileEntityOptional.from(world, currentPos, HammerBaseBlockEntity.class).ifPresent(HammerBaseBlockEntity::updateRedstonePower);
-        if (Direction.DOWN.equals(facing) && !HammerHeadBlock.instance.equals(facingState.getBlock())) {
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+            BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        TileEntityOptional.from(level, pos, HammerBaseBlockEntity.class).ifPresent(HammerBaseBlockEntity::updateRedstonePower);
+        if (Direction.DOWN.equals(direction) && !HammerHeadBlock.instance.equals(neighbourState.getBlock())) {
             return Blocks.AIR.defaultBlockState();
         }
 
-        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
     }
 
     // based on same method implementation in BedBlock

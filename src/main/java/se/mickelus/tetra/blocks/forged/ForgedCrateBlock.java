@@ -117,9 +117,9 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
 
         if (integrity - progress >= 0) {
             if (TetraItemAbilities.hammer.equals(toolAction)) {
-                world.playSound(player, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 1, 0.5f);
+                world.playSound(player, pos, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR.value(), SoundSource.PLAYERS, 1, 0.5f);
             } else {
-                world.playSound(player, pos, SoundEvents.LADDER_STEP, SoundSource.PLAYERS, 0.7f, 2f);
+                world.playSound(player, pos, SoundEvents.LADDER_STEP.value(), SoundSource.PLAYERS, 0.7f, 2f);
             }
 
             world.setBlockAndUpdate(pos, blockState.setValue(propIntegrity, integrity - progress));

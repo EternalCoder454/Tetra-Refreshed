@@ -147,12 +147,12 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
         return TileEntityOptional.from(world, pos, ScrollTile.class)
                 .filter(tile -> tile.getScrolls().length == 1)
                 .map(ScrollTile::getScrolls)
                 .map(scrolls -> scrolls[0].createItemStack())
-                .orElseGet(() -> super.getCloneItemStack(world, pos, state));
+                .orElseGet(() -> super.getCloneItemStack(world, pos, state, includeData));
     }
 
     @Nullable

@@ -32,8 +32,8 @@ public class GeodeBlock extends TetraBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state) {
-        return Blocks.DEEPSLATE.getCloneItemStack(world, pos, state);
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
+        return Blocks.DEEPSLATE.getCloneItemStack(world, pos, state, includeData);
     }
 
     @Override

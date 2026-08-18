@@ -413,7 +413,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
                                 consumeFuel();
                             } else {
                                 head.activate();
-                                level.playSound(null, pos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
+                                level.playSound(null, pos, SoundEvents.ANVIL_LAND.value(), SoundSource.BLOCKS, 0.2f, (float) (0.5 + Math.random() * 0.2));
                             }
                         } else {
                             head.activate();
