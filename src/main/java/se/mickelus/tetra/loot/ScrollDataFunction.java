@@ -1,6 +1,5 @@
 package se.mickelus.tetra.loot;
 
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +33,7 @@ public class ScrollDataFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public MapCodec<? extends LootItemFunction> codec() {
+    public MapCodec<? extends LootItemConditionalFunction> codec() {
         return CODEC;
     }
 }

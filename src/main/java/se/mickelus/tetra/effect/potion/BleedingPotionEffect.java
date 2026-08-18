@@ -64,9 +64,9 @@ public class BleedingPotionEffect extends MobEffect {
     }
 
     private static SimpleParticleType getBloodParticleType(LivingEntity entity) {
-        if (entity.getType().is(slimebloodTag)) {
+        if (entity.getType().builtInRegistryHolder().is(slimebloodTag)) {
             return DripParticles.fallingSlime.get();
-        } else if (entity.getType().is(lavabloodTag)) {
+        } else if (entity.getType().builtInRegistryHolder().is(lavabloodTag)) {
             return ParticleTypes.FALLING_LAVA;
         } else {
             return DripParticles.fallingBlood.get();

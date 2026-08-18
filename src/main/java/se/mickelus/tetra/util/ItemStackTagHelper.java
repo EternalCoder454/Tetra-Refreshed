@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.nbt.NbtOps;
 
 // Cross-version compat: this helper bridges 1.20-style raw NBT to 1.21's immutable CustomData component.
 // The shape (getTag/getOrCreateTag/setTag/getTagElement/addTagElement/removeTagKey) intentionally
@@ -42,7 +43,7 @@ public final class ItemStackTagHelper {
         if (data == null || data.isEmpty()) {
             return null;
         }
-        return safeCopy(data.getUnsafe());
+        return safeCopy(data.copyTag());
     }
 
     /**
@@ -117,14 +118,16 @@ public final class ItemStackTagHelper {
         if (!isSerializedStack(tag)) {
             return ItemStack.EMPTY;
         }
-        return ItemStack.parseOptional(registryAccess, tag);
+        return ItemStack.OPTIONAL_CODEC.parse(registryAccess.createSerializationContext(NbtOps.INSTANCE), tag)
+                .result().orElse(ItemStack.EMPTY);
     }
 
     public static CompoundTag saveStack(ItemStack stack, HolderLookup.Provider registryAccess) {
         if (stack == null || stack.isEmpty()) {
             return new CompoundTag();
         }
-        return (CompoundTag) stack.save(registryAccess, new CompoundTag());
+        return (CompoundTag) ItemStack.CODEC.encodeStart(registryAccess.createSerializationContext(NbtOps.INSTANCE), stack)
+                .getOrThrow();
     }
 
     private static CompoundTag safeCopy(CompoundTag source) {

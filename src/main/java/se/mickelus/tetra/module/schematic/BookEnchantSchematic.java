@@ -5,7 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -95,7 +95,7 @@ public class BookEnchantSchematic implements UpgradeSchematic {
 
         Set<Holder<Enchantment>> currentEnchantmentHolders = EnchantmentHelper.getEnchantmentsForCrafting(itemStack).keySet();
 
-        return module != null && materialStack.getItem() instanceof EnchantedBookItem
+        return module != null && materialStack.is(Items.ENCHANTED_BOOK)
                 && EnchantmentHelper.getEnchantmentsForCrafting(materialStack).entrySet().stream()
                 .anyMatch(entry -> acceptsEnchantment(itemStack, module, currentEnchantmentHolders, entry.getKey(), entry.getIntValue()));
     }

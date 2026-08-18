@@ -66,7 +66,7 @@ public class PotionItemGui extends GuiElement {
     private void drawItemStack(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y) {
 
         graphics.item(itemStack, x, y);
-        graphics.renderItemDecorations(mc.font, itemStack, x, y, "");
+        graphics.itemDecorations(mc.font, itemStack, x, y, "");
     }
 
 

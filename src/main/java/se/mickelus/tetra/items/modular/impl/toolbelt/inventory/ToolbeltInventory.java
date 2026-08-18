@@ -23,6 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraft.world.entity.ContainerUser;
 
 @ParametersAreNonnullByDefault
 public class ToolbeltInventory implements Container {
@@ -53,7 +54,7 @@ public class ToolbeltInventory implements Container {
         TagKey<Item> rejectKey = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_reject"));
         var acceptTag = BuiltInRegistries.ITEM.getTagOrEmpty(acceptKey);
 
-        return (itemStack -> (acceptTag.size() == 0 || itemStack.is(acceptKey)) && !itemStack.is(rejectKey));
+        return (itemStack -> (!acceptTag.iterator().hasNext() || itemStack.is(acceptKey)) && !itemStack.is(rejectKey));
     }
 
 
@@ -164,11 +165,11 @@ public class ToolbeltInventory implements Container {
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(ContainerUser user) {
     }
 
     @Override
-    public void stopOpen(Player player) {
+    public void stopOpen(ContainerUser user) {
     }
 
     @Override

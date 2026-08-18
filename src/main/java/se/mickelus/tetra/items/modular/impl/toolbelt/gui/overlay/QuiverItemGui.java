@@ -97,7 +97,7 @@ public class QuiverItemGui extends GuiElement {
     private void drawItemStack(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y) {
 
         graphics.item(itemStack, x, y);
-        graphics.renderItemDecorations(fontRenderer, itemStack, x, y, "");
+        graphics.itemDecorations(fontRenderer, itemStack, x, y, "");
     }
 
 

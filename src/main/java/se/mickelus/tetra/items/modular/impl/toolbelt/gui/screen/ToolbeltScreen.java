@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -85,9 +85,9 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotIndex, int barIndex, ClickType clickType) {
+    protected void slotClicked(Slot slot, int slotIndex, int barIndex, ContainerInput clickType) {
         // todo: based on how quick swapping is implemented in AbstractContainerMenu.doClick, there has to be a cleaner way
-        if (slot instanceof DisabledSlot || (clickType == ClickType.SWAP && getMenu().getSlotAt(barIndex, Inventory.class) instanceof DisabledSlot)) {
+        if (slot instanceof DisabledSlot || (clickType == ContainerInput.SWAP && getMenu().getSlotAt(barIndex, Inventory.class) instanceof DisabledSlot)) {
             return;
         }
         super.slotClicked(slot, slotIndex, barIndex, clickType);

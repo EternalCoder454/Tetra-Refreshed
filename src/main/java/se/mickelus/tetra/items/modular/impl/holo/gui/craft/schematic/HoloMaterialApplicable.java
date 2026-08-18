@@ -75,7 +75,7 @@ public class HoloMaterialApplicable extends GuiElement {
                             return I18n.get("tetra.material." + mat.substring(1));
                         }
                         return Optional.ofNullable(RegistryHelper.get(BuiltInRegistries.ITEM, Identifier.parse(mat)))
-                                .map(Item::getDescription)
+                                .map(item -> item.getName(item.getDefaultInstance()))
                                 .map(Component::getString)
                                 .orElse(mat);
                     })

@@ -29,6 +29,8 @@ import se.mickelus.tetra.util.StringHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.util.ARGB;
 @ParametersAreNonnullByDefault
 public class UnstablePowerMobEffect extends MobEffect {
     public static final String identifier = "unstable_power";
@@ -209,10 +211,8 @@ public class UnstablePowerMobEffect extends MobEffect {
                         Mth.clamp((float) duration / 10.0F / 5.0F * 0.5F, 0.0F, 0.5F) + Mth.cos((float) duration * (float) Math.PI / 5.0F) * Mth.clamp((float) l / 10.0F * 0.25F,
                                 0.0F, 0.25F);
             }
-            TextureAtlasSprite textureatlassprite = Minecraft.getInstance().getMobEffectTextures().get(effect);
-            guiGraphics.setColor(1f, 1f, 1f, iconAlpha);
-            guiGraphics.blit(x + 3, y + 3, 0, 18, 18, textureatlassprite);
-            guiGraphics.setColor(1f, 1f, 1f, 1f);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, Gui.getMobEffectSprite(effect), x + 3, y + 3, 18, 18,
+                    ARGB.white(Mth.clamp(iconAlpha, 0.0F, 1.0F)));
         }
 
         private static void renderBar(GuiGraphicsExtractor guiGraphics, int x, int y, float ratio, int color) {

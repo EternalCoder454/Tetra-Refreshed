@@ -27,7 +27,7 @@ public class EntityPropertyNumberProvider implements NumberProvider {
             case burningDuration -> resolvedEntity.getRemainingFireTicks();
             case airSupply -> resolvedEntity.getAirSupply();
             case maxAirSupply -> resolvedEntity.getMaxAirSupply();
-            case fallDistance -> resolvedEntity.fallDistance;
+            case fallDistance -> (float) resolvedEntity.fallDistance;
             case health -> resolvedEntity instanceof LivingEntity livingEntity ? livingEntity.getHealth() : 0;
             case maxHealth -> resolvedEntity instanceof LivingEntity livingEntity ? livingEntity.getMaxHealth() : 0;
             case armor -> resolvedEntity instanceof LivingEntity livingEntity ? livingEntity.getArmorValue() : 0;

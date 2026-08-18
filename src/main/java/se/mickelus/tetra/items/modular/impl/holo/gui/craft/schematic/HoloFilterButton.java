@@ -15,6 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.Minecraft;
 
 @ParametersAreNonnullByDefault
 public class HoloFilterButton extends GuiElement {

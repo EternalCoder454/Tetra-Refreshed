@@ -2,7 +2,7 @@ package se.mickelus.tetra.effect.gui;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -13,7 +13,7 @@ public class EffectUnRenderer implements IClientMobEffectExtensions {
     public static final IClientMobEffectExtensions INSTANCE = new EffectUnRenderer();
 
     @Override
-    public boolean renderInventoryIcon(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphicsExtractor guiGraphics, int x, int y, int blitOffset) {
+    public boolean renderInventoryIcon(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, int x, int y, int blitOffset) {
         return true;
     }
 

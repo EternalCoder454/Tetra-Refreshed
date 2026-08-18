@@ -26,8 +26,8 @@ public class ReplaceTableModifier extends LootModifier {
 
     public Identifier table;
 
-    protected ReplaceTableModifier(LootItemCondition[] conditions, Identifier table) {
-        super(conditions);
+    protected ReplaceTableModifier(LootItemCondition[] conditions, int priority, Identifier table) {
+        super(conditions, priority);
         this.table = table;
     }
 
