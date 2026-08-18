@@ -230,7 +230,7 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
+    public void hurtEnemy(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
         applyDamage(entityHitDamage, itemStack, attacker);
 
         if (!isBroken(itemStack)) {

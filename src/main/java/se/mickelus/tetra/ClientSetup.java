@@ -244,6 +244,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        event.registerCategory(TetraKeyMappings.bindingGroup);
         event.register(TetraKeyMappings.accessBinding);
         event.register(TetraKeyMappings.restockBinding);
         event.register(TetraKeyMappings.openBinding);

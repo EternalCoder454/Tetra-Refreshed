@@ -1,5 +1,7 @@
 package se.mickelus.tetra.module.improvement;
 
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
@@ -24,26 +26,41 @@ public class HoneToast implements Toast {
         this.itemStack = itemStack;
     }
 
+    private Visibility visibility = Visibility.SHOW;
+
     @Override
-    public Visibility render(GuiGraphicsExtractor graphics, ToastManager toastGui, long delta) {
-        if (itemStack != null) {
-            graphics.blit(texture, 0, 0, 0, 0, 160, 32);
+    public Visibility getWantedVisibility() {
+        return visibility;
+    }
 
-            String itemName = toastGui.getMinecraft().font.plainSubstrByWidth(itemStack.getHoverName().getString(), 125);
-            graphics.text(toastGui.getMinecraft().font, I18n.get("tetra.hone.available"), 30, 7, SchematicRarity.hone.tint);
-            graphics.text(toastGui.getMinecraft().font, itemName, 30, 18, GuiColors.muted);
-
-            graphics.item(itemStack, 8, 8);
-            graphics.renderItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8);
-
-            if (!this.hasPlayedSound && delta > 0L) {
-                toastGui.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.honeGain, 1, 1));
-                this.hasPlayedSound = true;
-            }
-
-            return delta > 5000 ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
+    @Override
+    public void update(ToastManager toastManager, long delta) {
+        if (itemStack == null) {
+            visibility = Visibility.HIDE;
+            return;
         }
 
-        return Toast.Visibility.HIDE;
+        if (!this.hasPlayedSound && delta > 0L) {
+            toastManager.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.honeGain, 1, 1));
+            this.hasPlayedSound = true;
+        }
+
+        visibility = delta > 5000 ? Visibility.HIDE : Visibility.SHOW;
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long delta) {
+        if (itemStack == null) {
+            return;
+        }
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0, 0, 160, 32, 256, 256);
+
+        String itemName = font.plainSubstrByWidth(itemStack.getHoverName().getString(), 125);
+        graphics.text(font, I18n.get("tetra.hone.available"), 30, 7, SchematicRarity.hone.tint);
+        graphics.text(font, itemName, 30, 18, GuiColors.muted);
+
+        graphics.item(itemStack, 8, 8);
+        graphics.itemDecorations(font, itemStack, 8, 8);
     }
 }

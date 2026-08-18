@@ -1,5 +1,7 @@
 package se.mickelus.tetra.module.improvement;
 
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
@@ -45,30 +47,45 @@ public class SettleToast implements Toast {
                 .orElse(slot);
     }
 
+    private Visibility visibility = Visibility.SHOW;
+
     @Override
-    public Visibility render(GuiGraphicsExtractor graphics, ToastManager toastGui, long delta) {
-        if (itemStack != null) {
-            graphics.blit(texture, 0, 0, 0, 0, 160, 32);
+    public Visibility getWantedVisibility() {
+        return visibility;
+    }
 
-            if (glyph != null) {
-                graphics.blit(texture, 20, 14, 160, 0, 15, 15);
-                glyph.draw(graphics, 19, 14, 260, 43, -1, -1, 1);
-            }
-
-            graphics.text(toastGui.getMinecraft().font, I18n.get(TetraMod.MOD_ID + ".settled.toast"), 30, 7, SchematicRarity.hone.tint);
-            graphics.text(toastGui.getMinecraft().font, toastGui.getMinecraft().font.plainSubstrByWidth(moduleName, 118), 37, 18, GuiColors.muted);
-
-            graphics.item(itemStack, 8, 8);
-            graphics.renderItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8);
-
-            if (!this.hasPlayedSound && delta > 0L) {
-                toastGui.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.settle, 1, 1));
-                this.hasPlayedSound = true;
-            }
-
-            return delta > 5000 ? Visibility.HIDE : Visibility.SHOW;
+    @Override
+    public void update(ToastManager toastManager, long delta) {
+        if (itemStack == null) {
+            visibility = Visibility.HIDE;
+            return;
         }
 
-        return Visibility.HIDE;
+        if (!this.hasPlayedSound && delta > 0L) {
+            toastManager.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.settleGain, 1, 1));
+            this.hasPlayedSound = true;
+        }
+
+        visibility = delta > 5000 ? Visibility.HIDE : Visibility.SHOW;
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long delta) {
+        if (itemStack == null) {
+            return;
+        }
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0, 0, 160, 32, 256, 256);
+
+        if (glyph != null) {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 20, 14, 160, 0, 15, 15, 256, 256);
+            glyph.draw(graphics, 19, 14, 260, 43, -1, -1, 1);
+        }
+
+        graphics.text(font, I18n.get(TetraMod.MOD_ID + ".settled.toast"), 30, 7, SchematicRarity.hone.tint);
+        graphics.text(font, font.plainSubstrByWidth(moduleName, 118), 37, 18, GuiColors.muted);
+
+        graphics.item(itemStack, 8, 8);
+        graphics.itemDecorations(font, itemStack, 8, 8);
     }
 }

@@ -1,5 +1,7 @@
 package se.mickelus.tetra.client.keymap;
 
+import se.mickelus.tetra.TetraMod;
+import net.minecraft.resources.Identifier;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -8,7 +10,9 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public class TetraKeyMappings {
-    public static final String bindingGroup = "tetra.binding.group";
+    /** Registered on the mod bus, see ClientSetup.registerKeyMappings. */
+    public static final KeyMapping.Category bindingGroup =
+            new KeyMapping.Category(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "binding_group"));
     public static final KeyMapping accessBinding = new KeyMapping("tetra.toolbelt.binding.access", TetraKeyConflictContext.toolbelt, InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_B, bindingGroup);
     public static final KeyMapping restockBinding = new KeyMapping("tetra.toolbelt.binding.restock", TetraKeyConflictContext.toolbelt, KeyModifier.SHIFT,
