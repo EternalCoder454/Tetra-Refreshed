@@ -1,7 +1,7 @@
 package se.mickelus.tetra;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
@@ -237,7 +237,7 @@ public class ClientSetup {
         registerOverlay(event, "multiblock_schematic", new MultiblockSchematicGui(mc));
     }
 
-    private static void registerOverlay(RegisterGuiLayersEvent event, String id, LayeredDraw.Layer overlay) {
+    private static void registerOverlay(RegisterGuiLayersEvent event, String id, GuiLayer overlay) {
         event.registerBelowAll(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, id), overlay);
         NeoForge.EVENT_BUS.register(overlay);
     }

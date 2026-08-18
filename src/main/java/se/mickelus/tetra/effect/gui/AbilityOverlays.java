@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import se.mickelus.mutil.gui.GuiRoot;
@@ -12,7 +12,7 @@ import se.mickelus.mutil.gui.GuiRoot;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class AbilityOverlays extends GuiRoot implements LayeredDraw.Layer {
+public class AbilityOverlays extends GuiRoot implements GuiLayer {
     public static AbilityOverlays instance;
 
     private final ChargeBarGui chargeBar;

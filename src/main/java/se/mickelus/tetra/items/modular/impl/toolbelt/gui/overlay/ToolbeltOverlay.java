@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ import se.mickelus.tetra.items.modular.impl.toolbelt.inventory.ToolbeltSlotType;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ToolbeltOverlay extends GuiRoot implements LayeredDraw.Layer {
+public class ToolbeltOverlay extends GuiRoot implements GuiLayer {
 
     private final QuickslotGroupGui quickslotGroup;
     private final PotionGroupGui potionGroup;

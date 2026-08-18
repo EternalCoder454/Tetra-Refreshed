@@ -363,8 +363,8 @@ public class ModularBowItem extends ModularItem {
         NeoForge.EVENT_BUS.post(event);
 
         // vanilla velocity sync breaks when velocity is >3.9 on any axis
-        if (projectileVelocity * 3 > 4) {
-            TetraMod.packetHandler.sendToAllPlayersNear(new ProjectileMotionPacket(projectile), projectile.blockPosition(), 512, world.dimension());
+        if (projectileVelocity * 3 > 4 && world instanceof ServerLevel serverLevel) {
+            TetraMod.packetHandler.sendToAllPlayersNear(new ProjectileMotionPacket(projectile), serverLevel, projectile.blockPosition(), 512);
         }
     }
 

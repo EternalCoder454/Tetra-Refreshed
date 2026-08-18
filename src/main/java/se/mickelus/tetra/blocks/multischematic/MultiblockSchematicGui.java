@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -18,7 +18,7 @@ import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
-public class MultiblockSchematicGui extends GuiRoot implements LayeredDraw.Layer {
+public class MultiblockSchematicGui extends GuiRoot implements GuiLayer {
     private final GuiVerticalLayoutGroup element;
     private int selected = -1;
 

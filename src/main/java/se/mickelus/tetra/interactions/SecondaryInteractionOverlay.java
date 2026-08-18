@@ -3,7 +3,7 @@ package se.mickelus.tetra.interactions;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -16,7 +16,7 @@ import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiRoot;
 import se.mickelus.tetra.client.keymap.TetraKeyMappings;
 
-public class SecondaryInteractionOverlay extends GuiRoot implements LayeredDraw.Layer {
+public class SecondaryInteractionOverlay extends GuiRoot implements GuiLayer {
     SecondaryInteraction currentInteraction;
     SecondaryInteractionGui currentDisplay;
     boolean wasKeyDown = false;

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
-public class ScannerOverlayGui extends GuiRoot implements LayeredDraw.Layer {
+public class ScannerOverlayGui extends GuiRoot implements GuiLayer {
     public static final TagKey<Block> tag = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "scannable"));
     private static final int snoozeLength = 6000; // 5 min
     public static ScannerOverlayGui instance;

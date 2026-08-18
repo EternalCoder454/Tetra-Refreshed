@@ -3,7 +3,7 @@ package se.mickelus.tetra.effect.howling;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,7 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class HowlingOverlay implements LayeredDraw.Layer {
+public class HowlingOverlay implements GuiLayer {
     private final Minecraft mc;
 
     private final HowlingProgressGui gui;

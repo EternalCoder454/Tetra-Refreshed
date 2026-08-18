@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.crossbow;
 
+import net.minecraft.server.level.ServerLevel;
 import com.google.common.collect.*;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -433,8 +434,8 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
         world.addFreshEntity(projectile);
 
         // vanilla velocity sync breaks when velocity is >3.9 on any axis
-        if (projectileVelocity > 4) {
-            TetraMod.packetHandler.sendToAllPlayersNear(new ProjectileMotionPacket(projectile), projectile.blockPosition(), 512, world.dimension());
+        if (projectileVelocity > 4 && world instanceof ServerLevel serverLevel) {
+            TetraMod.packetHandler.sendToAllPlayersNear(new ProjectileMotionPacket(projectile), serverLevel, projectile.blockPosition(), 512);
         }
     }
 
