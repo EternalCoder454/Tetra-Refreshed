@@ -19,6 +19,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.server.level.ServerLevel;
 
 @ParametersAreNonnullByDefault
 public class VexingEffect {
@@ -54,9 +55,9 @@ public class VexingEffect {
                     vex.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copy());
                     vex.setDropChance(EquipmentSlot.MAINHAND, 0);
                     vex.setLimitedLife(160);
-                    vex.moveTo(entity.getX(), entity.getY() + 1, entity.getZ(), entity.getYRot(), 0.0F);
+                    vex.snapTo(entity.getX(), entity.getY() + 1, entity.getZ(), entity.getYRot(), 0.0F);
                     vex.setIsCharging(true);
-                    vex.finalizeSpawn((ServerLevelAccessor) level, level.getCurrentDifficultyAt(origin), EntitySpawnReason.MOB_SUMMONED, null);
+                    vex.finalizeSpawn((ServerLevelAccessor) level, ((ServerLevel) level).getCurrentDifficultyAt(origin), EntitySpawnReason.MOB_SUMMONED, null);
                     vex.setBoundOrigin(origin);
                     vex.addEffect(new MobEffectInstance(EffectHelper.effectHolder(UnstablePowerMobEffect.instance), 1199, effectLevel - 1, false, false));
 

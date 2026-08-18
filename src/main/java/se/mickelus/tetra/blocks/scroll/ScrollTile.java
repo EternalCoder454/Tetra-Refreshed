@@ -19,6 +19,7 @@ import se.mickelus.tetra.TetraRegistries;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Collection;
+import net.minecraft.core.component.DataComponentGetter;
 
 @ParametersAreNonnullByDefault
 public class ScrollTile extends BlockEntity {
@@ -96,7 +97,7 @@ public class ScrollTile extends BlockEntity {
     }
 
     @Override
-    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         ScrollData data = componentInput.get(TetraRegistries.scrollData.get());
         if (data != null) {

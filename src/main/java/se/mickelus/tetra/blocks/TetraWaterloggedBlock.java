@@ -47,7 +47,7 @@ public class TetraWaterloggedBlock extends TetraBlock implements SimpleWaterlogg
     }
 
     @Override
-    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
             BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
             ticks.scheduleTick(pos, WATER, WATER.getTickDelay(level));

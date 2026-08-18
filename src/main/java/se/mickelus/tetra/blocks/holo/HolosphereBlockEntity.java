@@ -191,10 +191,8 @@ public class HolosphereBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        if (pkt.getTag() != null) {
-            loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
-        }
+    public void onDataPacket(Connection net, ValueInput input) {
+        loadWithComponents(input);
     }
 
     @Override

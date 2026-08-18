@@ -30,7 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -115,7 +114,7 @@ public class FracturedBedrockTile extends BlockEntity {
         }
 
         boolean spawnBonus = spawnInfo.getMobs(MobCategory.MONSTER).unwrap().stream()
-                .map(MobSpawnSettings.SpawnerData::type)
+                .map(weighted -> weighted.value().type())
                 .anyMatch(type -> EntityType.HUSK.equals(type) || EntityType.STRAY.equals(type) || EntityType.WITCH.equals(type));
         if (spawnBonus) {
             luck += 1;

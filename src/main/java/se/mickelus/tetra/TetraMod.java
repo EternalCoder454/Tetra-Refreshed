@@ -93,7 +93,8 @@ public class TetraMod {
 
         modBus.addListener(this::setup);
         modBus.addListener(this::registerPayloads);
-        modBus.addListener(this::onGatherData);
+        modBus.addListener(this::onGatherServerData);
+        modBus.addListener(this::onGatherClientData);
         modBus.addListener(TetraRegistries::registerCapabilities);
         TetraAttributes.registry.register(modBus);
         modBus.addListener(TetraAttributes::onEntityAttributeModification);
@@ -235,20 +236,16 @@ public class TetraMod {
         packetHandler = new PacketHandler(MOD_ID, "main", "1");
     }
 
-    private void onGatherData(final GatherDataEvent event) {
-        DataGenerator dataGenerator = event.getGenerator();
-        DataGenerator gen = event.getGenerator();
-        PackOutput packOutput = gen.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+    // includeServer and includeClient are gone: the two sides are separate events now, and the
+    // event itself hands each provider its pack output and lookup provider.
+    private void onGatherServerData(final GatherDataEvent.Server event) {
+        event.createProvider(TetraBlockStateProvider::new);
+        event.createProvider((packOutput, lookupProvider) -> new TetraTagsProvider(packOutput, lookupProvider, MOD_ID));
+        event.createProvider(TetraLootTableProvider::new);
+    }
 
-        if (event.includeServer()) {
-            dataGenerator.addProvider(true, new TetraBlockStateProvider(packOutput));
-            dataGenerator.addProvider(true, new TetraTagsProvider(packOutput, lookupProvider, MOD_ID));
-            dataGenerator.addProvider(true, new TetraLootTableProvider(packOutput, lookupProvider));
-        }
-        if (event.includeClient()) {
-            dataGenerator.addProvider(true, new StatBarProvider(packOutput));
-        }
+    private void onGatherClientData(final GatherDataEvent.Client event) {
+        event.createProvider(StatBarProvider::new);
     }
 
     public void setup(FMLCommonSetupEvent event) {
@@ -276,7 +273,7 @@ public class TetraMod {
 
         WorkbenchTile.registerPackets(packetHandler);
         TetraRegistries.registerPackets(packetHandler);
-        packetHandler.registerPayloads(event);
+        packetHandler.register(event);
     }
 
     private void registerCommands(RegisterCommandsEvent event) {

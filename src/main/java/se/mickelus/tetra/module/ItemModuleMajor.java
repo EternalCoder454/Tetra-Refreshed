@@ -235,7 +235,7 @@ public abstract class ItemModuleMajor extends ItemModule {
         CompoundTag mappings = getTagElement(itemStack, "EnchantmentMapping");
         if (mappings != null) {
             return mappings.keySet().stream()
-                    .filter(key -> getSlot().equals(mappings.get(key).getAsString()))
+                    .filter(key -> getSlot().equals(mappings.getStringOr(key, "")))
                     .collect(Collectors.toSet());
         }
         return Collections.emptySet();

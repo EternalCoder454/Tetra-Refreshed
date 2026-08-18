@@ -123,7 +123,7 @@ public class UtilBooster {
 
                 // todo: needs a custom packet for syncing moveStrafing & moveForward to the server, CInputPacket only works when riding something
                 CastOptional.cast(player, LocalPlayer.class).ifPresent(cp -> {
-                    cp.connection.send(new ServerboundPlayerInputPacket(cp.xxa, cp.zza, cp.input.jumping, cp.input.shiftKeyDown));
+                    cp.connection.send(new ServerboundPlayerInputPacket(cp.input.keyPresses));
                 });
 
                 ItemStackTagHelper.mutate(itemStack, tag -> {

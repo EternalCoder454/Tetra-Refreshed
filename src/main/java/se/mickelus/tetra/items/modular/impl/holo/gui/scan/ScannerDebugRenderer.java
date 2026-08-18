@@ -14,6 +14,10 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.phys.shapes.Shapes;
 
 @ParametersAreNonnullByDefault
 public class ScannerDebugRenderer {
@@ -29,8 +33,10 @@ public class ScannerDebugRenderer {
 
         if (player != null && player.isCreative()) {
             PoseStack matrixStack = event.getPoseStack();
-            VertexConsumer vertexBuilder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.lines());
-            Vec3 eyePos = Minecraft.getInstance().player.getEyePosition(event.getPartialTick().getGameTimeDeltaPartialTick(false));
+            VertexConsumer vertexBuilder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderTypes.lines());
+            // The camera position lives on the level render state now rather than being derived
+            // from a partial tick at draw time.
+            Vec3 eyePos = event.getLevelRenderState().cameraRenderState.pos;
 
             if (overlayGui.upHighlight != null) drawDebugBox(overlayGui.upHighlight, eyePos, matrixStack, vertexBuilder, 1, 0, 0, 0.5f);
             if (overlayGui.midHighlight != null) drawDebugBox(overlayGui.midHighlight, eyePos, matrixStack, vertexBuilder, 0, 1, 0, 0.5f);
@@ -42,7 +48,9 @@ public class ScannerDebugRenderer {
         Vec3 pos = /*new Vec3(1023, 7, 1159).subtract(eyePos)*/Vec3.atLowerCornerOf(blockPos).subtract(eyePos);
         AABB aabb = new AABB(pos, pos.add(1, 1, 1));
 
-        // draw center box
-        LevelRenderer.renderLineBox(matrixStack, vertexBuilder, aabb.inflate(0.0030000000949949026D), red, green, blue, alpha);
+        // LevelRenderer#renderLineBox is gone; ShapeRenderer draws the edges of a shape, and the
+        // colour is packed rather than passed as four channels.
+        ShapeRenderer.renderShape(matrixStack, vertexBuilder, Shapes.create(aabb.inflate(0.0030000000949949026D)),
+                0, 0, 0, ARGB.colorFromFloat(alpha, red, green, blue), 1.0f);
     }
 }

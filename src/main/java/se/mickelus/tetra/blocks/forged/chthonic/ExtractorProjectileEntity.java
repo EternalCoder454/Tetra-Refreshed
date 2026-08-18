@@ -256,7 +256,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
      */
     @Override
     public void playerTouch(Player player) {
-        if (inGround) {
+        if (isInGround()) {
             super.playerTouch(player);
 
             // this should mean that it has been picked up
@@ -282,8 +282,9 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     }
 
     // pretty much the same as a regular pickup but attempts to place it in the offhand first
+    // Entity#interactAt merged into interact, which takes the hand before the hit vector.
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 vec) {
         if (!level().isClientSide()
                 && onGround()
                 && isAlive()
@@ -310,7 +311,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.interactAt(player, vec, hand);
+        return super.interact(player, hand, vec);
     }
 
     private void ignitePlayer(Player player) {

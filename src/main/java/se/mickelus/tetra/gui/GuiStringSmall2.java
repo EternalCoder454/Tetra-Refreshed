@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiString;
+import net.minecraft.network.chat.FontDescription;
 
 public class GuiStringSmall2 extends GuiString {
     MutableComponent textComponent;
@@ -32,7 +33,7 @@ public class GuiStringSmall2 extends GuiString {
 
     public void setString(String string) {
         if (string != null) {
-            textComponent = Component.literal(string.toUpperCase()).withStyle(Style.EMPTY.withFont(Identifier.fromNamespaceAndPath("tetra", "ascii_small")));
+            textComponent = Component.literal(string.toUpperCase()).withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Identifier.fromNamespaceAndPath("tetra", "ascii_small"))));
             this.width = this.fontRenderer.width(textComponent);
             if (this.fixedWidth) {
                 textComponent = (MutableComponent) fontRenderer.substrByWidth(textComponent, width);

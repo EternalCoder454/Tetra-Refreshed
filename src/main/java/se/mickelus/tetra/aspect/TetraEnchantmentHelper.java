@@ -154,7 +154,7 @@ public class TetraEnchantmentHelper {
                         .map(CompoundTag::keySet)
                         .stream()
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toMap(Function.identity(), mappings::getString));
+                        .collect(Collectors.toMap(Function.identity(), key -> mappings.getStringOr(key, "")));
 
                 ItemModuleMajor[] modules = ((IModularItem) itemStack.getItem()).getMajorModules(itemStack);
                 Map<String, Integer> capacity = Arrays.stream(modules)
