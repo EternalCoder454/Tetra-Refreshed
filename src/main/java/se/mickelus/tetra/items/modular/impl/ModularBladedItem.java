@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular.impl;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.google.common.collect.Lists;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +21,7 @@ import java.util.Collection;
 
 @ParametersAreNonnullByDefault
 public class ModularBladedItem extends ItemModularHandheld {
+
     public final static String bladeKey = "sword/blade";
     public final static String hiltKey = "sword/hilt";
 
@@ -96,5 +99,13 @@ public class ModularBladedItem extends ItemModularHandheld {
             return "blocking";
         }
         return null;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw - 90.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(pitch + 135.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
     }
 }

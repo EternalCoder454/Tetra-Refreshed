@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular.impl;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -74,6 +76,15 @@ public class ModularSingleHeadedItem extends ItemModularHandheld {
             return "throwing";
         }
         return null;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw - 90.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(pitch + 135.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+        poseStack.translate(.3f, -.3f, 0);
     }
 
     @Override

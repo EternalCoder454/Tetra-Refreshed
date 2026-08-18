@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular.impl;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -203,6 +205,16 @@ public class ModularDoubleHeadedItem extends ItemModularHandheld {
                                 .map(synergy -> synergy.tools))
                 .filter(Objects::nonNull)
                 .reduce(result, ToolData::merge);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
+        // Tumbles end over end until it hits something, then holds the angle it struck at.
+        poseStack.mulPose(Axis.ZP.rotationDegrees(dealtDamage ? pitch + 135.0F : pitch + spin));
+        poseStack.mulPose(Axis.YP.rotationDegrees(yaw - 90.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+        poseStack.translate(.3f, -.3f, 0);
     }
 
     @Override

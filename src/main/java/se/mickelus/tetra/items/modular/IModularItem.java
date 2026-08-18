@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.core.component.DataComponents;
 import com.google.common.cache.Cache;
@@ -1139,6 +1141,21 @@ public interface IModularItem {
             logger.error("Failed to compute enchantability for {}", getItemName(itemStack), e);
             return getEnchantability(itemStack);
         }
+    }
+
+    /**
+     * Orient this item while it is flying through the air after being thrown.
+     *
+     * The renderer used to decide this itself, with a chain of instanceof against Tetra's own item
+     * classes, so an item outside Tetra could only get a pose by mixing into the renderer. Asking
+     * the item means a new modular item type brings its own.
+     *
+     * @param spin         ticks the entity has existed, plus the partial tick, for anything that
+     *                     should tumble rather than hold an angle
+     * @param dealtDamage  whether it has already hit something, which usually stops the tumble
+     */
+    @OnlyIn(Dist.CLIENT)
+    default void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
     }
 
     @OnlyIn(Dist.CLIENT)

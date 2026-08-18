@@ -1,5 +1,6 @@
 package se.mickelus.tetra.items.modular;
 
+import javax.annotation.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -46,7 +47,7 @@ public class ThrownModularItemRenderer extends EntityRenderer<ThrownModularItemE
         state.item.clear();
         itemModelResolver.updateForNonLiving(state.item, itemStack, ItemDisplayContext.FIXED, entity);
 
-        state.shape = shapeOf(itemStack.getItem());
+        state.modular = itemStack.getItem() instanceof IModularItem modular ? modular : null;
         state.yaw = entity.getYRot();
         state.pitch = entity.getXRot();
         state.spin = entity.tickCount + partialTicks;
@@ -54,60 +55,15 @@ public class ThrownModularItemRenderer extends EntityRenderer<ThrownModularItemE
         state.onGround = entity.onGround();
     }
 
-    private static Shape shapeOf(Item item) {
-        if (item instanceof ModularSingleHeadedItem) {
-            return Shape.singleHeaded;
-        }
-        if (item instanceof ModularDoubleHeadedItem) {
-            return Shape.doubleHeaded;
-        }
-        if (item instanceof ModularBladedItem) {
-            return Shape.blade;
-        }
-        if (item instanceof ModularShieldItem) {
-            return Shape.shield;
-        }
-        return Shape.none;
-    }
-
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         poseStack.pushPose();
 
-        switch (state.shape) {
-            case singleHeaded -> {
-                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
-                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-                poseStack.translate(.3f, -.3f, 0);
-            }
-            case doubleHeaded -> {
-                if (state.dealtDamage) {
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
-                } else {
-                    poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + state.spin));
-                }
-                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
-                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-                poseStack.translate(.3f, -.3f, 0);
-            }
-            case blade -> {
-                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
-                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-            }
-            case shield -> {
-                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch));
-                if (state.onGround) {
-                    poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
-                } else {
-                    poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw + state.spin * 100));
-                }
-                poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-                poseStack.translate(-0.2, 0, 0);
-            }
-            case none -> {
-            }
+        // The renderer used to choose a pose here with a chain of instanceof against Tetra's own
+        // item classes, which left an item from another mod with no way to get one short of mixing
+        // into this method. The item is asked instead.
+        if (state.modular != null) {
+            state.modular.applyThrownPose(poseStack, state.yaw, state.pitch, state.spin, state.dealtDamage, state.onGround);
         }
 
         state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
@@ -116,13 +72,10 @@ public class ThrownModularItemRenderer extends EntityRenderer<ThrownModularItemE
         super.submit(state, poseStack, collector, camera);
     }
 
-    private enum Shape {
-        singleHeaded, doubleHeaded, blade, shield, none
-    }
-
     public static class State extends EntityRenderState {
         public final ItemStackRenderState item = new ItemStackRenderState();
-        public Shape shape = Shape.none;
+        @Nullable
+        public IModularItem modular;
         public float yaw;
         public float pitch;
         public float spin;
