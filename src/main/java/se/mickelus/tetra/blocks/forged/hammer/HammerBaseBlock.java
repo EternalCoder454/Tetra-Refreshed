@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,7 @@ import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
 @ParametersAreNonnullByDefault
 public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, EntityBlock {
     public static final String identifier = "hammer_base";
-    public static final DirectionProperty facingProp = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
 
     public static final String qualityImprovementKey = "quality";
     public static final BlockInteraction[] interactions = new BlockInteraction[] {
@@ -77,7 +77,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                 .map(ItemStack::new)
                 .orElse(null);
 
-        if (moduleStack != null && !world.isClientSide) {
+        if (moduleStack != null && !world.isClientSide()) {
             if (player != null && player.getInventory().add(moduleStack)) {
                 player.playSound(SoundEvents.ITEM_PICKUP, 1, 1);
             } else {
@@ -185,7 +185,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
         if (blockFacing.getAxis().equals(facing.getAxis())) {
             int slotIndex = blockFacing.equals(facing) ? 0 : 1;
             if (te.hasCellInSlot(slotIndex)) {
-                if (!world.isClientSide) {
+                if (!world.isClientSide()) {
                     ItemStack cell = te.removeCellFromSlot(slotIndex);
                     if (player.getInventory().add(cell)) {
                         player.playSound(SoundEvents.ITEM_PICKUP, 1, 1);
@@ -197,9 +197,9 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                     world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.6f);
                 }
 
-                return InteractionResult.sidedSuccess(player.level().isClientSide);
+                return InteractionResult.SUCCESS;
             } else if (heldStack.getItem() instanceof ThermalCellItem) {
-                if (world.isClientSide) {
+                if (world.isClientSide()) {
                     return InteractionResult.SUCCESS;
                 }
 
@@ -217,18 +217,18 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
             if (te.getEffect(isA) == null) {
                 boolean success = te.setModule(isA, heldStack.getItem());
                 if (success) {
-                    if (!player.level().isClientSide) {
+                    if (!player.level().isClientSide()) {
                         BlockUseCriterion.trigger((ServerPlayer) player, world.getBlockState(pos), heldStack, getAdvancementData(world, pos));
                     }
 
                     world.playSound(player, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.5f, 0.5f);
                     heldStack.shrink(1);
 
-                    if (world.isClientSide) {
+                    if (world.isClientSide()) {
                         InteractiveBlockOverlay.markDirty();
                     }
 
-                    return InteractionResult.sidedSuccess(player.level().isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
@@ -237,13 +237,13 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult rayTraceResult) {
         return switch (useInternal(blockState, world, pos, player, hand, rayTraceResult)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 

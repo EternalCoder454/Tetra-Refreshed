@@ -1,20 +1,20 @@
 package se.mickelus.tetra.module.model;
 
 import com.mojang.math.Transformation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import se.mickelus.mutil.gui.SimpleColor;
 import se.mickelus.tetra.module.Priority;
 
 public class FilteredGridTextureModelData extends GridTextureModelData {
-    public static final ResourceLocation TYPE = ResourceLocation.fromNamespaceAndPath("tetra", "filtered_grid_texture");
+    public static final Identifier TYPE = Identifier.fromNamespaceAndPath("tetra", "filtered_grid_texture");
     private String filter;
 
     public FilteredGridTextureModelData() {
         super();
     }
 
-    public FilteredGridTextureModelData(ResourceLocation type, ResourceLocation location, ResourceLocation renderType, Transformation transform,
+    public FilteredGridTextureModelData(Identifier type, Identifier location, Identifier renderType, Transformation transform,
             Integer emission, SimpleColor tint, SimpleColor overlayTint, Priority renderLayer, Boolean invertPerspectives,
             ItemDisplayContext[] contexts, String filter) {
         super(type, location, renderType, transform, emission, tint, overlayTint, renderLayer, invertPerspectives, contexts);

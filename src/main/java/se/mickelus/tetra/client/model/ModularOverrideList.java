@@ -6,15 +6,15 @@ import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.cuboid.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -54,10 +54,10 @@ public class ModularOverrideList extends ItemOverrides {
     private final ModelBaker baker;
     private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelState;
-    private final ResourceLocation modelLocation;
+    private final Identifier modelLocation;
 
     public ModularOverrideList(UnresolvedItemModel model, IGeometryBakingContext context, ModelBaker baker,
-            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ResourceLocation modelLocation) {
+            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, Identifier modelLocation) {
         this.model = model;
         this.context = context;
         this.baker = baker;
@@ -124,7 +124,7 @@ public class ModularOverrideList extends ItemOverrides {
                 .map(moduleModel -> new Material(TextureAtlas.LOCATION_BLOCKS, moduleModel.getLocation()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
 
-        var renderTypes = new Int2ObjectOpenHashMap<ResourceLocation>();
+        var renderTypes = new Int2ObjectOpenHashMap<Identifier>();
         var builder = new QuadTransformerBuilder();
         for (int i = 0; i < models.size(); i++) {
             var model = models.get(i);

@@ -85,7 +85,7 @@ public class AspectIconGui extends GuiElement {
     @Override
     public List<Component> getTooltipLines() {
         if (hasFocus()) {
-            if (Screen.hasShiftDown() && !aspects.isEmpty()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasShiftDown() && !aspects.isEmpty()) {
                 return detailTooltip;
             }
             return tooltip;

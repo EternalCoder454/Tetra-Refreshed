@@ -3,7 +3,7 @@ package se.mickelus.tetra.items.modular.impl.toolbelt.gui.overlay;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -57,7 +57,7 @@ public class PotionItemGui extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         super.draw(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
 
         if (this.opacity == 1) {
@@ -65,7 +65,7 @@ public class PotionItemGui extends GuiElement {
         }
     }
 
-    private void drawItemStack(GuiGraphics graphics, ItemStack itemStack, int x, int y) {
+    private void drawItemStack(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y) {
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 

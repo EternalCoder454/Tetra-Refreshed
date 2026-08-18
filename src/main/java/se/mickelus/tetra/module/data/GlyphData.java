@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module.data;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.gui.GuiTextures;
 
@@ -30,7 +30,7 @@ public class GlyphData {
      * <p>
      * Json format: "domain:path"
      */
-    public ResourceLocation textureLocation = GuiTextures.glyphs;
+    public Identifier textureLocation = GuiTextures.glyphs;
 
     public GlyphData() {
     }
@@ -40,17 +40,17 @@ public class GlyphData {
         this.textureY = textureY;
     }
 
-    public GlyphData(ResourceLocation textureLocation, int textureX, int textureY) {
+    public GlyphData(Identifier textureLocation, int textureX, int textureY) {
         this.textureLocation = textureLocation;
         this.textureX = textureX;
         this.textureY = textureY;
     }
 
     public GlyphData(String texture, int textureX, int textureY) {
-        this(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, texture), textureX, textureY);
+        this(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, texture), textureX, textureY);
     }
 
-    public GlyphData(ResourceLocation textureLocation, int textureX, int textureY, int tint) {
+    public GlyphData(Identifier textureLocation, int textureX, int textureY, int tint) {
         this(textureLocation, textureX, textureY);
         this.tint = tint;
     }

@@ -1,7 +1,7 @@
 package se.mickelus.tetra.blocks.scroll.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.GuiClickable;
 import se.mickelus.mutil.gui.GuiTexture;
 import se.mickelus.tetra.TetraMod;
@@ -10,7 +10,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ScrollPageButtonGui extends GuiClickable {
-    static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/pamphlet.png");
+    static final Identifier texture = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/pamphlet.png");
     GuiTexture regularTexture;
     GuiTexture hoverTexture;
 
@@ -27,7 +27,7 @@ public class ScrollPageButtonGui extends GuiClickable {
     }
 
     @Override
-    protected void drawChildren(GuiGraphics guiGraphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    protected void drawChildren(GuiGraphicsExtractor guiGraphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (hasFocus()) {
             hoverTexture.draw(guiGraphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
         } else {

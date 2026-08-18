@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -49,7 +49,7 @@ import java.util.*;
 @ParametersAreNonnullByDefault
 public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, IToolProviderBlock {
     public static final String identifier = "rack";
-    public static final DirectionProperty facingProp = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     private static final Map<Direction, VoxelShape> shapes = Maps.newEnumMap(ImmutableMap.of(
             Direction.NORTH, Block.box(0.0, 11.0, 14.0, 16.0, 14.0, 16.0),
             Direction.SOUTH, Block.box(0.0, 11.0, 0.0, 16.0, 14.0, 2.0),
@@ -94,20 +94,20 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
             TileEntityOptional.from(world, pos, RackTile.class)
                     .ifPresent(tile -> tile.slotInteract(slot, player, hand));
 
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.PASS;
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(blockState, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 
@@ -163,7 +163,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     @Override
     public void appendHoverText(final ItemStack stack, final net.minecraft.world.item.Item.TooltipContext context, final List<Component> tooltip,
             final TooltipFlag advanced) {
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             tooltip.add(Component.translatable("block.tetra.rack.description").withStyle(ChatFormatting.GRAY));
         } else {
@@ -257,16 +257,16 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     private void spawnConsumeParticle(Level world, BlockPos pos, BlockState blockState, Container inventory, ItemStack providerStack) {
         if (world instanceof ServerLevel) {
             Direction facing = blockState.getValue(RackBlock.facingProp);
-            Vec3 particlePos = Vec3.atLowerCornerOf(pos).add(0.5f, 0.75f, 0.5f).add(Vec3.atLowerCornerOf(facing.getNormal()).scale(-0.3));
+            Vec3 particlePos = Vec3.atLowerCornerOf(pos).add(0.5f, 0.75f, 0.5f).add(Vec3.atLowerCornerOf(facing.getUnitVec3i()).scale(-0.3));
 
             ItemStack firstSlot = inventory.getItem(0);
             firstSlot = Optional.of(ItemUpgradeRegistry.instance.getReplacement(firstSlot))
                     .filter(itemStack -> !itemStack.isEmpty())
                     .orElse(firstSlot);
             if (ItemStack.matches(providerStack, firstSlot)) {
-                particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getNormal()).scale(-0.25));
+                particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getUnitVec3i()).scale(-0.25));
             } else {
-                particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getNormal()).scale(0.25));
+                particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getUnitVec3i()).scale(0.25));
             }
 
             ((ServerLevel) world).sendParticles(new DustParticleOptions(new Vector3f(0.0f, 0.66f, 0.66f), 1f), particlePos.x(), particlePos.y(), particlePos.z(), 2, 0, 0, 0, 0f);

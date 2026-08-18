@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiClickable;
 import se.mickelus.mutil.gui.GuiElement;
@@ -117,7 +117,7 @@ public class GuiSliderSegmented extends GuiClickable {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (isDragging) {
             int newSegment = calculateSegment(refX, mouseX);
             if (newSegment != value) {

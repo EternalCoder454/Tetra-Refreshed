@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +51,7 @@ public class LungeEffect extends ChargedAbilityEffect {
             .build();
 
     LungeEffect() {
-        super(5, 0.5f, 60, 6.5, ItemEffect.lunge, TargetRequirement.none, UseAnim.SPEAR, "raised");
+        super(5, 0.5f, 60, 6.5, ItemEffect.lunge, TargetRequirement.none, ItemUseAnimation.SPEAR, "raised");
     }
 
     public static void onPlayerTick(Player player) {
@@ -99,7 +99,7 @@ public class LungeEffect extends ChargedAbilityEffect {
             RevengeTracker.removeEnemy(player, target);
         }
 
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             double bonusDamage = 0;
 
             if (momentumLevel > 0) {
@@ -118,7 +118,7 @@ public class LungeEffect extends ChargedAbilityEffect {
                 }
             }
 
-            target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.8f);
             player.swing(InteractionHand.MAIN_HAND, true);
         }
 
@@ -200,10 +200,10 @@ public class LungeEffect extends ChargedAbilityEffect {
 
         entity.hurtMarked = true;
 
-        entity.getCommandSenderWorld().playSound(entity, BlockPos.containing(entity.position().add(entity.getDeltaMovement())), SoundEvents.UI_TOAST_IN,
+        entity.level().playSound(entity, BlockPos.containing(entity.position().add(entity.getDeltaMovement())), SoundEvents.UI_TOAST_IN,
                 SoundSource.PLAYERS, 1, 1.3f);
 
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
             ((ServerLevel) entity.level()).sendParticles(ParticleTypes.WITCH,
                     entity.getX() + (rand.nextGaussian() - 0.5) * 0.5,
@@ -216,7 +216,7 @@ public class LungeEffect extends ChargedAbilityEffect {
     }
 
     private static int getIdentifier(Player entity) {
-        return entity.level().isClientSide ? -entity.getId() : entity.getId();
+        return entity.level().isClientSide() ? -entity.getId() : entity.getId();
     }
 
     @Override

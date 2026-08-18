@@ -67,7 +67,7 @@ public class HoloMaterialImprovementGui extends GuiElement {
     @Override
     public List<Component> getTooltipLines() {
         if (hasFocus()) {
-            if (Screen.hasShiftDown() && extendedTooltip != null) {
+            if (net.minecraft.client.Minecraft.getInstance().hasShiftDown() && extendedTooltip != null) {
                 return extendedTooltip;
             }
             return tooltip;

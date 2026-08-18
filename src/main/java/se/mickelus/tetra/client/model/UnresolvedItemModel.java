@@ -3,12 +3,12 @@ package se.mickelus.tetra.client.model;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.cuboid.ItemTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.RenderTypeGroup;
@@ -68,7 +68,7 @@ public final class UnresolvedItemModel implements IUnbakedGeometry<UnresolvedIte
 
     @Override
     public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
-        overrideList = new ModularOverrideList(this, context, baker, spriteGetter, modelState, ResourceLocation.parse(context.getModelName()));
+        overrideList = new ModularOverrideList(this, context, baker, spriteGetter, modelState, Identifier.parse(context.getModelName()));
         return new Baked(overrideList);
     }
 

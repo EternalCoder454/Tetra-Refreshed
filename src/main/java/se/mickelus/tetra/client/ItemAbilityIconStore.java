@@ -2,7 +2,7 @@ package se.mickelus.tetra.client;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -51,12 +51,12 @@ public class ItemAbilityIconStore implements ResourceManagerReloadListener {
                         HashMap::putAll);
     }
 
-    private ItemAbility getAction(ResourceLocation resourceLocation) {
+    private ItemAbility getAction(Identifier resourceLocation) {
         String path = resourceLocation.getPath();
         return ItemAbility.get(path.substring(directory.length() + 1, path.length() - jsonExtension.length()));
     }
 
-    private GlyphData getGlyph(ResourceLocation resourceLocation, Resource resource) {
+    private GlyphData getGlyph(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return Optional.of(GsonHelper.fromJson(DataManager.gson, reader, GlyphData.class)).orElse(null);
         } catch (IOException | JsonParseException e) {

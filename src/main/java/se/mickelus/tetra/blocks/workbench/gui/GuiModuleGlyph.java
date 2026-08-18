@@ -1,7 +1,7 @@
 package se.mickelus.tetra.blocks.workbench.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.GuiTexture;
 import se.mickelus.tetra.module.data.GlyphData;
 
@@ -12,7 +12,7 @@ public class GuiModuleGlyph extends GuiTexture {
 
     boolean shift = true;
 
-    public GuiModuleGlyph(int x, int y, int width, int height, int tint, int textureX, int textureY, ResourceLocation textureLocation) {
+    public GuiModuleGlyph(int x, int y, int width, int height, int tint, int textureX, int textureY, Identifier textureLocation) {
         super(x, y, width + 1, height + 1, textureX, textureY, textureLocation);
 
         this.color = tint;
@@ -32,7 +32,7 @@ public class GuiModuleGlyph extends GuiTexture {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (shift) {
             graphics.pose().pushPose();
             graphics.pose().translate(0.5, 0.5, 0);

@@ -1,7 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.holo.gui.craft.schematic;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiStringSmall;
@@ -72,7 +72,7 @@ public class HoloSchematicListGui extends GuiElement {
 
     public void update(IModularItem item, String slot) {
         Minecraft mc = Minecraft.getInstance();
-        CraftingContext context = new CraftingContext(mc.player.level(), mc.player.getOnPos(), null, mc.player, new ItemStack(item.getItem()), slot, new ResourceLocation[0]);
+        CraftingContext context = new CraftingContext(mc.player.level(), mc.player.getOnPos(), null, mc.player, new ItemStack(item.getItem()), slot, new Identifier[0]);
         allSchematics = Arrays.stream(SchematicRegistry.getPreviewSchematics(context, true))
                 .filter(schematic -> !schematic.isHoning())
                 .filter(schematic -> schematic.getType() != SchematicType.improvement)

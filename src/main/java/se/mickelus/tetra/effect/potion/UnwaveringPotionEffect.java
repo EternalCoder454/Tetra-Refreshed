@@ -1,6 +1,6 @@
 package se.mickelus.tetra.effect.potion;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -16,7 +16,7 @@ public class UnwaveringPotionEffect extends MobEffect {
     public UnwaveringPotionEffect() {
         super(MobEffectCategory.BENEFICIAL, 0x887700);
 
-        addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, ResourceLocation.fromNamespaceAndPath("tetra", "unwavering_knockback_resistance"), 1,
+        addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, Identifier.fromNamespaceAndPath("tetra", "unwavering_knockback_resistance"), 1,
                 AttributeModifier.Operation.ADD_VALUE);
 
         instance = this;

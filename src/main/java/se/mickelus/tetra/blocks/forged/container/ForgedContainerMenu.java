@@ -82,7 +82,7 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
             Arrays.stream(compartmentSlots[i]).forEach(slot -> slot.toggle(enabled));
         }
 
-        if (tile.getLevel().isClientSide) {
+        if (tile.getLevel().isClientSide()) {
             TetraMod.packetHandler.sendToServer(new ChangeCompartmentPacket(compartmentIndex));
         }
     }

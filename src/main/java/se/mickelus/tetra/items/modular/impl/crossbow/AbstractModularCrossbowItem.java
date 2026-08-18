@@ -1,7 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.crossbow;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
@@ -40,9 +40,9 @@ public abstract class AbstractModularCrossbowItem extends ModularItem {
     public static final String identifier = "modular_crossbow";
     private static final GuiModuleOffsets majorOffsets = new GuiModuleOffsets(-13, 0, -13, 18);
     private static final GuiModuleOffsets minorOffsets = new GuiModuleOffsets(4, -1, 13, 12, 4, 25);
-    protected GridTextureModelData arrowModel = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/arrow"));
-    protected GridTextureModelData extractorModel = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/extractor"));
-    protected GridTextureModelData fireworkModel = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/firework"));
+    protected GridTextureModelData arrowModel = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/arrow"));
+    protected GridTextureModelData extractorModel = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/extractor"));
+    protected GridTextureModelData fireworkModel = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/crossbow/firework"));
     // used to pick projectiles from the player inventory
 
     public AbstractModularCrossbowItem(Properties properties) {

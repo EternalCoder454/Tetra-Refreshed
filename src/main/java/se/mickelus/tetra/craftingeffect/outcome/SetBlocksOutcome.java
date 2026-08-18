@@ -3,7 +3,7 @@ package se.mickelus.tetra.craftingeffect.outcome;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +46,7 @@ public class SetBlocksOutcome implements CraftingEffectOutcome {
 
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float severity) {
         if (consumeResources && !world.isClientSide() && world.getRandom().nextFloat() < chance) {

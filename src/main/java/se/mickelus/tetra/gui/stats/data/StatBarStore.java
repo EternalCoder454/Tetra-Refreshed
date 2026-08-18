@@ -2,7 +2,7 @@ package se.mickelus.tetra.gui.stats.data;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -58,7 +58,7 @@ public class StatBarStore implements ResourceManagerReloadListener {
     }
 
     @Nullable
-    private static GuiStatBase parseBar(ResourceLocation resourceLocation, Resource resource) {
+    private static GuiStatBase parseBar(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return GsonHelper.fromJson(StatRegistry.gson, reader, GuiStatBase.class);
         } catch (IOException | JsonParseException e) {

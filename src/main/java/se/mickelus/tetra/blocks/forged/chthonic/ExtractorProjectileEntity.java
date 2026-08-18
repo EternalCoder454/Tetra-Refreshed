@@ -17,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
@@ -83,7 +83,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
 
     @Override
     protected void onHit(HitResult rayTraceResult) {
-        if (!level().isClientSide
+        if (!level().isClientSide()
                 && rayTraceResult.getType() == HitResult.Type.BLOCK
                 && getDeltaMovement().lengthSqr() > 0.95) {
             ServerPlayer shooter = CastOptional.cast(getOwner(), ServerPlayer.class).orElse(null);
@@ -117,7 +117,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     }
 
     private void breakAround(Level world, BlockPos pos, Direction face, ServerPlayer shooter) {
-        Vec3i axis1 = RotationHelper.shiftAxis(face.getNormal());
+        Vec3i axis1 = RotationHelper.shiftAxis(face.getUnitVec3i());
         Vec3i axis2 = RotationHelper.shiftAxis(axis1);
         ServerScheduler.schedule(2, () -> {
             breakBlock(world, pos.offset(axis1), shooter);
@@ -180,7 +180,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     public void tick() {
         super.tick();
 
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (onGround() && heat > 0) {
                 int cooldown = isInWater() ? 10 : 1;
                 if (tickCount % 10 == 0) {
@@ -282,7 +282,7 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     // pretty much the same as a regular pickup but attempts to place it in the offhand first
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-        if (!level().isClientSide
+        if (!level().isClientSide()
                 && onGround()
                 && isAlive()
                 && pickup == AbstractArrow.Pickup.ALLOWED) {

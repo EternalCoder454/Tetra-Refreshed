@@ -3,13 +3,13 @@ package se.mickelus.tetra.items.modular.impl.holo.gui.scan;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 public class ScannerOverlayGui extends GuiRoot implements LayeredDraw.Layer {
-    public static final TagKey<Block> tag = BlockTags.create(ResourceLocation.fromNamespaceAndPath("tetra", "scannable"));
+    public static final TagKey<Block> tag = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "scannable"));
     private static final int snoozeLength = 6000; // 5 min
     public static ScannerOverlayGui instance;
     private final ScannerBarGui scanner;
@@ -250,7 +250,7 @@ public class ScannerOverlayGui extends GuiRoot implements LayeredDraw.Layer {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         if (isVisible()) {
             Window window = mc.getWindow();
             width = window.getGuiScaledWidth();

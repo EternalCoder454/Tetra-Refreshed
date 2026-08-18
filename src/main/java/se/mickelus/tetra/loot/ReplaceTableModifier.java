@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -21,12 +21,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class ReplaceTableModifier extends LootModifier {
     public static final MapCodec<ReplaceTableModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> LootModifier.codecStart(instance)
-            .and(ResourceLocation.CODEC.fieldOf("table").forGetter(modifier -> modifier.table))
+            .and(Identifier.CODEC.fieldOf("table").forGetter(modifier -> modifier.table))
             .apply(instance, ReplaceTableModifier::new));
 
-    public ResourceLocation table;
+    public Identifier table;
 
-    protected ReplaceTableModifier(LootItemCondition[] conditions, ResourceLocation table) {
+    protected ReplaceTableModifier(LootItemCondition[] conditions, Identifier table) {
         super(conditions);
         this.table = table;
     }

@@ -3,7 +3,7 @@ package se.mickelus.tetra.module.schematic.requirement;
 import com.google.gson.*;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.util.JsonOptional;
@@ -104,7 +104,7 @@ public class IntegerPredicate implements Predicate<Integer> {
                 return element.getAsInt();
             }
 
-            return Optional.ofNullable(HarvestTierRegistry.byName(ResourceLocation.parse(element.getAsString())))
+            return Optional.ofNullable(HarvestTierRegistry.byName(Identifier.parse(element.getAsString())))
                     .map(TierHelper::getIndex)
                     .map(index -> index + 1)
                     .orElse(0);

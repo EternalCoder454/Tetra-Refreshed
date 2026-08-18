@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -33,12 +33,12 @@ public class CraftingEffect {
         to.properties = CraftingProperties.merge(from.properties, to.properties);
     }
 
-    public boolean isApplicable(ResourceLocation[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean isApplicable(Identifier[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] materials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic, Level world, BlockPos pos, BlockState blockState) {
         return requirement.test(unlocks, upgradedStack, slot, isReplacing, player, materials, tools, schematic, world, pos, blockState);
     }
 
-    public boolean applyOutcomes(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean applyOutcomes(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, ItemStack[] postMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic,
             BlockPos pos, BlockState blockState, boolean consumeResources, float severity) {
         boolean success = false;

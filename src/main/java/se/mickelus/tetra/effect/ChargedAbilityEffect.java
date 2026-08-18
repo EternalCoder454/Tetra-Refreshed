@@ -6,7 +6,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
 import se.mickelus.tetra.items.modular.ItemModularHandheld;
 
@@ -23,10 +23,10 @@ public abstract class ChargedAbilityEffect {
     protected TargetRequirement target;
 
     protected String modelTransform;
-    protected UseAnim useAction;
+    protected ItemUseAnimation useAction;
 
     public ChargedAbilityEffect(int chargeTimeFlat, double chargeTimeSpeedMultiplier, int cooldownFlat, double cooldownSpeedMultiplier,
-            ItemEffect effect, TargetRequirement target, UseAnim useAction) {
+            ItemEffect effect, TargetRequirement target, ItemUseAnimation useAction) {
         this.chargeTimeFlat = chargeTimeFlat;
         this.chargeTimeSpeedMultiplier = chargeTimeSpeedMultiplier;
 
@@ -40,7 +40,7 @@ public abstract class ChargedAbilityEffect {
     }
 
     public ChargedAbilityEffect(int chargeTimeFlat, double chargeTimeSpeedMultiplier, int cooldownFlat, double cooldownSpeedMultiplier,
-            ItemEffect effect, TargetRequirement target, UseAnim pose, String modelTransform) {
+            ItemEffect effect, TargetRequirement target, ItemUseAnimation pose, String modelTransform) {
         this(chargeTimeFlat, chargeTimeSpeedMultiplier, cooldownFlat, cooldownSpeedMultiplier, effect, target, pose);
 
         this.modelTransform = modelTransform;
@@ -142,7 +142,7 @@ public abstract class ChargedAbilityEffect {
 
     }
 
-    public UseAnim getPose() {
+    public ItemUseAnimation getPose() {
         return useAction;
     }
 

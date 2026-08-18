@@ -32,7 +32,7 @@ public class CoreExtractorPistonBlockEntity extends BlockEntity {
         if (!isActive()) {
             endTime = level.getGameTime() + activationDuration;
 
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 TetraMod.packetHandler.sendToAllPlayersNear(new CoreExtractorPistonUpdatePacket(worldPosition, endTime), worldPosition, 64, level.dimension());
             }
         }
@@ -70,7 +70,7 @@ public class CoreExtractorPistonBlockEntity extends BlockEntity {
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (endTime < level.getGameTime()) {
             endTime = Long.MAX_VALUE;
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 TileEntityOptional.from(level, pos.relative(Direction.DOWN), CoreExtractorBaseBlockEntity.class)
                         .ifPresent(base -> base.fill(fillAmount));
 

@@ -15,12 +15,12 @@ import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -43,8 +43,8 @@ public class ModularShieldRenderer extends BlockEntityWithoutLevelRenderer {
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
-    public static ModelLayerLocation layer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield"), "main");
-    public static ModelLayerLocation bannerLayer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield_banner"), "main");
+    public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield"), "main");
+    public static ModelLayerLocation bannerLayer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield_banner"), "main");
     private final EntityModelSet modelSet;
     public ModularShieldBannerModel bannerModel;
     private ModularShieldModel model;
@@ -102,7 +102,7 @@ public class ModularShieldRenderer extends BlockEntityWithoutLevelRenderer {
                         // reset alpha to 1 if it's 0 to avoid mistakes & make things cleaner
                         a = a == 0 ? 1 : a;
 
-                        modelPart.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay, FastColor.ARGB32.colorFromFloat(a, r, g, b));
+                        modelPart.render(matrixStack, vertexBuilder, combinedLight, combinedOverlay, ARGB.colorFromFloat(a, r, g, b));
                     }
                 });
 

@@ -2,7 +2,7 @@ package se.mickelus.tetra.effect.data.outcome;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import se.mickelus.tetra.effect.data.ItemEffectContext;
 import se.mickelus.tetra.effect.data.provider.entity.EntityProvider;
@@ -11,7 +11,7 @@ import se.mickelus.tetra.effect.data.provider.number.NumberProvider;
 public class DamageEntityItemEffectOutcome extends ItemEffectOutcome {
     EntityProvider entity;
     NumberProvider amount;
-    ResourceLocation damageType;
+    Identifier damageType;
 
     @Override
     public boolean perform(ItemEffectContext context) {

@@ -42,12 +42,12 @@ public class BasicWorkbenchBlock extends AbstractWorkbenchBlock {
 
             world.playSound(player, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 0.5F);
 
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
                 world.setBlockAndUpdate(pos, instance.defaultBlockState());
 
                 BlockUseCriterion.trigger((ServerPlayer) player, instance.defaultBlockState(), ItemStack.EMPTY);
             }
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.PASS;

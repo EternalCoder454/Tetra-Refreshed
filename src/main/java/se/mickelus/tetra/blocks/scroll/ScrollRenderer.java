@@ -14,11 +14,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,10 +34,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
-    public static final Material material = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
+    public static final Material material = new Material(InventoryMenu.BLOCK_ATLAS, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"));
     private static final int availableGlyphs = 16;
     private static final int availableMaterials = 3;
-    public static ModelLayerLocation layer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"), "main");
+    public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/scroll"), "main");
     private final ModelPart[] rolledModel;
     private final ModelPart ribbonModel;
     private final ModelPart[] wallModel;
@@ -178,9 +178,9 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
 
         for (int i = 0; i < scrolls.length; i++) {
             int mat = getMaterial(scrolls, i);
-            float red = FastColor.ARGB32.red(scrolls[i].ribbon) / 255f;
-            float green = FastColor.ARGB32.green(scrolls[i].ribbon) / 255f;
-            float blue = FastColor.ARGB32.blue(scrolls[i].ribbon) / 255f;
+            float red = ARGB.red(scrolls[i].ribbon) / 255f;
+            float green = ARGB.green(scrolls[i].ribbon) / 255f;
+            float blue = ARGB.blue(scrolls[i].ribbon) / 255f;
 
             rolledModel[mat].render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
             ribbonModel.render(
@@ -188,7 +188,7 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
                     vertexBuilder,
                     combinedLight,
                     combinedOverlay,
-                    FastColor.ARGB32.color(255, (int) (red * 255), (int) (green * 255), (int) (blue * 255))
+                    ARGB.color(255, (int) (red * 255), (int) (green * 255), (int) (blue * 255))
             );
 
             matrixStack.translate(0, 0, 0.25f); // 4px
@@ -204,9 +204,9 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
     private void renderWall(ScrollData[] scrolls, PoseStack matrixStack, int combinedLight, int combinedOverlay, VertexConsumer vertexBuilder) {
         int mat = getMaterial(scrolls, 0);
         int color = getGlyphColor(mat);
-        float red = FastColor.ARGB32.red(color) / 255f;
-        float green = FastColor.ARGB32.green(color) / 255f;
-        float blue = FastColor.ARGB32.blue(color) / 255f;
+        float red = ARGB.red(color) / 255f;
+        float green = ARGB.green(color) / 255f;
+        float blue = ARGB.blue(color) / 255f;
 
         wallModel[mat].render(matrixStack, vertexBuilder, combinedLight, combinedOverlay);
         for (int i = 0; i < wallGlyphs.length; i++) {
@@ -218,9 +218,9 @@ public class ScrollRenderer implements BlockEntityRenderer<ScrollTile> {
     private void renderOpen(ScrollData[] scrolls, PoseStack matrixStack, int combinedLight, int combinedOverlay, VertexConsumer vertexBuilder) {
         int mat = getMaterial(scrolls, 0);
         int color = getGlyphColor(mat);
-        float red = FastColor.ARGB32.red(color) / 255f;
-        float green = FastColor.ARGB32.green(color) / 255f;
-        float blue = FastColor.ARGB32.blue(color) / 255f;
+        float red = ARGB.red(color) / 255f;
+        float green = ARGB.green(color) / 255f;
+        float blue = ARGB.blue(color) / 255f;
 
         matrixStack.translate(0.5, 0, 0.5);
         matrixStack.mulPose(Axis.YN.rotationDegrees(90));

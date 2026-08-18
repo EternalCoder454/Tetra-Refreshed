@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.schematic.requirement;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LockedRequirement implements CraftingRequirement {
-    public ResourceLocation key;
+    public Identifier key;
 
     @Override
     public boolean test(CraftingContext context) {

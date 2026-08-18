@@ -1,7 +1,7 @@
 package se.mickelus.tetra.module.schematic;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,14 +26,14 @@ public class CraftingContext {
     public final ItemStack targetStack;
 
     public final String slot;
-    public final ResourceLocation[] unlocks;
+    public final Identifier[] unlocks;
 
     @Nullable
     public final ItemModule targetModule;
     @Nullable
     public final ItemModuleMajor targetMajorModule;
 
-    public CraftingContext(@Nullable Level world, @Nullable BlockPos pos, @Nullable BlockState blockState, @Nullable Player player, ItemStack targetStack, String slot, ResourceLocation[] unlocks) {
+    public CraftingContext(@Nullable Level world, @Nullable BlockPos pos, @Nullable BlockState blockState, @Nullable Player player, ItemStack targetStack, String slot, Identifier[] unlocks) {
         this.world = world;
         this.pos = pos;
         this.blockState = blockState;

@@ -2,7 +2,7 @@ package se.mickelus.tetra.craftingeffect.outcome;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,7 @@ public class SpawnSculkOutcome implements CraftingEffectOutcome {
     boolean workbenchSource = true;
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos origin, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float craftingSeverity) {
         if (consumeResources && !world.isClientSide() && world.random.nextDouble() < chance) {

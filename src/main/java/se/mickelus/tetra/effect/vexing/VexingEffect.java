@@ -39,7 +39,7 @@ public class VexingEffect {
     }
 
     public static void perform(LivingEntity entity, ItemStack itemStack, double multiplier) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             Level level = entity.level();
             double effectProbability = EffectHelper.getEffectEfficiency(itemStack, ItemEffect.vexing);
             if (effectProbability > 0

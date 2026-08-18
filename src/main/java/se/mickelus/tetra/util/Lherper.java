@@ -1,6 +1,6 @@
 package se.mickelus.tetra.util;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import org.joml.Vector3f;
 
 import java.util.Arrays;
@@ -20,9 +20,9 @@ public class Lherper {
 
     public static int lerpColors(float factor, int... colors) {
         Vector3f result = lerpColors(factor, Arrays.stream(colors)
-                .mapToObj(color -> new Vector3f(FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color)))
+                .mapToObj(color -> new Vector3f(ARGB.red(color), ARGB.green(color), ARGB.blue(color)))
                 .toArray(Vector3f[]::new));
-        return FastColor.ARGB32.color(255, (int) result.x(), (int) result.y(), (int) result.z());
+        return ARGB.color(255, (int) result.x(), (int) result.y(), (int) result.z());
     }
 
     public static Vector3f lerpColors(float factor, Vector3f... colors) {

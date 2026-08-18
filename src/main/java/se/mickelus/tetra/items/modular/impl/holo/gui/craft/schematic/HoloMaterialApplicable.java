@@ -7,7 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -74,7 +74,7 @@ public class HoloMaterialApplicable extends GuiElement {
                         } else if (mat.startsWith("!")) {
                             return I18n.get("tetra.material." + mat.substring(1));
                         }
-                        return Optional.ofNullable(RegistryHelper.get(BuiltInRegistries.ITEM, ResourceLocation.parse(mat)))
+                        return Optional.ofNullable(RegistryHelper.get(BuiltInRegistries.ITEM, Identifier.parse(mat)))
                                 .map(Item::getDescription)
                                 .map(Component::getString)
                                 .orElse(mat);

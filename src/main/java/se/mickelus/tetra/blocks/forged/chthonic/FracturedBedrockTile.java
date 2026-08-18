@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -57,17 +57,17 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 public class FracturedBedrockTile extends BlockEntity {
 
-    public static final TagKey<Block> extractorBreakable = BlockTags.create(ResourceLocation.fromNamespaceAndPath("tetra", "extractor_breakable"));
+    public static final TagKey<Block> extractorBreakable = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "extractor_breakable"));
     private static final Logger logger = LogManager.getLogger();
 
     private static final String activityKey = "actv";
     private static final String stepKey = "step";
     private static final String luckKey = "luck";
     private static final List<ResourceKey<LootTable>> lootTables = List.of(
-            ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier1")),
-            ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier2")),
-            ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier3")),
-            ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier4"))
+            ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier1")),
+            ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier2")),
+            ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier3")),
+            ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "extractor/tier4"))
     );
     public static BlockEntityType<FracturedBedrockTile> type;
     private static final float spawnRatio = 0.5f;
@@ -118,7 +118,7 @@ public class FracturedBedrockTile extends BlockEntity {
     }
 
     public void activate(int amount) {
-        if (!level.isClientSide && activity <= 0) {
+        if (!level.isClientSide() && activity <= 0) {
             playSound();
         }
 
@@ -127,7 +127,7 @@ public class FracturedBedrockTile extends BlockEntity {
         activity += amount;
         setChanged();
 
-        if (!level.isClientSide && getProjectedTier() != preTier) {
+        if (!level.isClientSide() && getProjectedTier() != preTier) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     }
@@ -353,7 +353,7 @@ public class FracturedBedrockTile extends BlockEntity {
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide && activity > 0 && level.getGameTime() % getRate() == 0) {
+        if (!level.isClientSide() && activity > 0 && level.getGameTime() % getRate() == 0) {
             int intensity = getIntensity();
             Vec3 origin = Vec3.atCenterOf(pos);
 
@@ -387,7 +387,7 @@ public class FracturedBedrockTile extends BlockEntity {
 
             ((ServerLevel) level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FracturedBedrockBlock.instance.defaultBlockState()),
                     worldPosition.getX() + 0.5, worldPosition.getY() + 1.1, worldPosition.getZ() + 0.5,
-                    8, 0, level.random.nextGaussian() * 0.1, 0, 0.1);
+                    8, 0, level.getRandom().nextGaussian() * 0.1, 0, 0.1);
 
             step += intensity;
             activity -= intensity;
@@ -397,7 +397,7 @@ public class FracturedBedrockTile extends BlockEntity {
             }
         }
 
-        if (!level.isClientSide && activity > 0 && this.level.getGameTime() % 80 == 0) {
+        if (!level.isClientSide() && activity > 0 && this.level.getGameTime() % 80 == 0) {
             playSound();
         }
     }

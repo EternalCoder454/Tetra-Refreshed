@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -29,14 +29,14 @@ import java.util.function.Supplier;
 public class PrimaryMultiblockSchematicBlock extends MultiblockSchematicBlock implements ISchematicProviderBlock, ICraftingEffectProviderBlock {
     public static final BooleanProperty complete = BooleanProperty.create("complete");
 
-    protected final ResourceLocation[] schematics;
+    protected final Identifier[] schematics;
 
     public PrimaryMultiblockSchematicBlock(Properties properties, String schematic, Supplier<RuinedMultiblockSchematicBlock> ruinedRef,
-            ResourceLocation pryTable, int x, int y, int height, int width) {
+            Identifier pryTable, int x, int y, int height, int width) {
         super(properties, schematic, ruinedRef, pryTable, x, y, height, width);
         this.registerDefaultState(this.stateDefinition.any().setValue(facingProp, Direction.EAST).setValue(complete, false));
 
-        this.schematics = new ResourceLocation[] { ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, schematic) };
+        this.schematics = new Identifier[] { Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, schematic) };
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PrimaryMultiblockSchematicBlock extends MultiblockSchematicBlock im
     }
 
     @Override
-    public ResourceLocation[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
+    public Identifier[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
         return schematics;
     }
 
@@ -55,7 +55,7 @@ public class PrimaryMultiblockSchematicBlock extends MultiblockSchematicBlock im
     }
 
     @Override
-    public ResourceLocation[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
+    public Identifier[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
         return schematics;
     }
 
@@ -81,8 +81,8 @@ public class PrimaryMultiblockSchematicBlock extends MultiblockSchematicBlock im
 
     protected void spawnCompleteParticle(BlockState blockState, ServerLevel level, BlockPos worldPos, BlockPos placePos) {
         Direction facing = blockState.getValue(facingProp);
-        Vec3 face = Vec3.atLowerCornerOf(facing.getNormal());
-        Vec3 dir = Vec3.atLowerCornerOf(facing.getCounterClockWise().getNormal());
+        Vec3 face = Vec3.atLowerCornerOf(facing.getUnitVec3i());
+        Vec3 dir = Vec3.atLowerCornerOf(facing.getCounterClockWise().getUnitVec3i());
         Vec3 placeVec = Vec3.atCenterOf(placePos);
         Vec3 origin = Vec3.atBottomCenterOf(RotationHelper.rotateDirection(new BlockPos(-x, -y, 0), facing).offset(worldPos))
                 .add(face.scale(0.52))

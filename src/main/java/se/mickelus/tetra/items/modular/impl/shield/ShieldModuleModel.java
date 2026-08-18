@@ -1,6 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.shield;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.SimpleColor;
 import se.mickelus.tetra.items.modular.ItemColors;
 import se.mickelus.tetra.module.Priority;
@@ -11,14 +11,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ShieldModuleModel implements IModuleModel {
-    protected ResourceLocation type;
-    protected ResourceLocation model;
-    protected ResourceLocation texture;
+    protected Identifier type;
+    protected Identifier model;
+    protected Identifier texture;
     protected SimpleColor tint;
     protected SimpleColor overlayTint;
     protected Priority renderLayer = Priority.BASE;
 
-    public ShieldModuleModel(ResourceLocation type, ResourceLocation model, ResourceLocation texture, SimpleColor tint, SimpleColor overlayTint,
+    public ShieldModuleModel(Identifier type, Identifier model, Identifier texture, SimpleColor tint, SimpleColor overlayTint,
             Priority renderLayer) {
         this.type = type;
         this.model = model;
@@ -29,7 +29,7 @@ public class ShieldModuleModel implements IModuleModel {
     }
 
     @Override
-    public ResourceLocation getType() {
+    public Identifier getType() {
         return type;
     }
 
@@ -38,11 +38,11 @@ public class ShieldModuleModel implements IModuleModel {
         return renderLayer;
     }
 
-    public ResourceLocation getModel() {
+    public Identifier getModel() {
         return model;
     }
 
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         return texture;
     }
 
@@ -63,7 +63,7 @@ public class ShieldModuleModel implements IModuleModel {
             return copy;
         }
 
-        ResourceLocation updatedLocation = Arrays.stream(material.textures)
+        Identifier updatedLocation = Arrays.stream(material.textures)
                 .filter(availableTextures::contains)
                 .findFirst()
                 .map(texture -> appendString(this.texture, texture))
@@ -75,13 +75,13 @@ public class ShieldModuleModel implements IModuleModel {
         return copy;
     }
 
-    protected static ResourceLocation appendString(ResourceLocation resourceLocation, String string) {
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + string);
+    protected static Identifier appendString(Identifier resourceLocation, String string) {
+        return Identifier.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + string);
     }
 
     public ShieldModuleModel withSlotSuffix(String suffix) {
         ShieldModuleModel copy = copy();
-        copy.texture = ResourceLocation.fromNamespaceAndPath(texture.getNamespace(), texture.getPath() + suffix);
+        copy.texture = Identifier.fromNamespaceAndPath(texture.getNamespace(), texture.getPath() + suffix);
         return copy;
     }
 

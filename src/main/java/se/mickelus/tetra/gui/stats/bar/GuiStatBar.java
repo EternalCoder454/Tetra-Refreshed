@@ -220,7 +220,7 @@ public class GuiStatBar extends GuiStatBase {
     @Override
     public List<Component> getTooltipLines() {
         if (hasFocus()) {
-            if (Screen.hasShiftDown()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
                 return extendedTooltip;
             }
             return tooltip;

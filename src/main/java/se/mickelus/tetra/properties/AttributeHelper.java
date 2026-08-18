@@ -8,7 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,17 +29,17 @@ public class AttributeHelper {
 
     public static final Multimap<Attribute, AttributeModifier> emptyMap = ImmutableMultimap.of();
 
-    private static final Map<String, ResourceLocation> attributeIdMap = new HashMap<>();
+    private static final Map<String, Identifier> attributeIdMap = new HashMap<>();
 
     static {
         attributeIdMap.put(getAttributeKey(Attributes.ATTACK_DAMAGE.value(), AttributeModifier.Operation.ADD_VALUE),
-                ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "attack_damage"));
+                Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "attack_damage"));
         attributeIdMap.put(getAttributeKey(Attributes.ATTACK_SPEED.value(), AttributeModifier.Operation.ADD_VALUE),
-                ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "attack_speed"));
+                Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "attack_speed"));
     }
 
     public static Holder<Attribute> getHolder(Attribute attribute) {
-        ResourceLocation key = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.getKey(attribute), "Unregistered attribute: " + attribute);
+        Identifier key = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.getKey(attribute), "Unregistered attribute: " + attribute);
         Holder.Reference<Attribute> holder = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceKey.create(Registries.ATTRIBUTE, key)).orElse(null);
         return holder != null ? holder : BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute);
     }
@@ -134,11 +134,11 @@ public class AttributeHelper {
         return Stream.of(
                         Optional.of(getAdditionAmount(modifiers))
                                 .filter(amount -> amount != 0)
-                                .map(amount -> new AttributeModifier(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "stats/addition"), amount, AttributeModifier.Operation.ADD_VALUE)),
+                                .map(amount -> new AttributeModifier(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "stats/addition"), amount, AttributeModifier.Operation.ADD_VALUE)),
                         Optional.of(getMultiplyAmount(modifiers))
                                 .map(amount -> amount - 1) // vanilla expects the multiplier to be 0 based
                                 .filter(amount -> amount != 0)
-                                .map(amount -> new AttributeModifier(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "stats/multiply"), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
+                                .map(amount -> new AttributeModifier(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "stats/multiply"), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -239,9 +239,9 @@ public class AttributeHelper {
         return attribute.getDescriptionId() + operation.ordinal();
     }
 
-    private static ResourceLocation getAttributeId(Attribute attribute, AttributeModifier.Operation operation) {
+    private static Identifier getAttributeId(Attribute attribute, AttributeModifier.Operation operation) {
         return attributeIdMap.computeIfAbsent(getAttributeKey(attribute, operation),
-                k -> ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID,
+                k -> Identifier.fromNamespaceAndPath(TetraMod.MOD_ID,
                         "attribute/" + attribute.getDescriptionId().replace(':', '_').replace('.', '_') + "/" + operation.getSerializedName()));
     }
 

@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.math.Transformation;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -115,7 +115,7 @@ public class DataManager implements DataDistributor {
             .registerTypeAdapter(Item.class, new ItemDeserializer())
             .registerTypeAdapter(ItemStack.class, new ItemStackDeserializer())
             .registerTypeAdapter(Enchantment.class, new EnchantmentDeserializer())
-            .registerTypeAdapter(ResourceLocation.class, new ResourceLocationDeserializer())
+            .registerTypeAdapter(Identifier.class, new ResourceLocationDeserializer())
             .registerTypeAdapter(Vector3f.class, new VectorDeserializer())
             .registerTypeAdapter(Quaternionf.class, new QuaternionDeserializer())
             .registerTypeAdapter(Transformation.class, new TransformationDeserializer())
@@ -138,7 +138,7 @@ public class DataManager implements DataDistributor {
             .create();
     public static DataManager instance;
 
-    public final DataStore<ResourceLocation[]> tierData;
+    public final DataStore<Identifier[]> tierData;
     public final DataStore<TweakData[]> tweakData;
     public final MaterialStore materialData;
     public final DataStore<ImprovementData[]> improvementData;
@@ -161,7 +161,7 @@ public class DataManager implements DataDistributor {
     public DataManager() {
         instance = this;
 
-        this.tierData = new DataStore<>(gson, TetraMod.MOD_ID, "tiers", ResourceLocation[].class, this);
+        this.tierData = new DataStore<>(gson, TetraMod.MOD_ID, "tiers", Identifier[].class, this);
         this.tweakData = new DataStore<>(gson, TetraMod.MOD_ID, "tweaks", TweakData[].class, this);
         this.materialData = new MaterialStore(gson, TetraMod.MOD_ID, "materials", this);
         this.improvementData = new ImprovementStore(gson, TetraMod.MOD_ID, "improvements", materialData, this);
@@ -202,19 +202,19 @@ public class DataManager implements DataDistributor {
         }
     }
 
-    public void onDataRecieved(String directory, Map<ResourceLocation, String> data) {
+    public void onDataRecieved(String directory, Map<Identifier, String> data) {
         Arrays.stream(dataStores)
                 .filter(dataStore -> dataStore.getDirectory().equals(directory))
                 .forEach(dataStore -> dataStore.loadFromPacket(data));
     }
 
     @Override
-    public void sendToAll(String directory, Map<ResourceLocation, JsonElement> data) {
+    public void sendToAll(String directory, Map<Identifier, JsonElement> data) {
         TetraMod.packetHandler.sendToAllPlayers(new UpdateDataPacket(directory, data));
     }
 
     @Override
-    public void sendToPlayer(ServerPlayer player, String directory, Map<ResourceLocation, JsonElement> data) {
+    public void sendToPlayer(ServerPlayer player, String directory, Map<Identifier, JsonElement> data) {
         TetraMod.packetHandler.sendTo(new UpdateDataPacket(directory, data), player);
     }
 }

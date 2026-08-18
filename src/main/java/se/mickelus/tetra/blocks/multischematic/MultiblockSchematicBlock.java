@@ -5,11 +5,11 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -46,7 +46,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class MultiblockSchematicBlock extends HorizontalDirectionalBlock implements IInteractiveBlock {
-    public static final DirectionProperty facingProp = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> facingProp = BlockStateProperties.HORIZONTAL_FACING;
     private final MapCodec<MultiblockSchematicBlock> codec = MapCodec.unit(this);
     public final int x;
     public final int y;
@@ -54,7 +54,7 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
     public final int width;
     public final Supplier<RuinedMultiblockSchematicBlock> ruinedRef;
     protected String schematic;
-    protected ResourceLocation pryTable;
+    protected Identifier pryTable;
     protected BlockInteraction[] pryAction = new BlockInteraction[] {
             new BlockInteraction(TetraItemAbilities.pry, 1, Direction.EAST, 6, 10, 7, 10,
                     BlockStatePredicate.ANY,
@@ -62,7 +62,7 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
     };
 
     public MultiblockSchematicBlock(Properties properties, String schematic, Supplier<RuinedMultiblockSchematicBlock> ruinedRef,
-            @Nullable ResourceLocation pryTable, int x, int y, int height, int width) {
+            @Nullable Identifier pryTable, int x, int y, int height, int width) {
         super(properties);
         this.schematic = schematic;
         this.ruinedRef = ruinedRef;
@@ -135,14 +135,14 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         if (pryTable != null) {
             return switch (useInternal(state, world, pos, player, hand, hit)) {
-                case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-                case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-                case FAIL -> ItemInteractionResult.FAIL;
-                default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+                case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+                case FAIL -> InteractionResult.FAIL;
+                default -> InteractionResult.PASS;
             };
         }
         return super.useItemOn(stack, state, world, pos, player, hand, hit);
@@ -184,8 +184,8 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
 
     @OnlyIn(Dist.CLIENT)
     protected void spawnParticles(BlockState blockState, Level level, BlockPos blockPos) {
-        Vec3 face = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getNormal());
-        Vec3 dir = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getClockWise().getNormal());
+        Vec3 face = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getUnitVec3i());
+        Vec3 dir = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getClockWise().getUnitVec3i());
         getSchematicParts(blockState, level, blockPos).forEach(part ->
                 ClientScheduler.schedule(blockPos.distManhattan(part.worldPos) * 2, () ->
                         spawnParticleBlock(level, blockState, part.basePos(), part.blockState(), part.worldPos(), face, dir)));
@@ -248,12 +248,12 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
                     int y = j;
 
                     String ruinedId = String.format(ruinedFormat, identifier, x, y);
-                    ResourceLocation brokenPryTable = ResourceLocation.fromNamespaceAndPath("tetra", pryTablePrefix + ruinedId);
+                    Identifier brokenPryTable = Identifier.fromNamespaceAndPath("tetra", pryTablePrefix + ruinedId);
                     Supplier<RuinedMultiblockSchematicBlock> ruinedRef =
                             blocks.register(ruinedId, () -> new RuinedMultiblockSchematicBlock(ruinedProperties, brokenPryTable));
 
                     String id = String.format(format, identifier, x, y);
-                    ResourceLocation pryTable = ResourceLocation.fromNamespaceAndPath("tetra", pryTablePrefix + id);
+                    Identifier pryTable = Identifier.fromNamespaceAndPath("tetra", pryTablePrefix + id);
                     Supplier<MultiblockSchematicBlock> ref = x == width / 2 && y == height / 2
                             ? blocks.register(id, () -> new PrimaryMultiblockSchematicBlock(properties, identifier, ruinedRef, pryTable, x, y, height, width))
                             : blocks.register(id, () -> new MultiblockSchematicBlock(properties, identifier, ruinedRef, pryTable, x, y, height, width));

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
 import se.mickelus.tetra.effect.potion.BleedingPotionEffect;
 import se.mickelus.tetra.effect.potion.PuncturedPotionEffect;
@@ -23,13 +23,13 @@ public class PunctureEffect extends ChargedAbilityEffect {
     public static final PunctureEffect instance = new PunctureEffect();
 
     PunctureEffect() {
-        super(20, 0.5f, 40, 8, ItemEffect.puncture, TargetRequirement.entity, UseAnim.SPEAR, "raised");
+        super(20, 0.5f, 40, 8, ItemEffect.puncture, TargetRequirement.entity, ItemUseAnimation.SPEAR, "raised");
     }
 
     @Override
     public void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, LivingEntity target, Vec3 hitVec,
             int chargedTicks) {
-        if (!attacker.level().isClientSide) {
+        if (!attacker.level().isClientSide()) {
             int armorBefore = target.getArmorValue();
             int comboPoints = ComboPoints.get(attacker);
             boolean isSatiated = !attacker.getFoodData().needsFood();
@@ -128,9 +128,9 @@ public class PunctureEffect extends ChargedAbilityEffect {
                 }
             }
 
-            target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 0.8f);
         } else {
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
         }
 
         return result;
@@ -153,9 +153,9 @@ public class PunctureEffect extends ChargedAbilityEffect {
             target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20),
                     item.getEffectLevel(itemStack, ItemEffect.abilityDefensive), false, true));
 
-            target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.8f);
         } else {
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
         }
 
         return result;

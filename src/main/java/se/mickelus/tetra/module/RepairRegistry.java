@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.mickelus.tetra.data.DataManager;
@@ -38,7 +38,7 @@ public class RepairRegistry {
                 .collect(Collectors.toList());
     }
 
-    private void setupDefinitions(Map<ResourceLocation, RepairDefinition> data) {
+    private void setupDefinitions(Map<Identifier, RepairDefinition> data) {
         repairMap.clear();
 
         injectedRepairs.forEach(this::putDefinition);
@@ -57,7 +57,7 @@ public class RepairRegistry {
                 .add(definition);
     }
 
-    private boolean validate(ResourceLocation identifier, RepairDefinition definition) {
+    private boolean validate(Identifier identifier, RepairDefinition definition) {
         if (definition == null) {
             logger.warn("Failed to load repair definition '{}': Data is null (probably due to it failing to parse)",
                     identifier);

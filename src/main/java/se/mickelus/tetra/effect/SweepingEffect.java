@@ -132,7 +132,7 @@ public class SweepingEffect {
         }
 
         if (critMultiplier > 1) {
-            attacker.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
+            attacker.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
             ((Player) attacker).crit(target);
         }
     }

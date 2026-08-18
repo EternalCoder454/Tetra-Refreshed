@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
 import se.mickelus.tetra.ServerScheduler;
 import se.mickelus.tetra.effect.potion.ExhaustedPotionEffect;
@@ -36,7 +36,7 @@ public class OverpowerEffect extends ChargedAbilityEffect {
             .build();
 
     OverpowerEffect() {
-        super(10, 1f, 10, 1, ItemEffect.overpower, TargetRequirement.none, UseAnim.SPEAR, "raised");
+        super(10, 1f, 10, 1, ItemEffect.overpower, TargetRequirement.none, ItemUseAnimation.SPEAR, "raised");
     }
 
 
@@ -51,7 +51,7 @@ public class OverpowerEffect extends ChargedAbilityEffect {
 
         double exhaustDuration = item.getEffectEfficiency(itemStack, ItemEffect.overpower);
 
-        if (!attacker.level().isClientSide && !isDefensive) {
+        if (!attacker.level().isClientSide() && !isDefensive) {
             var exhaustedEffect = EffectHelper.effectHolder(ExhaustedPotionEffect.instance);
             int currentAmp = Optional.ofNullable(attacker.getEffect(exhaustedEffect))
                     .map(MobEffectInstance::getAmplifier)
@@ -64,11 +64,11 @@ public class OverpowerEffect extends ChargedAbilityEffect {
             }
 
             double comboEfficiency = item.getEffectEfficiency(itemStack, ItemEffect.abilityCombo);
-            if (comboEfficiency > 0 && attacker.getCommandSenderWorld().getRandom().nextFloat() < (comboEfficiency * ComboPoints.get(attacker) / 100f)) {
+            if (comboEfficiency > 0 && attacker.level().getRandom().nextFloat() < (comboEfficiency * ComboPoints.get(attacker) / 100f)) {
                 newAmp--;
 
-                RandomSource rand = attacker.getCommandSenderWorld().getRandom();
-                ((ServerLevel) attacker.getCommandSenderWorld()).sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                RandomSource rand = attacker.level().getRandom();
+                ((ServerLevel) attacker.level()).sendParticles(ParticleTypes.HAPPY_VILLAGER,
                         attacker.getX(), attacker.getY() + attacker.getBbHeight() / 2, attacker.getZ(), 10,
                         rand.nextGaussian() * 0.3, rand.nextGaussian() * attacker.getBbHeight() * 0.8, rand.nextGaussian() * 0.3, 0.1f);
             }
@@ -178,9 +178,9 @@ public class OverpowerEffect extends ChargedAbilityEffect {
 
             target.addEffect(new MobEffectInstance(exhaustedEffect, (int) (efficiency * 20), amplifier, false, true));
 
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 0.8f);
         } else {
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
         }
 
 

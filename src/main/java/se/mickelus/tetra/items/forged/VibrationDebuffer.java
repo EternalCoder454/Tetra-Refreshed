@@ -14,7 +14,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class VibrationDebuffer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (!event.getEntity().level().isClientSide && event.getEntity().level().getGameTime() % 20 == 0
+        if (!event.getEntity().level().isClientSide() && event.getEntity().level().getGameTime() % 20 == 0
                 && hasApplicableItem(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(MobEffects.CONFUSION, 80, 1));
         }

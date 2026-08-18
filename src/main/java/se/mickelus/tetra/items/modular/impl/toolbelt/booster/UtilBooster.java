@@ -132,10 +132,10 @@ public class UtilBooster {
 
                         player.moveRelative(0.05f, new Vec3(player.xxa, player.yya, player.zza));
 
-                        if (player.level().isClientSide) {
+                        if (player.level().isClientSide()) {
                             Vec3 direction = getAbsoluteMotion(-player.xxa, -player.zza, player.getYRot());
                             for (int i = 0; i < 8; i++) {
-                                player.getCommandSenderWorld().addParticle(ParticleTypes.SMOKE,
+                                player.level().addParticle(ParticleTypes.SMOKE,
                                         player.getX(), player.getY() + player.getBbHeight() * 0.4, player.getZ(),
                                         Math.random() * (0.2 * direction.x + 0.07) - 0.05,
                                         Math.random() * 0.1 - 0.05,
@@ -143,7 +143,7 @@ public class UtilBooster {
                             }
 
                             if (Math.random() > 0.3) {
-                                player.getCommandSenderWorld().addParticle(ParticleTypes.FLAME,
+                                player.level().addParticle(ParticleTypes.FLAME,
                                         player.getX(), player.getY() + player.getBbHeight() * 0.4, player.getZ(),
                                         Math.random() * (0.2 * direction.x + 0.07) - 0.05,
                                         Math.random() * 0.1 - 0.05,

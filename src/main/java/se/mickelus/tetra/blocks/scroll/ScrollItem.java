@@ -10,10 +10,10 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -90,7 +90,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void clientInit() {
-        ItemProperties.register(instance, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "scroll_mat"),
+        ItemProperties.register(instance, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "scroll_mat"),
                 (itemStack, world, livingEntity, i) -> ScrollData.readMaterialFast(itemStack));
     }
 
@@ -132,7 +132,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
 
     private ItemStack setupSchematic(String key, String details, String[] schematics, boolean isIntricate, int material, int tint, Integer... glyphs) {
         ScrollData data = new ScrollData(key, Optional.ofNullable(details), isIntricate, material, tint, Arrays.asList(glyphs),
-                Arrays.stream(schematics).map(s -> ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, s))
+                Arrays.stream(schematics).map(s -> Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, s))
                         .collect(Collectors.toList()),
                 Collections.emptyList());
 
@@ -144,7 +144,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
 
     private ItemStack setupTreatise(String key, boolean isIntricate, int material, int tint, Integer... glyphs) {
         ScrollData data = new ScrollData(key, Optional.empty(), isIntricate, material, tint, Arrays.asList(glyphs), Collections.emptyList(),
-                ImmutableList.of(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, key)));
+                ImmutableList.of(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, key)));
 
         ItemStack itemStack = new ItemStack(this);
         data.write(itemStack);
@@ -190,7 +190,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
         tooltip.add(Component.translatable("item.tetra.scroll." + data.key + ".description").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.literal(" "));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
 
             if (!ScrollData.read(itemStack).schematics.isEmpty()) {
@@ -246,12 +246,12 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (openScroll(player.getItemInHand(hand), world.isClientSide)) {
-            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide());
+        if (openScroll(player.getItemInHand(hand), world.isClientSide())) {
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResultHolder.pass(itemstack);
+        return InteractionResult.pass(itemstack);
     }
 
     @Override
@@ -262,8 +262,8 @@ public class ScrollItem extends BlockItem implements InitializableItem {
         Player player = context.getPlayer();
         Block block = context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 
-        if (!(block instanceof AbstractWorkbenchBlock) && player != null && player.isCrouching() && openScroll(itemStack, world.isClientSide)) {
-            return InteractionResult.sidedSuccess(world.isClientSide);
+        if (!(block instanceof AbstractWorkbenchBlock) && player != null && player.isCrouching() && openScroll(itemStack, world.isClientSide())) {
+            return InteractionResult.SUCCESS;
         }
 
         if (ScrollData.readOptional(itemStack).isEmpty()) {
@@ -280,7 +280,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
                 if (player == null || !player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return InteractionResult.SUCCESS;
             }
         }
 

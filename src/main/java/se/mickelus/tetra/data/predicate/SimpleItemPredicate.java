@@ -1,7 +1,7 @@
 package se.mickelus.tetra.data.predicate;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -20,7 +20,7 @@ public class SimpleItemPredicate implements TetraItemPredicate {
     @Nullable
     private final TagKey<Item> tag;
 
-    public SimpleItemPredicate(Collection<ResourceLocation> itemIds, @Nullable ResourceLocation tagId) {
+    public SimpleItemPredicate(Collection<Identifier> itemIds, @Nullable Identifier tagId) {
         this.items = new HashSet<>();
         itemIds.stream()
                 .map(itemId -> RegistryHelper.get(BuiltInRegistries.ITEM, itemId))

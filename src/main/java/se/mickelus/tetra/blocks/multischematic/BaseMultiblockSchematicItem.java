@@ -47,7 +47,7 @@ public class BaseMultiblockSchematicItem extends BlockItem {
 
         tooltip.add(Component.literal(" "));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
 
             tooltip.add(Component.literal(" "));

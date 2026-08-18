@@ -1,7 +1,7 @@
 package se.mickelus.tetra.module.model;
 
 import com.mojang.math.Transformation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import se.mickelus.mutil.gui.SimpleColor;
 import se.mickelus.tetra.module.Priority;
@@ -10,9 +10,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public abstract class AbstractTextureModelData implements IModuleModel {
-    protected ResourceLocation type;
-    protected ResourceLocation location;
-    protected ResourceLocation renderType;
+    protected Identifier type;
+    protected Identifier location;
+    protected Identifier renderType;
     protected Transformation transform;
     protected int emission = 0;
     protected SimpleColor tint = new SimpleColor(0xffffffff);
@@ -30,15 +30,15 @@ public abstract class AbstractTextureModelData implements IModuleModel {
     }
 
     @Override
-    public ResourceLocation getType() {
+    public Identifier getType() {
         return type;
     }
 
-    public ResourceLocation getLocation() {
+    public Identifier getLocation() {
         return location;
     }
 
-    public ResourceLocation getRenderType() {
+    public Identifier getRenderType() {
         return renderType;
     }
 

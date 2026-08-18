@@ -3,9 +3,9 @@ package se.mickelus.tetra.data.deserializer;
 import com.google.gson.*;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -51,7 +51,7 @@ public class ReplacementDeserializer implements JsonDeserializer<ReplacementDefi
             throw new JsonSyntaxException("Failed to parse replacement data due to faulty predicate", e);
         }
 
-        ResourceLocation resourceLocation = ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "item"));
+        Identifier resourceLocation = Identifier.parse(GsonHelper.getAsString(jsonObject, "item"));
         Item item = RegistryHelper.get(BuiltInRegistries.ITEM, resourceLocation);
         if (item == null) {
             throw new JsonSyntaxException("Failed to parse replacement data, missing (or faulty) item in " + jsonObject.getAsString());

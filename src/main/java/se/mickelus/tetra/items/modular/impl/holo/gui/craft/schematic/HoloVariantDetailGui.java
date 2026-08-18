@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ItemAbility;
@@ -137,7 +137,7 @@ public class HoloVariantDetailGui extends GuiElement {
 
             Player player = Minecraft.getInstance().player;
             ItemStack improvementStack = baseOutcome.itemStack;
-            CraftingContext context = new CraftingContext(null, null, null, player, improvementStack, slot, new ResourceLocation[0]);
+            CraftingContext context = new CraftingContext(null, null, null, player, improvementStack, slot, new Identifier[0]);
             UpgradeSchematic[] improvementSchematics = Arrays.stream(SchematicRegistry.getPreviewSchematics(context, false))
                     .filter(improvementSchematic -> SchematicType.improvement.equals(improvementSchematic.getType()))
                     .toArray(UpgradeSchematic[]::new);

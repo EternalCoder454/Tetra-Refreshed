@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.neoforged.moddev' version '2.0.144'
     id 'idea'
 }
 
@@ -38,7 +38,7 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     // Specify the version of NeoForge to use.
@@ -145,14 +145,22 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url = uri("file://${System.getenv("local_maven")}")
+        // Upstream publishes to a local maven named by the local_maven environment variable,
+        // which its Jenkins sets. Unset anywhere else, so the url became file://null and killed
+        // the configuration phase before any compile ran.
+        if (System.getenv("local_maven") != null) {
+            maven {
+                url = uri("file://${System.getenv("local_maven")}")
+            }
         }
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
+    // A port produces long error lists. Seeing all of them at once is the difference
+    // between one iteration and twenty.
+    options.compilerArgs.addAll(['-Xmaxerrs', '20000']) // Use the UTF-8 charset for Java compilation
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

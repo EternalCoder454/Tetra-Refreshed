@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -131,12 +131,12 @@ public class ModularHolosphereItem extends ModularItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (world.isClientSide) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        if (world.isClientSide()) {
             showGui();
         }
 
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+        return new InteractionResult<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 
     @Override

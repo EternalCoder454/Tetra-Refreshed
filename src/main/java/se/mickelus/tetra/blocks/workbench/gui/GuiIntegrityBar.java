@@ -1,7 +1,7 @@
 package se.mickelus.tetra.blocks.workbench.gui;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -91,7 +91,7 @@ public class GuiIntegrityBar extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         super.draw(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
 
         for (int i = 0; i < integrityCost; i++) {
@@ -110,7 +110,7 @@ public class GuiIntegrityBar extends GuiElement {
         }
     }
 
-    private void drawSegment(GuiGraphics graphics, int x, int y, int color, float opacity) {
+    private void drawSegment(GuiGraphicsExtractor graphics, int x, int y, int color, float opacity) {
         drawRect(graphics, x, y, x + segmentWidth, y + segmentHeight, color, opacity);
     }
 

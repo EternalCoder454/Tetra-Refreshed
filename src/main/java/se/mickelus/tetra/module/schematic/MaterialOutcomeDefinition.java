@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module.schematic;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.tetra.module.data.MaterialData;
 import se.mickelus.tetra.module.data.ToolData;
 
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class MaterialOutcomeDefinition extends OutcomeDefinition {
 
-    public ResourceLocation[] materials = {};
+    public Identifier[] materials = {};
 
     public int countOffset = 0;
     public float countFactor = 1;

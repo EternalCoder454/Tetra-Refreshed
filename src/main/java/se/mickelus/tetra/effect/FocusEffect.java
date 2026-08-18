@@ -31,7 +31,7 @@ public class FocusEffect {
                 int change = isDrawing ? 1 : 2;
                 cache.put(id, duration != null ? duration + change : change);
 
-                if (!player.level().isClientSide) {
+                if (!player.level().isClientSide()) {
                     int respiration = EffectHelper.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.RESPIRATION, player);
                     int amount = isDrawing ? 6 : 2;
                     int reduction = 0;
@@ -105,6 +105,6 @@ public class FocusEffect {
     }
 
     private static int getIdentifier(Player entity) {
-        return entity.level().isClientSide ? -entity.getId() : entity.getId();
+        return entity.level().isClientSide() ? -entity.getId() : entity.getId();
     }
 }

@@ -219,7 +219,7 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean isSelected) {
-        if (!world.isClientSide && entity instanceof LivingEntity livingEntity
+        if (!world.isClientSide() && entity instanceof LivingEntity livingEntity
                 && (isSelected || livingEntity.getMainHandItem() == itemStack || livingEntity.getOffhandItem() == itemStack)) {
             ModularItemComponentHelper.sync(itemStack);
         }

@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -82,7 +82,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
                     itemstack.shrink(1);
                 }
 
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.FAIL;
@@ -132,7 +132,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
 
                 player.resetAttackStrengthTicker();
 
-                return InteractionResult.sidedSuccess(canSwing);
+                return InteractionResult.SUCCESS;
             }
         }
 
@@ -144,17 +144,17 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
             BlockUseCriterion.trigger((ServerPlayer) player, blockState, itemStack, data);
         }
 
-        return InteractionResult.sidedSuccess(world.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState blockState, Level world, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit) {
         return switch (useInternal(blockState, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 
@@ -167,7 +167,7 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         BlockState result = super.playerWillDestroy(world, pos, state, player);
 
-        if (!world.isClientSide && !player.isCreative() && world.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+        if (!world.isClientSide() && !player.isCreative() && world.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
             world.getBlockEntity(pos, HolosphereBlockEntity.type.get())
                     .ifPresent(blockEntity -> {
                         ItemStack itemStack = blockEntity.getItemStack();

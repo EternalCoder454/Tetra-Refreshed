@@ -21,9 +21,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.HumanoidArm;
@@ -32,7 +32,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -214,7 +214,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
 
         super.appendHoverText(stack, context, tooltip, flagIn);
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Component.literal(" "));
             tooltip.add(Component.translatable("item.tetra.crossbow.wip").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal(" "));
@@ -242,7 +242,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
      */
     @Override
     public void onUseTick(Level world, LivingEntity entity, ItemStack itemStack, int count) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             int drawDuration = getReloadDuration(itemStack);
             float f = getProgress(itemStack, entity);
 
@@ -267,17 +267,17 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
         if (isBroken(itemstack)) {
-            return InteractionResultHolder.pass(itemstack);
+            return InteractionResult.pass(itemstack);
         }
 
         if (isLoaded(itemstack)) {
             fireProjectiles(itemstack, world, player);
             setLoaded(itemstack, false);
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResult.consume(itemstack);
         }
 
         if (findAmmo(player).isEmpty()) {
@@ -291,9 +291,9 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                 player.startUsingItem(hand);
             }
 
-            return InteractionResultHolder.consume(itemstack);
+            return InteractionResult.consume(itemstack);
         } else {
-            return InteractionResultHolder.fail(itemstack);
+            return InteractionResult.fail(itemstack);
         }
     }
 
@@ -316,7 +316,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     }
 
     protected void fireProjectiles(ItemStack itemStack, Level world, LivingEntity entity) {
-        if (entity instanceof Player player && !world.isClientSide) {
+        if (entity instanceof Player player && !world.isClientSide()) {
             ItemStack advancementCopy = itemStack.copy();
 
             List<ItemStack> list = takeProjectiles(itemStack, 1, world.registryAccess());
@@ -544,7 +544,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
             return ItemStack.EMPTY;
         }
 
-        ResourceLocation itemId = ResourceLocation.tryParse(stackTag.getString("id"));
+        Identifier itemId = Identifier.tryParse(stackTag.getString("id"));
         if (itemId == null) {
             return ItemStack.EMPTY;
         }
@@ -617,8 +617,8 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.CROSSBOW;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.CROSSBOW;
     }
 
     @Override

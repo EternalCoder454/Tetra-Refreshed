@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.GuiElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -35,7 +35,7 @@ public class VerticalTabGroupGui extends GuiElement {
         this.clickHandler = clickHandler;
     }
 
-    public VerticalTabGroupGui(int x, int y, Consumer<Integer> clickHandler, ResourceLocation texture, int textureX, int textureY, String... labels) {
+    public VerticalTabGroupGui(int x, int y, Consumer<Integer> clickHandler, Identifier texture, int textureX, int textureY, String... labels) {
         super(x, y, 3, labels.length * 16 + 1);
 
         buttons = new VerticalTabButtonGui[labels.length];

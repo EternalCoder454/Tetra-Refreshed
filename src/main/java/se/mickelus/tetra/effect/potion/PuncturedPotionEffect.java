@@ -2,7 +2,7 @@ package se.mickelus.tetra.effect.potion;
 
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
@@ -22,14 +22,14 @@ public class PuncturedPotionEffect extends MobEffect {
     public PuncturedPotionEffect() {
         super(MobEffectCategory.HARMFUL, 0x880000);
 
-        addAttributeModifier(Attributes.ARMOR, ResourceLocation.fromNamespaceAndPath("tetra", "punctured_armor"), -0.05,
+        addAttributeModifier(Attributes.ARMOR, Identifier.fromNamespaceAndPath("tetra", "punctured_armor"), -0.05,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         instance = this;
     }
 
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
+        if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
             EquipmentSlot slot = EquipmentSlot.values()[2 + rand.nextInt(4)];
             ItemStack itemStack = entity.getItemBySlot(slot);

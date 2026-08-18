@@ -5,7 +5,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
@@ -49,8 +49,8 @@ public class ToolbeltInventory implements Container {
     }
 
     protected static Predicate<ItemStack> getPredicate(String inventory) {
-        TagKey<Item> acceptKey = ItemTags.create(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_accept"));
-        TagKey<Item> rejectKey = ItemTags.create(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_reject"));
+        TagKey<Item> acceptKey = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_accept"));
+        TagKey<Item> rejectKey = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_reject"));
         var acceptTag = BuiltInRegistries.ITEM.getOrCreateTag(acceptKey);
 
         return (itemStack -> (acceptTag.size() == 0 || itemStack.is(acceptKey)) && !itemStack.is(rejectKey));

@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -105,12 +105,12 @@ public class ModularToolbeltItem extends ModularItem implements MenuProvider {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (!world.isClientSide) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        if (!world.isClientSide()) {
             ((ServerPlayer) player).openMenu(this);
         }
 
-        return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+        return new InteractionResult<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 
     @Override

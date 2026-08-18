@@ -3,7 +3,7 @@ package se.mickelus.tetra.craftingeffect.outcome;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,7 +26,7 @@ public class SpawnEntityOutcome implements CraftingEffectOutcome {
 
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float severity) {
         if (consumeResources && !world.isClientSide() && world.getRandom().nextFloat() < chance) {

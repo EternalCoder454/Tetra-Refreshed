@@ -48,7 +48,7 @@ public class DragonSinewItem extends TetraItem {
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
         entity.setDeltaMovement(entity.getDeltaMovement().scale(0.8f));
-        if (entity.level().isClientSide && entity.getAge() % 20 == 0) {
+        if (entity.level().isClientSide() && entity.getAge() % 20 == 0) {
             entity.level().addParticle(ParticleTypes.DRAGON_BREATH, entity.getRandomX(.2d), entity.getRandomY() + 0.2, entity.getRandomZ(0.2),
                     entity.level().getRandom().nextFloat() * 0.02f - 0.01f, -0.01f - entity.level().getRandom().nextFloat() * 0.01f, entity.level().getRandom().nextFloat() * 0.02f - 0.01f);
         }

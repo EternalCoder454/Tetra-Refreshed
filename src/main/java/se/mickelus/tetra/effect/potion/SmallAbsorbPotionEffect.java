@@ -5,7 +5,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -16,7 +16,7 @@ public class SmallAbsorbPotionEffect extends MobEffect {
 
     public SmallAbsorbPotionEffect() {
         super(MobEffectCategory.BENEFICIAL, 2445989);
-        addAttributeModifier(Attributes.MAX_ABSORPTION, ResourceLocation.fromNamespaceAndPath("tetra", "small_absorb"), 1,
+        addAttributeModifier(Attributes.MAX_ABSORPTION, Identifier.fromNamespaceAndPath("tetra", "small_absorb"), 1,
                 AttributeModifier.Operation.ADD_VALUE);
 
         instance = this;

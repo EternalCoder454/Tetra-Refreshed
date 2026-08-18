@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CombustingEffect {
     public static void perform(LivingEntity entity, ItemStack itemStack, double multiplier) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             int effectLevel = (int) Math.round(EffectHelper.getEffectLevel(itemStack, ItemEffect.combusting) * multiplier);
             if (effectLevel > 0 && entity.getRandom().nextFloat() < EffectHelper.getEffectEfficiency(itemStack, ItemEffect.combusting) / 100) {
                 boolean regularSuccess = igniteBlocksAround(entity.level(), entity.blockPosition(), 4, Mth.floor(effectLevel / 2f), true, false);

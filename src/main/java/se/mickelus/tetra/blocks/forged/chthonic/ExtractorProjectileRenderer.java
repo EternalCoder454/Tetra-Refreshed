@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -47,7 +47,7 @@ public class ExtractorProjectileRenderer extends EntityRenderer<ExtractorProject
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ExtractorProjectileEntity entity) {
+    public Identifier getTextureLocation(ExtractorProjectileEntity entity) {
         return null;
     }
 }

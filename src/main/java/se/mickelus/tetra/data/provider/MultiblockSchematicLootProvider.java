@@ -7,7 +7,7 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -50,17 +50,17 @@ public class MultiblockSchematicLootProvider extends BlockLootSubProvider {
                 for (int v = 0; v < height; v++) {
                     String id = String.format(MultiblockSchematicBlock.Builder.format, identifier, h, v);
                     consumer.accept(ResourceKey.create(Registries.LOOT_TABLE,
-                                    ResourceLocation.fromNamespaceAndPath("tetra", MultiblockSchematicBlock.Builder.pryTablePrefix + id)),
+                                    Identifier.fromNamespaceAndPath("tetra", MultiblockSchematicBlock.Builder.pryTablePrefix + id)),
                             provider.getMultiBlockSchematicPryTable(id));
-                    consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("tetra", "blocks/" + id)),
+                    consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("tetra", "blocks/" + id)),
                             provider.getMultiBlockSchematicDropTable(id, enchantments));
 
                     if (ruinable) {
                         id = String.format(MultiblockSchematicBlock.Builder.ruinedFormat, identifier, h, v);
                         consumer.accept(ResourceKey.create(Registries.LOOT_TABLE,
-                                        ResourceLocation.fromNamespaceAndPath("tetra", MultiblockSchematicBlock.Builder.pryTablePrefix + id)),
+                                        Identifier.fromNamespaceAndPath("tetra", MultiblockSchematicBlock.Builder.pryTablePrefix + id)),
                                 provider.getMultiBlockSchematicPryTable(id));
-                        consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath("tetra", "blocks/" + id)),
+                        consumer.accept(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath("tetra", "blocks/" + id)),
                                 provider.getMultiBlockSchematicDropTable(id, enchantments));
                     }
                 }
@@ -69,14 +69,14 @@ public class MultiblockSchematicLootProvider extends BlockLootSubProvider {
     }
 
     private LootTable.Builder getMultiBlockSchematicPryTable(String identifier) {
-        ResourceLocation rl = ResourceLocation.fromNamespaceAndPath("tetra", identifier);
+        Identifier rl = Identifier.fromNamespaceAndPath("tetra", identifier);
         return LootTable.lootTable().withPool(LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1))
                 .add(LootItem.lootTableItem(Objects.requireNonNull(RegistryHelper.get(BuiltInRegistries.BLOCK, rl), "Unknown block: " + rl))));
     }
 
     private LootTable.Builder getMultiBlockSchematicDropTable(String identifier, HolderLookup.RegistryLookup<Enchantment> enchantments) {
-        ResourceLocation rl = ResourceLocation.fromNamespaceAndPath("tetra", identifier);
+        Identifier rl = Identifier.fromNamespaceAndPath("tetra", identifier);
 
         return createSilkTouchDispatchTable(Objects.requireNonNull(RegistryHelper.get(BuiltInRegistries.BLOCK, rl), "Unknown block: " + rl),
                 LootItem.lootTableItem(MetalScrapItem.instance.get())

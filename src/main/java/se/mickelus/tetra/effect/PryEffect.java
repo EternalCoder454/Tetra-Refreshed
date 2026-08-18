@@ -34,7 +34,7 @@ public class PryEffect {
     }
 
     public static void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, int effectLevel, LivingEntity target) {
-        if (!attacker.level().isClientSide) {
+        if (!attacker.level().isClientSide()) {
             int comboPoints = ComboPoints.get(attacker);
             boolean isSatiated = !attacker.getFoodData().needsFood();
 
@@ -44,7 +44,7 @@ public class PryEffect {
                 performRegular(attacker, item, itemStack, damageMultiplier, effectLevel, target, isSatiated, comboPoints);
             }
 
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 0.8f, 0.8f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 0.8f, 0.8f);
 
             boolean overextended = item.getEffectLevel(itemStack, ItemEffect.abilityOverextend) > 0;
             attacker.causeFoodExhaustion(overextended ? 6f : 0.5f);
@@ -102,12 +102,12 @@ public class PryEffect {
                     .orElse(-1);
 
             double comboEfficiency = item.getEffectEfficiency(itemStack, ItemEffect.abilityCombo);
-            if (comboEfficiency > 0 && attacker.getCommandSenderWorld().getRandom().nextFloat() < (comboEfficiency * comboPoints / 100f)) {
+            if (comboEfficiency > 0 && attacker.level().getRandom().nextFloat() < (comboEfficiency * comboPoints / 100f)) {
                 amplifier++;
 
-                if (!target.getCommandSenderWorld().isClientSide) {
-                    RandomSource rand = target.getCommandSenderWorld().getRandom();
-                    ((ServerLevel) target.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT,
+                if (!target.level().isClientSide()) {
+                    RandomSource rand = target.level().getRandom();
+                    ((ServerLevel) target.level()).sendParticles(ParticleTypes.CRIT,
                             target.getX(), target.getY() + target.getBbHeight() / 2, target.getZ(), 10,
                             rand.nextGaussian() * 0.3, rand.nextGaussian() * target.getBbHeight() * 0.8, rand.nextGaussian() * 0.3, 0.1f);
                 }
@@ -125,7 +125,7 @@ public class PryEffect {
             target.addEffect(new MobEffectInstance(priedEffect, (int) (item.getEffectEfficiency(itemStack, ItemEffect.pry) * 20),
                     currentAmplifier + amplifier, false, false));
 
-            if (!target.getCommandSenderWorld().isClientSide) {
+            if (!target.level().isClientSide()) {
                 ParticleHelper.spawnArmorParticles(target);
             }
 
@@ -146,7 +146,7 @@ public class PryEffect {
             target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20),
                     item.getEffectLevel(itemStack, ItemEffect.abilityDefensive) - 1, false, true));
 
-            if (!target.getCommandSenderWorld().isClientSide) {
+            if (!target.level().isClientSide()) {
                 if (target.hasItemInSlot(EquipmentSlot.MAINHAND)) {
                     ParticleHelper.spawnArmorParticles(target, EquipmentSlot.MAINHAND);
                 } else if (target.hasItemInSlot(EquipmentSlot.OFFHAND)) {

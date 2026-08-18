@@ -1,6 +1,6 @@
 package se.mickelus.tetra.blocks.workbench.action;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;
 import se.mickelus.tetra.module.data.ToolData;
 
@@ -38,7 +38,7 @@ public abstract class ConfigAction implements WorkbenchAction {
     /**
      * The loot table that rewards will be picked from when the action is performed.
      */
-    public ResourceLocation lootTable;
+    public Identifier lootTable;
 
     /**
      * Denotes if this action should be available using in world interaction

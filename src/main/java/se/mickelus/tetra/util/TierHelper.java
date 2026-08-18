@@ -1,6 +1,6 @@
 package se.mickelus.tetra.util;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Tier;
 import se.mickelus.tetra.data.DataManager;
 import se.mickelus.tetra.tools.HarvestTierRegistry;
@@ -20,7 +20,7 @@ public class TierHelper {
     }
 
     private static void setupTiers() {
-        List<ResourceLocation> relevant = DataManager.instance.tierData.getData().values().stream()
+        List<Identifier> relevant = DataManager.instance.tierData.getData().values().stream()
                 .flatMap(Arrays::stream)
                 .distinct()
                 .collect(Collectors.toList());

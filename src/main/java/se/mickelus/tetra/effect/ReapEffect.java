@@ -10,7 +10,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import se.mickelus.tetra.effect.potion.*;
@@ -30,12 +30,12 @@ public class ReapEffect extends ChargedAbilityEffect {
     public static final ReapEffect instance = new ReapEffect();
 
     ReapEffect() {
-        super(20, 0.7f, 40, 8, ItemEffect.reap, TargetRequirement.none, UseAnim.SPEAR, "raised");
+        super(20, 0.7f, 40, 8, ItemEffect.reap, TargetRequirement.none, ItemUseAnimation.SPEAR, "raised");
     }
 
     @Override
     public void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, @Nullable LivingEntity target, @Nullable BlockPos targetPos, @Nullable Vec3 hitVec, int chargedTicks) {
-        if (!attacker.level().isClientSide) {
+        if (!attacker.level().isClientSide()) {
             int overchargeBonus = canOvercharge(item, itemStack) ? getOverchargeBonus(item, itemStack, chargedTicks) : 0;
             double momentumEfficiency = item.getEffectEfficiency(itemStack, ItemEffect.abilityMomentum);
             int revengeLevel = item.getEffectLevel(itemStack, ItemEffect.abilityRevenge);
@@ -145,7 +145,7 @@ public class ReapEffect extends ChargedAbilityEffect {
                     }
 
                     if (result == AbilityUseResult.crit) {
-                        player.getCommandSenderWorld().playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
+                        player.level().playSound(player, entity.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
                     }
                 });
 

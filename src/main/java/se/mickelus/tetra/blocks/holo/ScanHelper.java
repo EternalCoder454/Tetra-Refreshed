@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ChunkPos;
@@ -61,9 +61,9 @@ public class ScanHelper {
 
     private static Either<ResourceKey<Structure>, TagKey<Structure>> getKey(String identifier) {
         if (identifier.startsWith("#")) {
-            return Either.right(TagKey.create(Registries.STRUCTURE, ResourceLocation.parse(identifier.substring(1))));
+            return Either.right(TagKey.create(Registries.STRUCTURE, Identifier.parse(identifier.substring(1))));
         }
-        return Either.left(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.parse(identifier)));
+        return Either.left(ResourceKey.create(Registries.STRUCTURE, Identifier.parse(identifier)));
     }
 
     private static Optional<? extends HolderSet.ListBacked<Structure>> getHolders(Either<ResourceKey<Structure>, TagKey<Structure>> key, Registry<Structure> registry) {

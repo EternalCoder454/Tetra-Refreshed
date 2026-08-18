@@ -1,7 +1,7 @@
 package se.mickelus.tetra.gui.stats.data;
 
 import com.google.gson.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import se.mickelus.mutil.data.deserializer.ResourceLocationDeserializer;
 import se.mickelus.mutil.util.JsonOptional;
@@ -28,7 +28,7 @@ public class StatRegistry {
             .registerTypeAdapter(IStatFormat.class, new StatFormatDeserializer())
             .registerTypeAdapter(ITooltipGetter.class, new TooltipGetterDeserializer())
             .registerTypeAdapter(GuiStatIndicator.class, new IndicatorDeserializer())
-            .registerTypeAdapter(ResourceLocation.class, new ResourceLocationDeserializer())
+            .registerTypeAdapter(Identifier.class, new ResourceLocationDeserializer())
             .registerTypeAdapter(ICondition.class, new ConditionDeserializer())
             .create();
     private static final Map<String, Function<JsonElement, GuiStatBase>> statBarDeserializers = new HashMap<>();

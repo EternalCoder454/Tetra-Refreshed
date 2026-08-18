@@ -20,7 +20,7 @@ public class BloodboundEffect {
                     float healthCost = negateAmount / ratio;
                     entity.setHealth(entity.getHealth() - healthCost);
 
-                    if (!entity.level().isClientSide && entity.getRandom().nextFloat() < Math.max(0.1, 1 - (level / 100f))) {
+                    if (!entity.level().isClientSide() && entity.getRandom().nextFloat() < Math.max(0.1, 1 - (level / 100f))) {
                         spawnParticle(entity, itemStack);
                     }
                     

@@ -2,7 +2,7 @@ package se.mickelus.tetra.gui.stats.data;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class StatIndicatorStore implements ResourceManagerReloadListener {
     private static final Logger logger = LogManager.getLogger();
     public static StatIndicatorStore instance;
-    private Map<ResourceLocation, GuiStatIndicator> indicators = Collections.emptyMap();
+    private Map<Identifier, GuiStatIndicator> indicators = Collections.emptyMap();
 
     public StatIndicatorStore() {
         instance = this;
@@ -35,7 +35,7 @@ public class StatIndicatorStore implements ResourceManagerReloadListener {
         logger.info("Loaded {} stat indicators", this.indicators.size());
     }
 
-    public GuiStatIndicator[] getIndicatorsIn(ResourceLocation resourceLocation) {
+    public GuiStatIndicator[] getIndicatorsIn(Identifier resourceLocation) {
         return indicators.entrySet().stream()
                 .filter(entry -> resourceLocation.getNamespace().equals(entry.getKey().getNamespace())
                         && entry.getKey().getPath().startsWith(resourceLocation.getPath()))
@@ -43,7 +43,7 @@ public class StatIndicatorStore implements ResourceManagerReloadListener {
                 .toArray(GuiStatIndicator[]::new);
     }
 
-    private static Map<ResourceLocation, GuiStatIndicator> prepareIndicators() {
+    private static Map<Identifier, GuiStatIndicator> prepareIndicators() {
         return Minecraft.getInstance().getResourceManager().listResources("stat_indicators", rl -> rl.getPath().endsWith(".json")).entrySet().stream()
                 .filter(entry -> TetraMod.MOD_ID.equals(entry.getKey().getNamespace()))
                 .map(entry -> Pair.of(trimResourceLocation(entry.getKey()), parseBar(entry.getKey(), entry.getValue())))
@@ -51,12 +51,12 @@ public class StatIndicatorStore implements ResourceManagerReloadListener {
                 .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
     }
 
-    private static ResourceLocation trimResourceLocation(ResourceLocation resourceLocation) {
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath().substring(16));
+    private static Identifier trimResourceLocation(Identifier resourceLocation) {
+        return Identifier.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath().substring(16));
     }
 
     @Nullable
-    private static GuiStatIndicator parseBar(ResourceLocation resourceLocation, Resource resource) {
+    private static GuiStatIndicator parseBar(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return GsonHelper.fromJson(StatRegistry.gson, reader, GuiStatIndicator.class);
         } catch (IOException | JsonParseException e) {

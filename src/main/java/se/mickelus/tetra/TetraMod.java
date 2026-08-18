@@ -3,7 +3,7 @@ package se.mickelus.tetra;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
@@ -156,11 +156,11 @@ public class TetraMod {
         ItemUpgradeRegistry.instance.registerReplacementHook(TetraEnchantmentHelper::transferReplacementEnchantments);
 
         ModuleRegistry moduleRegistry = new ModuleRegistry();
-        moduleRegistry.registerModuleType(ResourceLocation.fromNamespaceAndPath(MOD_ID, "basic_module"), BasicModule::new);
-        moduleRegistry.registerModuleType(ResourceLocation.fromNamespaceAndPath(MOD_ID, "multi_module"), MultiSlotModule::new);
-        moduleRegistry.registerModuleType(ResourceLocation.fromNamespaceAndPath(MOD_ID, "basic_major_module"), BasicMajorModule::new);
-        moduleRegistry.registerModuleType(ResourceLocation.fromNamespaceAndPath(MOD_ID, "multi_major_module"), MultiSlotMajorModule::new);
-        moduleRegistry.registerModuleType(ResourceLocation.fromNamespaceAndPath(MOD_ID, "toolbelt_module"), ToolbeltModule::new);
+        moduleRegistry.registerModuleType(Identifier.fromNamespaceAndPath(MOD_ID, "basic_module"), BasicModule::new);
+        moduleRegistry.registerModuleType(Identifier.fromNamespaceAndPath(MOD_ID, "multi_module"), MultiSlotModule::new);
+        moduleRegistry.registerModuleType(Identifier.fromNamespaceAndPath(MOD_ID, "basic_major_module"), BasicMajorModule::new);
+        moduleRegistry.registerModuleType(Identifier.fromNamespaceAndPath(MOD_ID, "multi_major_module"), MultiSlotMajorModule::new);
+        moduleRegistry.registerModuleType(Identifier.fromNamespaceAndPath(MOD_ID, "toolbelt_module"), ToolbeltModule::new);
 
         CraftingRequirementDeserializer.registerSupplier("tetra:and", AndRequirement.class);
         CraftingRequirementDeserializer.registerSupplier("tetra:or", OrRequirement.class);

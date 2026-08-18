@@ -24,7 +24,7 @@ public class PristineEmeraldItem extends TetraItem {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag advanced) {
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             tooltip.add(Component.translatable("item.tetra.pristine_gem.description").withStyle(ChatFormatting.GRAY));
         } else {

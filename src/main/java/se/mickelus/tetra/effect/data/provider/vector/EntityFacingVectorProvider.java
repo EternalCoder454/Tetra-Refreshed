@@ -18,11 +18,11 @@ public class EntityFacingVectorProvider implements VectorProvider {
 
         if (cardinal.test(context)) {
             if (onlyHorizontalValue) {
-                return Vec3.atLowerCornerOf(entity.getEntity(context).getDirection().getNormal());
+                return Vec3.atLowerCornerOf(entity.getEntity(context).getDirection().getUnitVec3i());
             }
 
             Vec3 lookAngle = entity.getEntity(context).getLookAngle();
-            return Vec3.atLowerCornerOf(Direction.getNearest(lookAngle.x, lookAngle.y, lookAngle.z).getNormal());
+            return Vec3.atLowerCornerOf(Direction.getNearest(lookAngle.x, lookAngle.y, lookAngle.z).getUnitVec3i());
         }
 
         if (onlyHorizontalValue) {

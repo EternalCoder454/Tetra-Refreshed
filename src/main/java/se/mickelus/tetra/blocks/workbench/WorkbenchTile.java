@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -125,9 +125,9 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
             ItemStack[] preMaterials, ItemStack[] postMaterials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic,
             Level world, BlockPos pos, BlockState blockState, boolean consumeResources, float severity) {
         ItemStack result = upgradedStack.copy();
-        ResourceLocation[] unlockedEffects = CastOptional.cast(blockState.getBlock(), AbstractWorkbenchBlock.class)
+        Identifier[] unlockedEffects = CastOptional.cast(blockState.getBlock(), AbstractWorkbenchBlock.class)
                 .map(block -> block.getCraftingEffects(world, pos, blockState))
-                .orElse(new ResourceLocation[0]);
+                .orElse(new Identifier[0]);
         Arrays.stream(CraftingEffectRegistry.getEffects(unlockedEffects, upgradedStack, slot, isReplacing, player, preMaterials, tools, schematic, world, pos, blockState))
                 .forEach(craftingEffect -> craftingEffect.applyOutcomes(unlockedEffects, result, slot, isReplacing, player, preMaterials, postMaterials, tools, world,
                         schematic, pos, blockState, consumeResources, severity));
@@ -182,7 +182,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     }
 
     public void performAction(Player player, String actionKey) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             TetraMod.packetHandler.sendToServer(new WorkbenchActionPacket(worldPosition, actionKey));
             return;
         }
@@ -314,7 +314,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     }
 
     private void sync() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             TetraMod.packetHandler.sendToServer(new WorkbenchPacketUpdate(worldPosition, currentSchematic, currentSlot));
         } else {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -347,7 +347,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     }
 
     public void initiateCrafting(Player player) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             TetraMod.packetHandler.sendToServer(new WorkbenchPacketCraft(worldPosition));
         }
 
@@ -426,14 +426,14 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         clearSchematic();
     }
 
-    public ResourceLocation[] getUnlockedSchematics() {
+    public Identifier[] getUnlockedSchematics() {
         return CastOptional.cast(getBlockState().getBlock(), AbstractWorkbenchBlock.class)
                 .map(block -> block.getSchematics(level, worldPosition, getBlockState()))
-                .orElse(new ResourceLocation[0]);
+                .orElse(new Identifier[0]);
     }
 
     public void applyTweaks(Player player, String slot, Map<String, Integer> tweaks) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             TetraMod.packetHandler.sendToServer(new WorkbenchPacketTweak(worldPosition, slot, tweaks));
         }
 
@@ -462,7 +462,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     public void setChanged() {
         super.setChanged();
 
-        if (level != null && level.isClientSide) {
+        if (level != null && level.isClientSide()) {
             // TODO: this is called several times everytime a change occurs
 
             changeListeners.values().forEach(Runnable::run);
@@ -503,7 +503,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         interaction = ActionInteraction.create(this);
 
         // todo : due to the null check perhaps this is not the right place to do this
-        if (level != null && level.isClientSide) {
+        if (level != null && level.isClientSide()) {
             changeListeners.values().forEach(Runnable::run);
         }
     }
@@ -540,7 +540,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
      * Empties all material slots into the world. Make sure to call on both sides.
      */
     private void emptyMaterialSlots() {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             for (int i = 1; i < inventorySlots; i++) {
                 ItemStack materialStack = handler.extractItem(i, handler.getSlotLimit(i), false);
                 if (!materialStack.isEmpty()) {

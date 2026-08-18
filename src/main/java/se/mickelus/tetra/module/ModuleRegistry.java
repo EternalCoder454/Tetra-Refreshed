@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -23,8 +23,8 @@ public class ModuleRegistry {
 
     public static ModuleRegistry instance;
 
-    private final Map<ResourceLocation, BiFunction<ResourceLocation, ModuleData, ItemModule>> moduleConstructors;
-    private Map<ResourceLocation, ItemModule> moduleMap;
+    private final Map<Identifier, BiFunction<Identifier, ModuleData, ItemModule>> moduleConstructors;
+    private Map<Identifier, ItemModule> moduleMap;
 
     public ModuleRegistry() {
         instance = this;
@@ -35,7 +35,7 @@ public class ModuleRegistry {
         DataManager.instance.moduleData.onReload(() -> setupModules(DataManager.instance.moduleData.getData()));
     }
 
-    private void setupModules(Map<ResourceLocation, ModuleData> data) {
+    private void setupModules(Map<Identifier, ModuleData> data) {
         moduleMap = data.entrySet().stream()
                 .filter(entry -> validateModuleData(entry.getKey(), entry.getValue()))
                 .flatMap(entry -> expandEntry(entry).stream())
@@ -45,7 +45,7 @@ public class ModuleRegistry {
                 ));
     }
 
-    private boolean validateModuleData(ResourceLocation identifier, ModuleData data) {
+    private boolean validateModuleData(Identifier identifier, ModuleData data) {
         if (data == null) {
             logger.warn("Failed to create module from module data '{}': Data is null (probably due to it failing to parse)",
                     identifier);
@@ -67,16 +67,16 @@ public class ModuleRegistry {
     }
 
     // todo: hacky stuff to get multislot modules to work, there has to be another way
-    private Collection<Pair<ResourceLocation, ModuleData>> expandEntry(Map.Entry<ResourceLocation, ModuleData> entry) {
+    private Collection<Pair<Identifier, ModuleData>> expandEntry(Map.Entry<Identifier, ModuleData> entry) {
         ModuleData moduleData = entry.getValue();
         if (moduleData.slotSuffixes.length > 0) {
-            ArrayList<Pair<ResourceLocation, ModuleData>> result = new ArrayList<>(moduleData.slots.length);
+            ArrayList<Pair<Identifier, ModuleData>> result = new ArrayList<>(moduleData.slots.length);
             for (int i = 0; i < moduleData.slots.length; i++) {
                 ModuleData dataCopy = moduleData.shallowCopy();
                 dataCopy.slots = new String[] {moduleData.slots[i]};
                 dataCopy.slotSuffixes = new String[] {moduleData.slotSuffixes[i]};
 
-                ResourceLocation suffixedIdentifier = ResourceLocation.fromNamespaceAndPath(
+                Identifier suffixedIdentifier = Identifier.fromNamespaceAndPath(
                         entry.getKey().getNamespace(),
                         entry.getKey().getPath() + moduleData.slotSuffixes[i]);
 
@@ -118,19 +118,19 @@ public class ModuleRegistry {
                 .toArray(new VariantData[0]);
     }
 
-    private ItemModule setupModule(ResourceLocation identifier, ModuleData data) {
+    private ItemModule setupModule(Identifier identifier, ModuleData data) {
         expandMaterialVariants(data);
         handleVariantDuplicates(data);
 
         return moduleConstructors.get(data.type).apply(identifier, data);
     }
 
-    public void registerModuleType(ResourceLocation identifier, BiFunction<ResourceLocation, ModuleData, ItemModule> constructor) {
+    public void registerModuleType(Identifier identifier, BiFunction<Identifier, ModuleData, ItemModule> constructor) {
         moduleConstructors.put(identifier, constructor);
     }
 
 
-    public ItemModule getModule(ResourceLocation identifier) {
+    public ItemModule getModule(Identifier identifier) {
         return moduleMap.get(identifier);
     }
 

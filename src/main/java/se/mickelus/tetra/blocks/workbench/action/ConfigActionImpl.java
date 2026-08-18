@@ -63,7 +63,7 @@ public class ConfigActionImpl extends ConfigAction {
 
     @Override
     public void perform(@Nullable Player player, ItemStack targetStack, WorkbenchTile workbench) {
-        if (player != null && !player.level().isClientSide) {
+        if (player != null && !player.level().isClientSide()) {
             ServerLevel world = (ServerLevel) player.level();
             ResourceKey<LootTable> lootTableKey = ResourceKey.create(Registries.LOOT_TABLE, lootTable);
             LootTable table = world.getServer().reloadableRegistries().getLootTable(lootTableKey);
@@ -107,7 +107,7 @@ public class ConfigActionImpl extends ConfigAction {
 
             targetStack.setCount(targetStack.getCount() - 1);
             workbench.setChanged();
-        } else if (!workbench.getLevel().isClientSide) {
+        } else if (!workbench.getLevel().isClientSide()) {
             ServerLevel world = (ServerLevel) workbench.getLevel();
             LootTable table = world.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTable));
 

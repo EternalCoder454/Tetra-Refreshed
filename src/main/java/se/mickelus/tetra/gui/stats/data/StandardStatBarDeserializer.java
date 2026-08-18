@@ -1,7 +1,7 @@
 package se.mickelus.tetra.gui.stats.data;
 
 import com.google.gson.JsonElement;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import se.mickelus.tetra.gui.stats.StatsHelper;
 import se.mickelus.tetra.gui.stats.bar.GuiStatBar;
@@ -23,7 +23,7 @@ public class StandardStatBarDeserializer {
                 .setIndicators(data.indicators != null ? resolveIndicators(data.indicators) : new GuiStatIndicator[0]);
     }
 
-    private static GuiStatIndicator[] resolveIndicators(ResourceLocation[] directories) {
+    private static GuiStatIndicator[] resolveIndicators(Identifier[] directories) {
         return Arrays.stream(directories)
                 .map(StatIndicatorStore.instance::getIndicatorsIn)
                 .flatMap(Arrays::stream)
@@ -32,6 +32,6 @@ public class StandardStatBarDeserializer {
 
     record StandardData(ICondition[] conditions, String key, String[] contexts, double min, double max, Boolean segmented, Boolean split,
             Boolean inverted,
-            IStatGetter stat, ILabelGetter label, ITooltipGetter tooltip, ResourceLocation[] indicators, Boolean generateSorter) {
+            IStatGetter stat, ILabelGetter label, ITooltipGetter tooltip, Identifier[] indicators, Boolean generateSorter) {
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -47,7 +47,7 @@ import static com.google.common.base.Predicates.equalTo;
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock {
     public static final String identifier = "forged_container";
-    public static final DirectionProperty facingProp = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty flippedProp = BooleanProperty.create("flipped");
     public static final BooleanProperty locked1Prop = BooleanProperty.create("locked1");
     public static final BooleanProperty locked2Prop = BooleanProperty.create("locked2");
@@ -140,7 +140,7 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
         InteractionResult didInteract = BlockInteraction.attemptInteraction(world, state, pos, player, hand, hit);
 
         if (didInteract != InteractionResult.SUCCESS) {
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
                 TileEntityOptional.from(world, pos, ForgedContainerBlockEntity.class)
                         .ifPresent(te -> {
                             ForgedContainerBlockEntity delegate = te.getOrDelegate();
@@ -157,13 +157,13 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 

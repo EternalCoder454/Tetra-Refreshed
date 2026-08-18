@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect.condition;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -15,10 +15,10 @@ import java.util.Map;
 
 @ParametersAreNonnullByDefault
 public class LockedCondition implements CraftingEffectCondition {
-    ResourceLocation key;
+    Identifier key;
 
     @Override
-    public boolean test(ResourceLocation[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean test(Identifier[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] materials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic, Level world, BlockPos pos, BlockState blockState) {
         return key != null && Arrays.stream(unlocks).anyMatch(key::equals);
     }

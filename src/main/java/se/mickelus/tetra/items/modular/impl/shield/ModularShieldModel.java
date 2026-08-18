@@ -17,7 +17,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
@@ -45,7 +45,7 @@ public class ModularShieldModel extends Model {
         this.root = modelPart;
     }
 
-    private static Optional<Pair<ResourceLocation, ShieldModelPartData>> getModel(ResourceLocation resourceLocation, Resource resource) {
+    private static Optional<Pair<Identifier, ShieldModelPartData>> getModel(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return Optional.of(reader)
                     .map(r -> GsonHelper.fromJson(DataManager.gson, r, JsonElement.class))
@@ -62,7 +62,7 @@ public class ModularShieldModel extends Model {
         return Optional.empty();
     }
 
-    private static String trimResourceLocation(ResourceLocation rl) {
+    private static String trimResourceLocation(Identifier rl) {
         return rl.getNamespace() + ":" + rl.getPath().substring(22, rl.getPath().length() - 5);
     }
 

@@ -2,7 +2,7 @@ package se.mickelus.tetra.items.modular.impl.bow;
 
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -79,7 +79,7 @@ public class GuiRangedProgress extends GuiRoot {
     }
 
     @Override
-    public void draw(GuiGraphics graphics) {
+    public void draw(GuiGraphicsExtractor graphics) {
         if (isVisible() && (progress > 0 || hideAnimation.isActive())) {
             Window window = mc.getWindow();
             int width = window.getGuiScaledWidth();

@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.schematic;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -246,7 +246,7 @@ public class BookEnchantSchematic implements UpgradeSchematic {
 
     private String getEnchantmentKey(Holder<Enchantment> enchantment) {
         return TetraEnchantmentHelper.getEnchantmentKey(enchantment)
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .orElseGet(enchantment::getRegisteredName);
     }
 }

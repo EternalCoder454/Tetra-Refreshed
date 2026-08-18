@@ -27,7 +27,7 @@ public class ReverberatingPearlItem extends TetraItem {
         tooltip.add(Component.translatable("item." + unlocalizedName + ".tooltip"));
         tooltip.add(Component.literal(" "));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             tooltip.add(Tooltips.reveal);
             tooltip.add(Component.literal(" "));

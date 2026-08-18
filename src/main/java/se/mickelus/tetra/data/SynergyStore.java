@@ -1,7 +1,7 @@
 package se.mickelus.tetra.data;
 
 import com.google.gson.Gson;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.data.DataDistributor;
 import se.mickelus.mutil.data.DataStore;
 import se.mickelus.tetra.TetraMod;
@@ -23,7 +23,7 @@ public class SynergyStore extends DataStore<SynergyData[]> {
      * @return An array of synergy data
      */
     public SynergyData[] getOrdered(String path) {
-        SynergyData[] data = getDataIn(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, path)).stream()
+        SynergyData[] data = getDataIn(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, path)).stream()
                 .flatMap(Arrays::stream)
                 .toArray(SynergyData[]::new);
         for (SynergyData entry : data) {

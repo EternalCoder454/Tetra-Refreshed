@@ -2,7 +2,7 @@ package se.mickelus.tetra.craftingeffect.outcome;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -29,7 +29,7 @@ public class ApplyEnchantmentOutcome implements CraftingEffectOutcome {
     StackMode stacking = StackMode.max;
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials,
             Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState, boolean consumeResources,
             ItemStack[] postMaterials, float severity) {
@@ -69,7 +69,7 @@ public class ApplyEnchantmentOutcome implements CraftingEffectOutcome {
 
     private int getModuleEnchantmentLevel(ItemStack itemStack, ItemModuleMajor module, Enchantment enchantment) {
         return TetraEnchantmentHelper.getEnchantmentKey(enchantment)
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .map(module.getEnchantmentsPrimitive(itemStack)::get)
                 .orElse(0);
     }

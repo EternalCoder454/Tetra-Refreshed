@@ -2,7 +2,7 @@ package se.mickelus.tetra.effect.howling;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -34,7 +34,7 @@ public class HowlingOverlay implements LayeredDraw.Layer {
     }
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         this.gui.draw(graphics);
     }
 }

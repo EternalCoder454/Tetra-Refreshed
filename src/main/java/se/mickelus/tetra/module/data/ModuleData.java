@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module.data;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.tetra.module.Priority;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -21,14 +21,14 @@ public class ModuleData {
      * the same length as the slots field.
      */
     public String[] slotSuffixes = new String[0];
-    public ResourceLocation type;
+    public Identifier type;
     public boolean replace = false;
     public Priority renderLayer = Priority.BASE;
     public Priority namePriority = Priority.BASE;
     public Priority prefixPriority = Priority.BASE;
-    public ResourceLocation tweakKey;
+    public Identifier tweakKey;
     public boolean perk = false;
-    public ResourceLocation[] improvements = new ResourceLocation[0];
+    public Identifier[] improvements = new Identifier[0];
     public VariantData[] variants = new VariantData[0];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ public class ModuleData {
 
         to.improvements = Stream.concat(Arrays.stream(to.improvements), Arrays.stream(from.improvements))
                 .distinct()
-                .toArray(ResourceLocation[]::new);
+                .toArray(Identifier[]::new);
 
         to.variants = Stream.concat(Arrays.stream(to.variants), Arrays.stream(from.variants))
                 .toArray(VariantData[]::new);

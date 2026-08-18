@@ -223,7 +223,7 @@ public class CoreExtractorBaseBlockEntity extends BlockEntity implements IHeatTr
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (isSending) {
                 if (level.getGameTime() % 5 == 0) {
                     transfer();

@@ -10,7 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -46,7 +46,7 @@ public class PropertyMatcher implements Predicate<BlockState> {
             if (jsonObject.has("block")) {
                 String blockString = jsonObject.get("block").getAsString();
                 if (blockString != null) {
-                    ResourceLocation resourceLocation = ResourceLocation.parse(blockString);
+                    Identifier resourceLocation = Identifier.parse(blockString);
                     result.block = RegistryHelper.get(BuiltInRegistries.BLOCK, resourceLocation);
                 }
             }
@@ -54,7 +54,7 @@ public class PropertyMatcher implements Predicate<BlockState> {
             if (jsonObject.has("tag")) {
                 String tagString = jsonObject.get("tag").getAsString();
                 if (tagString != null) {
-                    result.tag = BlockTags.create(ResourceLocation.parse(tagString));
+                    result.tag = BlockTags.create(Identifier.parse(tagString));
                 }
             }
 
@@ -82,7 +82,7 @@ public class PropertyMatcher implements Predicate<BlockState> {
         } else {
             String blockString = json.getAsString();
             if (blockString != null) {
-                ResourceLocation resourceLocation = ResourceLocation.parse(blockString);
+                Identifier resourceLocation = Identifier.parse(blockString);
                 result.block = RegistryHelper.get(BuiltInRegistries.BLOCK, resourceLocation);
             }
         }

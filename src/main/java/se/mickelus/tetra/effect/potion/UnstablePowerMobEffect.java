@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -163,7 +163,7 @@ public class UnstablePowerMobEffect extends MobEffect {
         }
 
         @Override
-        public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphics guiGraphics, int x, int y, float z, float alpha) {
+        public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphicsExtractor guiGraphics, int x, int y, float z, float alpha) {
             Player player = Minecraft.getInstance().player;
             var effect = se.mickelus.tetra.effect.EffectHelper.effectHolder(UnstablePowerMobEffect.instance);
             int duration = Optional.ofNullable(player.getEffect(effect))
@@ -202,7 +202,7 @@ public class UnstablePowerMobEffect extends MobEffect {
             return true;
         }
 
-        private static void renderIcon(GuiGraphics guiGraphics, int x, int y, int duration, net.minecraft.core.Holder<MobEffect> effect) {
+        private static void renderIcon(GuiGraphicsExtractor guiGraphics, int x, int y, int duration, net.minecraft.core.Holder<MobEffect> effect) {
             float iconAlpha = 1;
             if (duration < 200) {
                 int l = 10 - duration / 20;
@@ -217,7 +217,7 @@ public class UnstablePowerMobEffect extends MobEffect {
             guiGraphics.setColor(1f, 1f, 1f, 1f);
         }
 
-        private static void renderBar(GuiGraphics guiGraphics, int x, int y, float ratio, int color) {
+        private static void renderBar(GuiGraphicsExtractor guiGraphics, int x, int y, float ratio, int color) {
             if (ratio > 0) {
                 fill(guiGraphics, x + 10, y + 21, (int) Mth.clampedMap(ratio, 0f, 1 / 8f, 0, -7), 1, color);
                 if (ratio > 1 / 8f) {
@@ -235,12 +235,12 @@ public class UnstablePowerMobEffect extends MobEffect {
             }
         }
 
-        private static void fill(GuiGraphics graphics, int x, int y, int width, int height, int color) {
+        private static void fill(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
             graphics.fill(x + Math.min(width, 0), y + Math.min(height, 0), x + Math.max(width, 0), y + Math.max(height, 0),
                     color);
         }
 
-        private static void renderAmplifierLabel(GuiGraphics guiGraphics, int x, int y, int amplifier) {
+        private static void renderAmplifierLabel(GuiGraphicsExtractor guiGraphics, int x, int y, int amplifier) {
             Font font = Minecraft.getInstance().font;
             String amplifierText = StringHelper.toRoman(amplifier + 1);
             int xo = 12 - font.width(amplifierText) / 2;

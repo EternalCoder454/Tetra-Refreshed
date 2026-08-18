@@ -15,14 +15,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class StunEffect {
     public static void perform(ItemStack itemStack, int effectLevel, LivingEntity attacker, LivingEntity target) {
-        if (!attacker.level().isClientSide && attacker.getRandom().nextFloat() < effectLevel / 100f) {
+        if (!attacker.level().isClientSide() && attacker.getRandom().nextFloat() < effectLevel / 100f) {
             int duration = (int) (EffectHelper.getEffectEfficiency(itemStack, ItemEffect.stun) * 20);
 
             target.addEffect(new MobEffectInstance(EffectHelper.effectHolder(StunPotionEffect.instance), duration, 0, false, false));
-            target.getCommandSenderWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PLAYER_ATTACK_STRONG,
+            target.level().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.PLAYER_ATTACK_STRONG,
                     SoundSource.PLAYERS, 0.8f, 0.9f);
 
-            ((ServerLevel) target.getCommandSenderWorld()).sendParticles(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xEEEEEE),
+            ((ServerLevel) target.level()).sendParticles(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xEEEEEE),
                     target.getX(), target.getEyeY(), target.getZ(),
                     5, 0, 0, 0, 0);
         }

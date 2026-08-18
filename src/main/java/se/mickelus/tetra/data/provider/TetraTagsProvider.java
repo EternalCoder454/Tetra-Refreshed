@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -27,15 +27,15 @@ public class TetraTagsProvider extends TagsProvider<Block> {
                 new MultiblockSchematicEntry("extractor", 3, 3)
         };
 
-        var schematicsAppender = tag(BlockTags.create(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "multiblock_schematic")));
+        var schematicsAppender = tag(BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "multiblock_schematic")));
         for (MultiblockSchematicEntry schematic : schematics) {
-            var tag = BlockTags.create(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, schematic.id));
+            var tag = BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, schematic.id));
             var appender = tag(tag);
             schematicsAppender.addTag(tag);
             for (int h = 0; h < schematic.width; h++) {
                 for (int v = 0; v < schematic.height; v++) {
                     String id = String.format(MultiblockSchematicBlock.Builder.format, schematic.id, h, v);
-                    appender.addOptional(ResourceLocation.fromNamespaceAndPath("tetra", id));
+                    appender.addOptional(Identifier.fromNamespaceAndPath("tetra", id));
                 }
             }
         }

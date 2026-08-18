@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiElement;
 
 public class ZOffsetGui extends GuiElement {
@@ -12,7 +12,7 @@ public class ZOffsetGui extends GuiElement {
     }
 
     @Override
-    protected void drawChildren(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    protected void drawChildren(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, z);
         super.drawChildren(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);

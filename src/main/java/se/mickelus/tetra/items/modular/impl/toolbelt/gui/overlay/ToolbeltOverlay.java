@@ -3,7 +3,7 @@ package se.mickelus.tetra.items.modular.impl.toolbelt.gui.overlay;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -88,7 +88,7 @@ public class ToolbeltOverlay extends GuiRoot implements LayeredDraw.Layer {
     }
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         if (!TetraKeyMappings.accessBinding.isDown() && isActive) {
             hideView();
         }
@@ -97,7 +97,7 @@ public class ToolbeltOverlay extends GuiRoot implements LayeredDraw.Layer {
     }
 
     @Override
-    public void draw(GuiGraphics graphics) {
+    public void draw(GuiGraphicsExtractor graphics) {
         super.draw(graphics);
         if (isVisible()) {
             Window window = mc.getWindow();

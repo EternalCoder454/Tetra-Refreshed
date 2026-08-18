@@ -1,7 +1,7 @@
 package se.mickelus.tetra;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.advancements.criterion.ItemSubPredicate;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,7 +9,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -137,10 +137,10 @@ public class TetraRegistries {
             TetraMod.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> creativeTabs = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TetraMod.MOD_ID);
 
-    public static final TagKey<Block> forgeHammerIncorrectTag = BlockTags.create(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "incorrect_for_maxed_forge_hammer"));
+    public static final TagKey<Block> forgeHammerIncorrectTag = BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "incorrect_for_maxed_forge_hammer"));
     public static final Tier forgeHammerTier = HarvestTierRegistry.register(
             new SimpleTier(forgeHammerIncorrectTag, 0, 0, 0, 0, () -> Ingredient.EMPTY),
-            ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "maxed_forge_hammer"),
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "maxed_forge_hammer"),
             List.of(Tiers.NETHERITE),
             List.of()
     );
@@ -635,31 +635,31 @@ public class TetraRegistries {
     }
 
     private static void validateTierOrdering() {
-        List<ResourceLocation> expectedOrder = List.of(
-                ResourceLocation.withDefaultNamespace("wood"),
-                ResourceLocation.withDefaultNamespace("gold"),
-                ResourceLocation.withDefaultNamespace("stone"),
-                ResourceLocation.withDefaultNamespace("iron"),
-                ResourceLocation.withDefaultNamespace("diamond"),
-                ResourceLocation.withDefaultNamespace("netherite"),
-                ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "maxed_forge_hammer")
+        List<Identifier> expectedOrder = List.of(
+                Identifier.withDefaultNamespace("wood"),
+                Identifier.withDefaultNamespace("gold"),
+                Identifier.withDefaultNamespace("stone"),
+                Identifier.withDefaultNamespace("iron"),
+                Identifier.withDefaultNamespace("diamond"),
+                Identifier.withDefaultNamespace("netherite"),
+                Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "maxed_forge_hammer")
         );
 
-        Map<ResourceLocation, Integer> indexes = new HashMap<>();
-        List<ResourceLocation> resolvedOrder = HarvestTierRegistry.ordered().stream()
+        Map<Identifier, Integer> indexes = new HashMap<>();
+        List<Identifier> resolvedOrder = HarvestTierRegistry.ordered().stream()
                 .map(HarvestTierRegistry::nameOf)
                 .toList();
 
         for (int i = 0; i < resolvedOrder.size(); i++) {
-            ResourceLocation name = resolvedOrder.get(i);
+            Identifier name = resolvedOrder.get(i);
             if (name != null) {
                 indexes.put(name, i);
             }
         }
 
-        ResourceLocation previous = null;
+        Identifier previous = null;
         int previousIndex = -1;
-        for (ResourceLocation expected : expectedOrder) {
+        for (Identifier expected : expectedOrder) {
             Integer index = indexes.get(expected);
             if (index == null) {
                 throw new IllegalStateException("Missing expected tier " + expected + " in resolved order " + resolvedOrder);

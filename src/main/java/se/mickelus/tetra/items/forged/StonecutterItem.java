@@ -32,7 +32,7 @@ public class StonecutterItem extends TetraItem {
         tooltip.add(ForgedBlockCommon.unsettlingTooltip);
         tooltip.add(Component.literal(" "));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             tooltip.add(Component.translatable("item.tetra.stonecutter.description").withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal(" "));

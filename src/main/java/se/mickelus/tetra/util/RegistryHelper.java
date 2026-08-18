@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.neoforged.neoforge.common.CommonHooks;
 
@@ -20,23 +20,23 @@ public final class RegistryHelper {
     }
 
     @Nullable
-    public static <T> T get(Registry<T> registry, ResourceLocation location) {
+    public static <T> T get(Registry<T> registry, Identifier location) {
         return registry.containsKey(location) ? registry.get(location) : null;
     }
 
     @Nullable
-    public static <T> T get(ResourceKey<? extends Registry<T>> registryKey, ResourceLocation location) {
+    public static <T> T get(ResourceKey<? extends Registry<T>> registryKey, Identifier location) {
         return lookup(registryKey).get(ResourceKey.create(registryKey, location))
                 .map(Holder.Reference::value)
                 .orElse(null);
     }
 
     @Nullable
-    public static <T> ResourceLocation key(Registry<T> registry, T value) {
+    public static <T> Identifier key(Registry<T> registry, T value) {
         return registry.getKey(value);
     }
 
-    public static <T> Optional<ResourceLocation> key(ResourceKey<? extends Registry<T>> registryKey, T value) {
+    public static <T> Optional<Identifier> key(ResourceKey<? extends Registry<T>> registryKey, T value) {
         return lookup(registryKey).listElements()
                 .filter(holder -> holder.value() == value || holder.value().equals(value))
                 .findFirst()
@@ -53,7 +53,7 @@ public final class RegistryHelper {
                 .toList();
     }
 
-    public static <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> registryKey, ResourceLocation location) {
+    public static <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> registryKey, Identifier location) {
         return TagKey.create(registryKey, location);
     }
 

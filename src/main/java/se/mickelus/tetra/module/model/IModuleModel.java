@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module.model;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.SimpleColor;
 import se.mickelus.tetra.module.Priority;
 import se.mickelus.tetra.module.data.MaterialData;
@@ -8,7 +8,7 @@ import se.mickelus.tetra.module.data.MaterialData;
 import java.util.List;
 
 public interface IModuleModel {
-    public ResourceLocation getType();
+    public Identifier getType();
 
     public Priority getRenderLayer();
 

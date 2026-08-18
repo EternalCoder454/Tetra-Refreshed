@@ -2,11 +2,11 @@ package se.mickelus.tetra.blocks.scroll;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -35,7 +35,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicProviderBlock, ICraftingEffectProviderBlock {
-    public static final ResourceLocation scrollDynamicDropId = ResourceLocation.parse("tetra:scroll");
+    public static final Identifier scrollDynamicDropId = Identifier.parse("tetra:scroll");
     public static final SoundType sound = new SoundType(0.8F, 1.3F, SoundEvents.BOOK_PAGE_TURN, SoundEvents.BOOK_PAGE_TURN,
             SoundEvents.BOOK_PAGE_TURN, SoundEvents.BOOK_PAGE_TURN, SoundEvents.BOOK_PAGE_TURN);
     private final Arrangement arrangement;
@@ -58,8 +58,8 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
     }
 
     @Override
-    public ResourceLocation[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
-        return TileEntityOptional.from(world, pos, ScrollTile.class).map(ScrollTile::getSchematics).orElseGet(() -> new ResourceLocation[0]);
+    public Identifier[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
+        return TileEntityOptional.from(world, pos, ScrollTile.class).map(ScrollTile::getSchematics).orElseGet(() -> new Identifier[0]);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
     }
 
     @Override
-    public ResourceLocation[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
-        return TileEntityOptional.from(world, pos, ScrollTile.class).map(ScrollTile::getCraftingEffects).orElseGet(() -> new ResourceLocation[0]);
+    public Identifier[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
+        return TileEntityOptional.from(world, pos, ScrollTile.class).map(ScrollTile::getCraftingEffects).orElseGet(() -> new Identifier[0]);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (arrangement == Arrangement.open) {
             BlockState offsetState = world.getBlockState(pos.below());
 

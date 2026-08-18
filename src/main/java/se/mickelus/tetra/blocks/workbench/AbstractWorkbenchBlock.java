@@ -3,11 +3,11 @@ package se.mickelus.tetra.blocks.workbench;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -42,7 +42,7 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
             return interactionResult;
         }
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             TileEntityOptional.from(world, pos, WorkbenchTile.class)
                     .ifPresent(te -> player.openMenu(te, pos));
         }
@@ -51,13 +51,13 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 
@@ -154,7 +154,7 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
         return null;
     }
 
-    public ResourceLocation[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
+    public Identifier[] getSchematics(Level world, BlockPos pos, BlockState blockState) {
         return Stream.concat(
                         DataManager.instance.unlockData.getData().values().stream()
                                 .filter(unlock -> unlock.block != null && unlock.schematics != null && unlock.schematics.length > 0)
@@ -166,10 +166,10 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
                                 .filter(pair -> ((ISchematicProviderBlock) pair.getSecond().getBlock()).canUnlockSchematics(world, pair.getFirst(), pos))
                                 .map(pair -> ((ISchematicProviderBlock) pair.getSecond().getBlock()).getSchematics(world, pair.getFirst(), blockState)))
                 .flatMap(Stream::of)
-                .toArray(ResourceLocation[]::new);
+                .toArray(Identifier[]::new);
     }
 
-    public ResourceLocation[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
+    public Identifier[] getCraftingEffects(Level world, BlockPos pos, BlockState blockState) {
         return Stream.concat(
                         DataManager.instance.unlockData.getData().values().stream()
                                 .filter(unlock -> unlock.block != null && unlock.effects != null && unlock.effects.length > 0)
@@ -180,7 +180,7 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
                                 .filter(pair -> ((ICraftingEffectProviderBlock) pair.getSecond().getBlock()).canUnlockCraftingEffects(world, pair.getFirst(), pos))
                                 .map(pair -> ((ICraftingEffectProviderBlock) pair.getSecond().getBlock()).getCraftingEffects(world, pair.getFirst(), blockState)))
                 .flatMap(Stream::of)
-                .toArray(ResourceLocation[]::new);
+                .toArray(Identifier[]::new);
     }
 
     @Override

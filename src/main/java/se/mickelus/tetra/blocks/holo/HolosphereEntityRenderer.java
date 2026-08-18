@@ -13,10 +13,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -32,7 +32,7 @@ import se.mickelus.tetra.util.Lherper;
 
 public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereBlockEntity> {
     public static final Material material = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "block/holosphere_hud"));
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/holosphere_hud"));
     private final BlockEntityRenderDispatcher dispatcher;
     private final Font font;
 
@@ -181,9 +181,9 @@ public class HolosphereEntityRenderer implements BlockEntityRenderer<HolosphereB
         float spriteHeight = sprite.contents().height();
         float voxelSize = 1 / Math.max(spriteWidth, spriteHeight) * scale;
 
-        float r = FastColor.ARGB32.red(color) / 255f;
-        float g = FastColor.ARGB32.green(color) / 255f;
-        float b = FastColor.ARGB32.blue(color) / 255f;
+        float r = ARGB.red(color) / 255f;
+        float g = ARGB.green(color) / 255f;
+        float b = ARGB.blue(color) / 255f;
 
 //        Quaternion quaternion = camera.rotation();
         PoseStack.Pose pose = poseStack.last();

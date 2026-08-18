@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect.outcome;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -31,7 +31,7 @@ public class SpawnEffectCloudOutcome implements CraftingEffectOutcome {
     int randomOriginDistance = 0;
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float severity) {
         if (consumeResources && !world.isClientSide() && world.getRandom().nextFloat() < chance) {
@@ -59,9 +59,9 @@ public class SpawnEffectCloudOutcome implements CraftingEffectOutcome {
     }
 
     private static BlockPos findRandomBlockPos(Level level, BlockPos origin, int radius) {
-        BlockPos randomOffset = new BlockPos(level.random.nextIntBetweenInclusive(-radius, radius),
+        BlockPos randomOffset = new BlockPos(level.getRandom().nextIntBetweenInclusive(-radius, radius),
                 0,
-                level.random.nextIntBetweenInclusive(-radius, radius));
+                level.getRandom().nextIntBetweenInclusive(-radius, radius));
 
         for (int i = 0; i < 4; i++) {
             BlockPos adjustedPos = randomOffset.below(i).offset(origin);

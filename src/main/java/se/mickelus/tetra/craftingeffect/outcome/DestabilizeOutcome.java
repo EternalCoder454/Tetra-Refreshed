@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect.outcome;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -22,12 +22,12 @@ public class DestabilizeOutcome implements CraftingEffectOutcome {
     CraftingEffectOutcome[] outcomes = new CraftingEffectOutcome[0];
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials, Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState,
             boolean consumeResources, ItemStack[] postMaterials, float severity) {
         AtomicBoolean success = new AtomicBoolean(false);
 
-        if (consumeResources && !world.isClientSide && upgradedStack.getItem() instanceof IModularItem item) {
+        if (consumeResources && !world.isClientSide() && upgradedStack.getItem() instanceof IModularItem item) {
             ItemModule module = item.getModuleFromSlot(upgradedStack, slot);
             if (module != null) {
                 float destabilizationChance = module.getDestabilizationChance(upgradedStack, severity);

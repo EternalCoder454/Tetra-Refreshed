@@ -1,6 +1,6 @@
 package se.mickelus.tetra.tools;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,8 +25,8 @@ public final class HarvestTierRegistry {
     private static final Logger logger = LogManager.getLogger();
     private static final List<Tier> orderedTiers = new ArrayList<>();
     private static final Map<Tier, TierEntry> entriesByTier = new IdentityHashMap<>();
-    private static final Map<ResourceLocation, Tier> tiersByName = new LinkedHashMap<>();
-    private static final Set<ResourceLocation> unknownTierWarnings = ConcurrentHashMap.newKeySet();
+    private static final Map<Identifier, Tier> tiersByName = new LinkedHashMap<>();
+    private static final Set<Identifier> unknownTierWarnings = ConcurrentHashMap.newKeySet();
     private static int nextOrder;
 
     static {
@@ -41,17 +41,17 @@ public final class HarvestTierRegistry {
     private HarvestTierRegistry() {}
 
     private static void registerVanilla(Tier tier, String path, List<Tier> after, List<Tier> before) {
-        registerInternal(tier, ResourceLocation.withDefaultNamespace(path), after, before);
+        registerInternal(tier, Identifier.withDefaultNamespace(path), after, before);
     }
 
-    public static Tier register(Tier tier, ResourceLocation name, List<Tier> after, List<Tier> before) {
+    public static Tier register(Tier tier, Identifier name, List<Tier> after, List<Tier> before) {
         Objects.requireNonNull(tier, "tier");
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(after, "after");
         Objects.requireNonNull(before, "before");
 
         if (entriesByTier.containsKey(tier)) {
-            ResourceLocation existingName = nameOf(tier);
+            Identifier existingName = nameOf(tier);
             if (!name.equals(existingName)) {
                 throw new IllegalStateException("Tier " + tier + " is already registered as " + existingName + ", not " + name);
             }
@@ -62,7 +62,7 @@ public final class HarvestTierRegistry {
         return tier;
     }
 
-    private static void registerInternal(Tier tier, ResourceLocation name, List<Tier> after, List<Tier> before) {
+    private static void registerInternal(Tier tier, Identifier name, List<Tier> after, List<Tier> before) {
         Tier namedTier = tiersByName.get(name);
         if (namedTier != null && namedTier != tier) {
             throw new IllegalStateException("Tier name already registered: " + name);
@@ -76,7 +76,7 @@ public final class HarvestTierRegistry {
         rebuildOrderedTiers();
     }
 
-    private static void validateDependencies(ResourceLocation name, List<Tier> dependencies, String direction) {
+    private static void validateDependencies(Identifier name, List<Tier> dependencies, String direction) {
         for (Tier dependency : dependencies) {
             if (!entriesByTier.containsKey(dependency)) {
                 throw new IllegalStateException("Unknown " + direction + " dependency for tier " + name + ": " + dependency);
@@ -145,7 +145,7 @@ public final class HarvestTierRegistry {
     }
 
     @Nullable
-    public static Tier byName(@Nullable ResourceLocation name) {
+    public static Tier byName(@Nullable Identifier name) {
         if (name == null) {
             return null;
         }
@@ -162,7 +162,7 @@ public final class HarvestTierRegistry {
     }
 
     @Nullable
-    public static ResourceLocation nameOf(Tier tier) {
+    public static Identifier nameOf(Tier tier) {
         TierEntry entry = entriesByTier.get(tier);
         return entry != null ? entry.name() : null;
     }
@@ -171,5 +171,5 @@ public final class HarvestTierRegistry {
         return !state.is(tier.getIncorrectBlocksForDrops());
     }
 
-    private record TierEntry(ResourceLocation name, List<Tier> after, List<Tier> before, int order) {}
+    private record TierEntry(Identifier name, List<Tier> after, List<Tier> before, int order) {}
 }

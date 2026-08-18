@@ -1,6 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.gui.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -96,14 +96,14 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
@@ -116,7 +116,7 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.renderTooltip(graphics, mouseX, mouseY);
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
@@ -125,7 +125,7 @@ public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int x, int y) {
+    protected void renderLabels(GuiGraphicsExtractor graphics, int x, int y) {
     }
 
     @Override

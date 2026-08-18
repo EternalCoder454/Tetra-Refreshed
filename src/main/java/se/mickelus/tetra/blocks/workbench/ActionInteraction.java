@@ -51,7 +51,7 @@ public class ActionInteraction extends BlockInteraction {
 
     @Override
     public void applyOutcome(Level world, BlockPos pos, BlockState blockState, @Nullable Player player, @Nullable InteractionHand hand, Direction hitFace) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             CastOptional.cast(world.getBlockEntity(pos), WorkbenchTile.class)
                     .ifPresent(tile -> {
                         if (player != null) {

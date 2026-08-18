@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.advancements.criterion.ItemSubPredicate;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.util.CastOptional;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;

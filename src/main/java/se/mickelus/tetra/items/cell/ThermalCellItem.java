@@ -3,7 +3,7 @@ package se.mickelus.tetra.items.cell;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -59,7 +59,7 @@ public class ThermalCellItem extends TetraItem {
 
     @Override
     public void clientInit() {
-        ItemProperties.register(this, ResourceLocation.parse(chargedPropKey), (itemStack, world, livingEntity, i) -> getCharge(itemStack) > 0 ? 1 : 0);
+        ItemProperties.register(this, Identifier.parse(chargedPropKey), (itemStack, world, livingEntity, i) -> getCharge(itemStack) > 0 ? 1 : 0);
     }
 
     @Override

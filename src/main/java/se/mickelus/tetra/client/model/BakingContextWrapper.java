@@ -1,9 +1,9 @@
 package se.mickelus.tetra.client.model;
 
 import com.mojang.math.Transformation;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.cuboid.ItemTransforms;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +59,7 @@ public class BakingContextWrapper implements IGeometryBakingContext {
 
     @Override
     @Nullable
-    public ResourceLocation getRenderTypeHint() {
+    public Identifier getRenderTypeHint() {
         return parent.getRenderTypeHint();
     }
 

@@ -5,7 +5,7 @@ import com.google.gson.JsonParseException;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
 import se.mickelus.tetra.effect.ItemEffect;
@@ -60,7 +60,7 @@ public class StatGetterDeserializers {
 
     public static IStatGetter attributeGetter(JsonElement json) {
         AttributeData data = StatRegistry.gson.fromJson(json, AttributeData.class);
-        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, ResourceLocation.parse(data.attribute));
+        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, Identifier.parse(data.attribute));
         if (attribute == null) {
             throw new JsonParseException("Failed to parse attribute stat getter, unknown attribute: " + data.attribute);
         }
@@ -76,7 +76,7 @@ public class StatGetterDeserializers {
 
     public static IStatGetter attributeMultiplierGetter(JsonElement json) {
         AttributeMultiplierData data = StatRegistry.gson.fromJson(json, AttributeMultiplierData.class);
-        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, ResourceLocation.parse(data.attribute));
+        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, Identifier.parse(data.attribute));
         if (attribute == null) {
             throw new JsonParseException("Failed to parse attribute multiplier stat getter, unknown attribute: " + data.attribute);
         }
@@ -89,7 +89,7 @@ public class StatGetterDeserializers {
 
     public static IStatGetter attributeAdditionGetter(JsonElement json) {
         AttributeAdditionData data = StatRegistry.gson.fromJson(json, AttributeAdditionData.class);
-        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, ResourceLocation.parse(data.attribute));
+        Attribute attribute = RegistryHelper.get(BuiltInRegistries.ATTRIBUTE, Identifier.parse(data.attribute));
         if (attribute == null) {
             throw new JsonParseException("Failed to parse attribute addition stat getter, unknown attribute: " + data.attribute);
         }
@@ -124,7 +124,7 @@ public class StatGetterDeserializers {
 
     public static IStatGetter enchantmentGetter(JsonElement json) {
         EnchantmentData data = StatRegistry.gson.fromJson(json, EnchantmentData.class);
-        ResourceLocation enchantment = ResourceLocation.parse(data.enchantment);
+        Identifier enchantment = Identifier.parse(data.enchantment);
         if (enchantment == null) {
             throw new JsonParseException("Failed to parse enchantment stat getter, unknown enchantment: " + data.enchantment);
         }
@@ -144,6 +144,6 @@ public class StatGetterDeserializers {
         return new StatGetterIsItem(items, data.inverted);
     }
 
-    record IsItemData(ResourceLocation[] items, boolean inverted) {
+    record IsItemData(Identifier[] items, boolean inverted) {
     }
 }

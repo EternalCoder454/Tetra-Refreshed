@@ -3,7 +3,7 @@ package se.mickelus.tetra.effect.potion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -24,8 +24,8 @@ public class BleedingPotionEffect extends MobEffect {
     public static final String identifier = "bleeding";
     public static BleedingPotionEffect instance;
 
-    public static final TagKey<EntityType<?>> slimebloodTag = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("tetra", "slimeblood"));
-    public static final TagKey<EntityType<?>> lavabloodTag = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("tetra", "lavablood"));
+    public static final TagKey<EntityType<?>> slimebloodTag = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("tetra", "slimeblood"));
+    public static final TagKey<EntityType<?>> lavabloodTag = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("tetra", "lavablood"));
 
     public BleedingPotionEffect() {
         super(MobEffectCategory.HARMFUL, 0x880000);
@@ -46,7 +46,7 @@ public class BleedingPotionEffect extends MobEffect {
         return duration % 10 == 0;
     }
     public static void spawnParticles(LivingEntity entity, int count) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             RandomSource random = entity.getRandom();
             AABB boundingBox = entity.getBoundingBox().inflate(0.1, 0.1, 0.1);
             Vec3 target = getRandomVec3InAABB(boundingBox, random);

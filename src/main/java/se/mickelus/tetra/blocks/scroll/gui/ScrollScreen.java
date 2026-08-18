@@ -1,10 +1,10 @@
 package se.mickelus.tetra.blocks.scroll.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -37,7 +37,7 @@ public class ScrollScreen extends Screen {
         height = 240;
 
         gui = new GuiElement(0, 0, width, height);
-        gui.addChild(new GuiTexture(0, 0, 160, 186, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/pamphlet.png")).setAttachment(GuiAttachment.middleCenter));
+        gui.addChild(new GuiTexture(0, 0, 160, 186, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/pamphlet.png")).setAttachment(GuiAttachment.middleCenter));
 
         text = new GuiText(2, -75, 124, "");
         text.setAttachmentAnchor(GuiAttachment.middleCenter);
@@ -57,7 +57,7 @@ public class ScrollScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
         renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -68,7 +68,7 @@ public class ScrollScreen extends Screen {
         renderHoveredToolTip(graphics, mouseX, mouseY);
     }
 
-    protected void renderHoveredToolTip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderHoveredToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = gui.getTooltipLines();
         if (tooltipLines != null) {
             graphics.renderTooltip(font, tooltipLines, Optional.empty(), mouseX, mouseY);

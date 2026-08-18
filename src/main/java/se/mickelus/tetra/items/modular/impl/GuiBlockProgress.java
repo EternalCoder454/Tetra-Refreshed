@@ -3,7 +3,7 @@ package se.mickelus.tetra.items.modular.impl;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -64,7 +64,7 @@ public class GuiBlockProgress extends GuiRoot {
         }
     }
 
-    public void draw(GuiGraphics graphics) {
+    public void draw(GuiGraphicsExtractor graphics) {
         if (isVisible()) {
             Window window = mc.getWindow();
             int width = window.getGuiScaledWidth();

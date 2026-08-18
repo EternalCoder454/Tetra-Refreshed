@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiTexture;
 import se.mickelus.mutil.gui.animation.AnimationChain;
@@ -15,7 +15,7 @@ public class VerticalTabIconButtonGui extends VerticalTabButtonGui {
     private final GuiTexture icon;
     private final AnimationChain iconFlash;
 
-    public VerticalTabIconButtonGui(int x, int y, ResourceLocation texture, int textureX, int textureY, String label, String keybinding,
+    public VerticalTabIconButtonGui(int x, int y, Identifier texture, int textureX, int textureY, String label, String keybinding,
             Runnable onClickHandler, boolean initiallyActive) {
         super(x, y, label, keybinding, onClickHandler, initiallyActive);
 

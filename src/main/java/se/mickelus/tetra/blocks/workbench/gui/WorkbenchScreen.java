@@ -2,7 +2,7 @@ package se.mickelus.tetra.blocks.workbench.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
@@ -123,14 +123,14 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
     }
 
     @Override
-    public void render(GuiGraphics graphics, final int mouseX, final int mouseY, final float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float partialTicks) {
         this.renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         defaultGui.updateFocusState(this.leftPos, this.topPos, mouseX, mouseY);
@@ -139,11 +139,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchContainer>
 
     // override this to stop titles from rendering
     @Override
-    protected void renderLabels(GuiGraphics graphics, int x, int y) {
+    protected void renderLabels(GuiGraphicsExtractor graphics, int x, int y) {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.renderTooltip(graphics, mouseX, mouseY);
 
         List<Component> tooltipLines = defaultGui.getTooltipLines();

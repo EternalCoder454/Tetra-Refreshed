@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -89,9 +89,9 @@ public class ModularShieldItem extends ItemModularHandheld {
     public void clientInit() {
         super.clientInit();
 
-        ItemProperties.register(this, ResourceLocation.withDefaultNamespace("blocking"),
+        ItemProperties.register(this, Identifier.withDefaultNamespace("blocking"),
                 (itemStack, world, entity, i) -> isBlocking(itemStack, entity) ? 1.0F : 0.0F);
-        ItemProperties.register(this, ResourceLocation.withDefaultNamespace("throwing"),
+        ItemProperties.register(this, Identifier.withDefaultNamespace("throwing"),
                 (itemStack, world, entity, i) -> isThrowing(itemStack, entity) ? 1.0F : 0.0F);
     }
 

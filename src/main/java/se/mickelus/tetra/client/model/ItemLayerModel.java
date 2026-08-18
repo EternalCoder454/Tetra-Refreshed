@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.client.RenderTypeGroup;
 import net.neoforged.neoforge.client.model.CompositeModel;
@@ -28,10 +28,10 @@ import java.util.function.Function;
 
 public class ItemLayerModel implements IUnbakedGeometry<ItemLayerModel> {
     private final Int2ObjectMap<List<IQuadTransformer>> layerTransformers;
-    private final Int2ObjectMap<ResourceLocation> renderTypeNames;
+    private final Int2ObjectMap<Identifier> renderTypeNames;
     private List<Material> textures;
 
-    public ItemLayerModel(List<Material> textures, Int2ObjectMap<List<IQuadTransformer>> layerTransformers, Int2ObjectMap<ResourceLocation> renderTypeNames) {
+    public ItemLayerModel(List<Material> textures, Int2ObjectMap<List<IQuadTransformer>> layerTransformers, Int2ObjectMap<Identifier> renderTypeNames) {
         this.textures = textures;
         this.layerTransformers = layerTransformers;
         this.renderTypeNames = renderTypeNames;
@@ -62,7 +62,7 @@ public class ItemLayerModel implements IUnbakedGeometry<ItemLayerModel> {
                 layerTransformers.get(i).forEach(transformer -> transformer.processInPlace(quads));
             }
 
-            ResourceLocation renderTypeName = renderTypeNames.get(i);
+            Identifier renderTypeName = renderTypeNames.get(i);
             RenderTypeGroup renderTypes = renderTypeName != null
                     ? context.getRenderType(renderTypeName)
                     : new RenderTypeGroup(RenderType.solid(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());

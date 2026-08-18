@@ -3,11 +3,11 @@ package se.mickelus.tetra.blocks.multischematic;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
@@ -30,10 +30,10 @@ import se.mickelus.tetra.effect.EffectHelper;
 import java.util.Collection;
 
 public class RuinedMultiblockSchematicBlock extends HorizontalDirectionalBlock implements IInteractiveBlock {
-    public static final DirectionProperty facingProp = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> facingProp = BlockStateProperties.HORIZONTAL_FACING;
     private final MapCodec<RuinedMultiblockSchematicBlock> codec = MapCodec.unit(this);
 
-    protected ResourceLocation pryTable;
+    protected Identifier pryTable;
 
     protected BlockInteraction[] pryAction = new BlockInteraction[] {
             new BlockInteraction(TetraItemAbilities.pry, 1, Direction.EAST, 6, 10, 7, 10,
@@ -41,7 +41,7 @@ public class RuinedMultiblockSchematicBlock extends HorizontalDirectionalBlock i
                     this::pryBlock)
     };
 
-    public RuinedMultiblockSchematicBlock(final Properties properties, ResourceLocation pryTable) {
+    public RuinedMultiblockSchematicBlock(final Properties properties, Identifier pryTable) {
         super(properties);
         this.pryTable = pryTable;
 
@@ -74,14 +74,14 @@ public class RuinedMultiblockSchematicBlock extends HorizontalDirectionalBlock i
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         if (pryTable != null) {
             return switch (useInternal(state, world, pos, player, hand, hit)) {
-                case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-                case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-                case FAIL -> ItemInteractionResult.FAIL;
-                default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+                case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+                case FAIL -> InteractionResult.FAIL;
+                default -> InteractionResult.PASS;
             };
         }
         return super.useItemOn(stack, state, world, pos, player, hand, hit);

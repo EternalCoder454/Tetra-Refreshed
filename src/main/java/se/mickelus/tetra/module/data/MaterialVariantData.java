@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module.data;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import se.mickelus.tetra.module.model.IModuleModel;
 import se.mickelus.tetra.properties.AttributeHelper;
 
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class MaterialVariantData extends VariantData {
 
-    public ResourceLocation[] materials = {};
+    public Identifier[] materials = {};
 
     public MaterialMultiplier extract = new MaterialMultiplier();
 

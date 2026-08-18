@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import se.mickelus.mutil.util.CastOptional;
@@ -31,12 +31,12 @@ public class ExecuteEffect extends ChargedAbilityEffect {
     public static final ExecuteEffect instance = new ExecuteEffect();
 
     ExecuteEffect() {
-        super(20, 0.5f, 40, 8, ItemEffect.execute, TargetRequirement.entity, UseAnim.SPEAR, "raised");
+        super(20, 0.5f, 40, 8, ItemEffect.execute, TargetRequirement.entity, ItemUseAnimation.SPEAR, "raised");
     }
 
     @Override
     public void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, LivingEntity target, Vec3 hitVec, int chargedTicks) {
-        if (!target.level().isClientSide) {
+        if (!target.level().isClientSide()) {
             AbilityUseResult result;
             if (isDefensive(item, itemStack, hand)) {
                 result = defensiveExecute(attacker, item, itemStack, target);
@@ -195,7 +195,7 @@ public class ExecuteEffect extends ChargedAbilityEffect {
 
     private void playEffects(boolean isSuccess, LivingEntity target, Vec3 hitVec) {
         if (isSuccess) {
-            target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.8f);
 
             RandomSource rand = target.getRandom();
             CastOptional.cast(target.level(), ServerLevel.class).ifPresent(world ->
@@ -203,7 +203,7 @@ public class ExecuteEffect extends ChargedAbilityEffect {
                             hitVec.x, hitVec.y, hitVec.z, 10,
                             rand.nextGaussian() * 0.3, rand.nextGaussian() * 0.3, rand.nextGaussian() * 0.3, 0.1f));
         } else {
-            target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
+            target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.8f);
         }
     }
 }

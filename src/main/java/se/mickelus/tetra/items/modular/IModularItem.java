@@ -490,7 +490,7 @@ public interface IModularItem {
                 itemStack.setDamageValue(Math.min(itemStack.getDamageValue() + reducedAmount, itemStack.getMaxDamage()));
             }
 
-            if (isBroken(damage + reducedAmount, maxDamage) && responsibleEntity != null && !responsibleEntity.level().isClientSide) {
+            if (isBroken(damage + reducedAmount, maxDamage) && responsibleEntity != null && !responsibleEntity.level().isClientSide()) {
                 responsibleEntity.playSound(SoundEvents.SHIELD_BREAK, 1, 1);
             }
         }
@@ -545,7 +545,7 @@ public interface IModularItem {
                     .withStyle(ChatFormatting.DARK_RED, ChatFormatting.ITALIC));
         }
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             Arrays.stream(getMajorModules(itemStack))
                     .filter(Objects::nonNull)

@@ -2,7 +2,7 @@ package se.mickelus.tetra.items.modular.impl.holo.gui.craft;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -60,7 +60,7 @@ public class HolosphereEntryStore implements ResourceManagerReloadListener {
                 .collect(Collectors.toMap(entry -> entry.key, entry -> entry));
     }
 
-    private HolosphereEntryData parseEntry(ResourceLocation resourceLocation, Resource resource) {
+    private HolosphereEntryData parseEntry(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             HolosphereEntryData result = GsonHelper.fromJson(DataManager.gson, reader, HolosphereEntryData.class);
             result.key = resourceLocation.getPath().substring(directory.length() + 1, resourceLocation.getPath().length() - jsonExtension.length());

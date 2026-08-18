@@ -139,7 +139,7 @@ public class GuiMagicUsage extends GuiElement {
     @Override
     public List<Component> getTooltipLines() {
         if (hasFocus()) {
-            if (Screen.hasShiftDown()) {
+            if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
                 return tooltipExtended;
             }
 

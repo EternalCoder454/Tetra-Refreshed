@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui.stats.bar;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ItemAbility;
@@ -82,7 +82,7 @@ public class StrikingStatIndicatorGui extends GuiStatIndicator {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (current != null) {
             current.draw(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
         }

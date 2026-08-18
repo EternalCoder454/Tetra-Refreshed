@@ -1,7 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.holo.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -125,7 +125,7 @@ public class HoloGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         renderBackground(graphics, mouseX, mouseY, partialTicks);
         super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -136,7 +136,7 @@ public class HoloGui extends Screen {
         renderHoveredToolTip(graphics, mouseX, mouseY);
     }
 
-    protected void renderHoveredToolTip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderHoveredToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = defaultGui.getTooltipLines();
         if (tooltipLines != null) {
             graphics.renderTooltip(font, tooltipLines, Optional.empty(), mouseX, mouseY);

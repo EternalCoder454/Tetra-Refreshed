@@ -3,7 +3,7 @@ package se.mickelus.tetra;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
@@ -144,7 +144,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void modelRegistryReady(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "modular_loader"), new ModularModelLoader());
+        event.register(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "modular_loader"), new ModularModelLoader());
     }
 
     @SubscribeEvent
@@ -238,7 +238,7 @@ public class ClientSetup {
     }
 
     private static void registerOverlay(RegisterGuiLayersEvent event, String id, LayeredDraw.Layer overlay) {
-        event.registerBelowAll(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, id), overlay);
+        event.registerBelowAll(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, id), overlay);
         NeoForge.EVENT_BUS.register(overlay);
     }
 

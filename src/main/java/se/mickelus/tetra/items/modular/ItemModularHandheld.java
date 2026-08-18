@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -19,7 +19,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -32,11 +32,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -76,7 +76,7 @@ import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 public class ItemModularHandheld extends ModularItem {
-    public static final TagKey<Block> nailedTag = BlockTags.create(ResourceLocation.fromNamespaceAndPath("tetra", "nailed"));
+    public static final TagKey<Block> nailedTag = BlockTags.create(Identifier.fromNamespaceAndPath("tetra", "nailed"));
     // if the blocking level exceeds this value the item has an infinite blocking duration
     public static final int blockingDurationLimit = 16;
     static final ChargedAbilityEffect[] abilities = new ChargedAbilityEffect[] {
@@ -169,7 +169,7 @@ public class ItemModularHandheld extends ModularItem {
 
         applyBlockBreakEffects(itemStack, world, state, pos, entity);
 
-        if (!world.isClientSide && !isBroken(itemStack)) {
+        if (!world.isClientSide() && !isBroken(itemStack)) {
             // todo (destabilization): apply chaotic effect here
             if (getEffectLevel(itemStack, ItemEffect.piercingHarvest) > 0) {
                 PiercingEffect.pierceBlocks(this, itemStack, getEffectLevel(itemStack, ItemEffect.piercing), (ServerLevel) world, state, pos, entity);
@@ -203,7 +203,7 @@ public class ItemModularHandheld extends ModularItem {
      * @param entity
      */
     public void applyBlockBreakEffects(ItemStack itemStack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             int intuitLevel = getEffectLevel(itemStack, ItemEffect.intuit);
             if (intuitLevel > 0) {
                 ServerLevel serverLevel = (ServerLevel) world;
@@ -306,13 +306,13 @@ public class ItemModularHandheld extends ModularItem {
                         world.playSound(player, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
                     }
 
-                    if (!world.isClientSide) {
+                    if (!world.isClientSide()) {
                         world.setBlock(pos, block, 11);
                         applyDamage(blockDestroyDamage, context.getItemInHand(), player);
                         applyUsageEffects(player, itemStack, 2);
                     }
 
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
             }
 
@@ -320,7 +320,7 @@ public class ItemModularHandheld extends ModularItem {
                 if (dowseBlock(player, world, blockState, pos)) {
                     applyDamage(blockDestroyDamage, itemStack, player);
                     applyUsageEffects(player, itemStack, 2);
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
             }
 
@@ -330,7 +330,7 @@ public class ItemModularHandheld extends ModularItem {
                     applyDamage(blockDestroyDamage, itemStack, player);
                     applyUsageEffects(player, itemStack, 2);
                     player.resetAttackStrengthTicker();
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
             }
         }
@@ -339,19 +339,19 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
         // pass success for channeled abilities
         if (getUseDuration(itemStack) > 0) {
             player.startUsingItem(hand);
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemStack);
+            return new InteractionResult<>(InteractionResult.SUCCESS, itemStack);
         }
 
         if (InteractionHand.OFF_HAND.equals(hand)) {
             int jabLevel = getEffectLevel(itemStack, ItemEffect.jab);
             if (jabLevel > 0) {
-                if (!world.isClientSide) {
+                if (!world.isClientSide()) {
                     if (getEffectLevel(itemStack, ItemEffect.truesweep) > 0 && player.onGround() && !player.isSprinting()) {
                         SweepingEffect.truesweep(itemStack, player, true);
                     }
@@ -364,11 +364,11 @@ public class ItemModularHandheld extends ModularItem {
 
                 player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
 
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemStack);
+                return new InteractionResult<>(InteractionResult.SUCCESS, itemStack);
             }
         }
 
-        return new InteractionResultHolder<>(InteractionResult.PASS, itemStack);
+        return new InteractionResult<>(InteractionResult.PASS, itemStack);
     }
 
     @Override
@@ -381,13 +381,13 @@ public class ItemModularHandheld extends ModularItem {
 
                     tickProgression(player, itemStack, 2);
                     applyDamage(2, itemStack, player);
-                    return InteractionResult.sidedSuccess(player.level().isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
 
                 int pryLevel = getEffectLevel(itemStack, ItemEffect.pry);
                 if (pryLevel > 0) {
                     PryEffect.perform(player, hand, this, itemStack, pryLevel, target);
-                    return InteractionResult.sidedSuccess(player.level().isClientSide);
+                    return InteractionResult.SUCCESS;
                 }
 
                 if (InteractionHand.OFF_HAND.equals(hand)) {
@@ -395,7 +395,7 @@ public class ItemModularHandheld extends ModularItem {
                     if (jabLevel > 0) {
                         jabEntity(itemStack, jabLevel, player, target);
 
-                        if (!player.level().isClientSide) {
+                        if (!player.level().isClientSide()) {
                             if (getEffectLevel(itemStack, ItemEffect.truesweep) > 0 && player.onGround() && !player.isSprinting()) {
                                 SweepingEffect.truesweep(itemStack, player, true);
                             }
@@ -408,7 +408,7 @@ public class ItemModularHandheld extends ModularItem {
 
                         tickProgression(player, itemStack, 2);
                         applyDamage(2, itemStack, player);
-                        return InteractionResult.sidedSuccess(player.level().isClientSide);
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }
@@ -482,9 +482,9 @@ public class ItemModularHandheld extends ModularItem {
         AbilityUseResult result = hitEntity(itemStack, player, target, jabLevel / 100f, 0.5f, 0.2f);
 
         if (result == AbilityUseResult.crit) {
-            player.getCommandSenderWorld().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
+            player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 1, 1.3f);
         } else {
-            player.getCommandSenderWorld().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 1.3f);
+            player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 1.3f);
         }
 
         player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
@@ -500,9 +500,9 @@ public class ItemModularHandheld extends ModularItem {
                 target.addEffect(new MobEffectInstance(EffectHelper.effectHolder(StunPotionEffect.instance), (int) Math.round(stunDuration * 20), 0, false, false));
             }
 
-            player.getCommandSenderWorld().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.7f);
+            player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.7f);
         } else {
-            player.getCommandSenderWorld().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.7f);
+            player.level().playSound(player, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.7f);
         }
 
         player.getCooldowns().addCooldown(this, (int) Math.round(getCooldownBase(itemStack) * 20));
@@ -510,7 +510,7 @@ public class ItemModularHandheld extends ModularItem {
 
     public void throwItem(Player player, ItemStack stack, int riptideLevel, float cooldownBase) {
         Level world = player.level();
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             applyDamage(1, stack, player);
             applyUsageEffects(player, stack, 1);
 
@@ -615,14 +615,14 @@ public class ItemModularHandheld extends ModularItem {
      * returns the action that specifies what animation to play when the items is being used
      */
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
         if (getEffectLevel(stack, ItemEffect.blocking) > 0) {
-            return UseAnim.BLOCK;
+            return ItemUseAnimation.BLOCK;
         }
 
         if (getEffectLevel(stack, ItemEffect.throwable) > 0
                 || EffectHelper.getEnchantmentLevel(Enchantments.RIPTIDE, stack) > 0) {
-            return UseAnim.SPEAR;
+            return ItemUseAnimation.SPEAR;
         }
 
         ChargedAbilityEffect ability = getChargeableAbility(stack);
@@ -654,14 +654,14 @@ public class ItemModularHandheld extends ModularItem {
     }
 
     public boolean isThrowing(ItemStack itemStack, @Nullable LivingEntity entity) {
-        return UseAnim.SPEAR.equals(getUseAnimation(itemStack)) && Optional.ofNullable(entity)
+        return ItemUseAnimation.SPEAR.equals(getUseAnimation(itemStack)) && Optional.ofNullable(entity)
                 .filter(e -> itemStack.equals(e.getUseItem()))
                 .map(e -> e.getUseItemRemainingTicks() > 0)
                 .orElse(false);
     }
 
     public boolean isBlocking(ItemStack itemStack, @Nullable LivingEntity entity) {
-        return UseAnim.BLOCK.equals(getUseAnimation(itemStack)) && Optional.ofNullable(entity)
+        return ItemUseAnimation.BLOCK.equals(getUseAnimation(itemStack)) && Optional.ofNullable(entity)
                 .filter(e -> itemStack.equals(e.getUseItem()))
                 .map(e -> e.getUseItemRemainingTicks() > 0)
                 .orElse(false);
@@ -715,7 +715,7 @@ public class ItemModularHandheld extends ModularItem {
                             player.getCooldowns().addCooldown(this, (int) Math.round(blockingCooldown * getCooldownBase(itemStack) * 20));
                         }
 
-                        if (player.isCrouching() && world.isClientSide) {
+                        if (player.isCrouching() && world.isClientSide()) {
                             onPlayerStoppedUsingSecondary(itemStack, world, entity, 0);
                         }
                     }
@@ -754,7 +754,7 @@ public class ItemModularHandheld extends ModularItem {
                         causeRiptideEffect(player, riptideLevel);
                     } else if (ticksUsed >= 10 && throwingLevel > 0) {
                         throwItem(player, itemStack, riptideLevel, (float) cooldownBase);
-                    } else if (world.isClientSide) {
+                    } else if (world.isClientSide()) {
                         onPlayerStoppedUsingSecondary(itemStack, world, entityLiving, timeLeft);
                     }
                 }
@@ -765,7 +765,7 @@ public class ItemModularHandheld extends ModularItem {
                     throwItem(player, itemStack, riptideLevel, (float) cooldownBase);
                 }
 
-                if (world.isClientSide) {
+                if (world.isClientSide()) {
                     triggerChargedAbility(itemStack, world, entityLiving, ticksUsed);
                 }
             }
@@ -932,7 +932,7 @@ public class ItemModularHandheld extends ModularItem {
 
         Optional.of(getCounterWeightBonus(itemStack))
                 .filter(bonus -> bonus > 0)
-                .map(bonus -> new AttributeModifier(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "counterweight"), bonus, AttributeModifier.Operation.ADD_VALUE))
+                .map(bonus -> new AttributeModifier(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "counterweight"), bonus, AttributeModifier.Operation.ADD_VALUE))
                 .ifPresent(modifier -> result.put(Attributes.ATTACK_SPEED.value(), modifier));
 
         return result;

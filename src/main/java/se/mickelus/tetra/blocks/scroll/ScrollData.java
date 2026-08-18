@@ -16,7 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.util.HexCodec;
 import se.mickelus.tetra.TetraRegistries;
@@ -34,8 +34,8 @@ public class ScrollData {
             Codec.INT.fieldOf("material").forGetter(i -> i.material),
             HexCodec.instance.fieldOf("ribbon").forGetter(i -> i.ribbon),
             Codec.INT.listOf().optionalFieldOf("glyphs", Collections.emptyList()).forGetter(i -> i.glyphs),
-            ResourceLocation.CODEC.listOf().optionalFieldOf("schematics", Collections.emptyList()).forGetter(i -> i.schematics),
-            ResourceLocation.CODEC.listOf().optionalFieldOf("effects", Collections.emptyList()).forGetter(i -> i.craftingEffects)
+            Identifier.CODEC.listOf().optionalFieldOf("schematics", Collections.emptyList()).forGetter(i -> i.schematics),
+            Identifier.CODEC.listOf().optionalFieldOf("effects", Collections.emptyList()).forGetter(i -> i.craftingEffects)
     ).apply(instance, ScrollData::new));
     public static final Codec<ScrollData> CODEC = MAP_CODEC.codec();
     public static final StreamCodec<RegistryFriendlyByteBuf, ScrollData> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
@@ -45,14 +45,14 @@ public class ScrollData {
     public final int material;
     public final int ribbon;
     public final List<Integer> glyphs;
-    public final List<ResourceLocation> schematics;
-    public final List<ResourceLocation> craftingEffects;
+    public final List<Identifier> schematics;
+    public final List<Identifier> craftingEffects;
 
     public ScrollData() {
         this("unknown", Optional.empty(), false, 0, 0xffffff, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
     }
 
-    public ScrollData(String name, Optional<String> details, boolean isIntricate, int material, int ribbon, List<Integer> glyphs, List<ResourceLocation> schematics, List<ResourceLocation> craftingEffects) {
+    public ScrollData(String name, Optional<String> details, boolean isIntricate, int material, int ribbon, List<Integer> glyphs, List<Identifier> schematics, List<Identifier> craftingEffects) {
         this.key = name;
         this.details = details.orElse(null);
         this.isIntricate = isIntricate;

@@ -176,7 +176,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
     }
 
     public void consumeFuel() {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             int fuelUsage = fuelUsage();
 
             for (int i = 0; i < slots.length; i++) {
@@ -225,8 +225,8 @@ public class HammerBaseBlockEntity extends BlockEntity {
         Direction facing = getLevel().getBlockState(getBlockPos()).getValue(HammerBaseBlock.facingProp);
         Vec3 pos = Vec3.atCenterOf(getBlockPos());
 
-        Vec3 oppositePos = pos.add(Vec3.atLowerCornerOf(facing.getOpposite().getNormal()).scale(0.55));
-        pos = pos.add(Vec3.atLowerCornerOf(facing.getNormal()).scale(0.55));
+        Vec3 oppositePos = pos.add(Vec3.atLowerCornerOf(facing.getOpposite().getUnitVec3i()).scale(0.55));
+        pos = pos.add(Vec3.atLowerCornerOf(facing.getUnitVec3i()).scale(0.55));
 
         if (hasEffect(HammerEffect.power)) {
             spawnParticle(ParticleTypes.ENCHANTED_HIT, Vec3.atLowerCornerOf(getBlockPos()).add(0.5, -0.9, 0.5), 15, 0.1f);
@@ -234,7 +234,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
         if (hasEffect(HammerEffect.power)) {
             spawnParticle(ParticleTypes.WHITE_ASH, Vec3.atLowerCornerOf(getBlockPos()).add(0.5, -0.9, 0.5), 15, 0.1f);
-            int count = level.random.nextInt(2 + getEffectLevel(HammerEffect.power) * 4);
+            int count = level.getRandom().nextInt(2 + getEffectLevel(HammerEffect.power) * 4);
 
             if (count > 2) {
                 // particles cell 1
@@ -249,7 +249,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
             }
         }
 
-        if (level.random.nextFloat() < getJamChance()) {
+        if (level.getRandom().nextFloat() < getJamChance()) {
             TileEntityOptional.from(level, getBlockPos().below(), HammerHeadBlockEntity.class).ifPresent(head -> {
                 head.setJammed(true);
 
@@ -420,7 +420,7 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
                         // the workbench triggers the hammer on the server side, so no need to consume fuel and play sounds
                         if (!(targetState.getBlock() instanceof AbstractWorkbenchBlock)) {
-                            if (!level.isClientSide) {
+                            if (!level.isClientSide()) {
                                 consumeFuel();
                             } else {
                                 head.activate();

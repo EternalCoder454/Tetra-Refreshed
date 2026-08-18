@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect.condition;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -17,7 +17,7 @@ public class SchematicCondition implements CraftingEffectCondition {
     String schematic;
 
     @Override
-    public boolean test(ResourceLocation[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean test(Identifier[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] materials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic, Level world, BlockPos pos, BlockState blockState) {
         return this.schematic.equals(schematic.getKey());
     }

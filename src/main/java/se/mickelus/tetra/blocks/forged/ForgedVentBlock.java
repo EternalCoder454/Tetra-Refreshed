@@ -3,13 +3,13 @@ package se.mickelus.tetra.blocks.forged;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -49,8 +49,8 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     public static final BooleanProperty propX = BooleanProperty.create("x");
     public static final BooleanProperty propBroken = BooleanProperty.create("broken");
     public static final String identifier = "forged_vent";
-    private static final ResourceLocation boltLootTable = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/bolt_break");
-    private static final ResourceLocation ventLootTable = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/vent_break");
+    private static final Identifier boltLootTable = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/bolt_break");
+    private static final Identifier ventLootTable = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/vent_break");
     public static final BlockInteraction[] interactions = new BlockInteraction[]{
             new BlockInteraction(TetraItemAbilities.hammer, 3, Direction.EAST, 1, 4, 12, 15,
                     new PropertyMatcher().where(propBroken, equalTo(false)).where(propRotation, equalTo(0)),
@@ -94,7 +94,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     private static boolean breakBolt(Level world, BlockPos pos, BlockState blockState, @Nullable Player player, @Nullable InteractionHand hand, Direction hitFace) {
         world.setBlock(pos, world.getBlockState(pos).setValue(propBroken, true), 2);
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             ServerLevel serverWorld = (ServerLevel) world;
             if (player != null) {
                 BlockInteraction.dropLoot(ventLootTable, player, hand, serverWorld, blockState);
@@ -112,7 +112,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
         List<BlockPos> connectedVents = getConnectedBlocks(world, pos, new LinkedList<>(), blockState.getValue(propX));
 
         if (connectedVents.stream().anyMatch(blockPos -> !world.getBlockState(blockPos).getValue(propBroken))) {
-            if (!world.isClientSide) {
+            if (!world.isClientSide()) {
                 world.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.PLAYERS, 0.4f, 2);
             }
             return false;
@@ -123,7 +123,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
             world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 2);
         });
 
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             ServerLevel serverWorld = (ServerLevel) world;
             if (player != null) {
                 BlockInteraction.dropLoot(ventLootTable, player, hand, serverWorld, blockState);
@@ -172,13 +172,13 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult rayTrace) {
         return switch (useInternal(state, world, pos, player, hand, rayTrace)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 

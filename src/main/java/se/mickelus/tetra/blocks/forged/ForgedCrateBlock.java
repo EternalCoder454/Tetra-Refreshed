@@ -4,13 +4,13 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -51,10 +51,10 @@ import static net.minecraft.world.level.material.Fluids.WATER;
 @ParametersAreNonnullByDefault
 public class ForgedCrateBlock extends FallingBlock implements InitializableBlock, IInteractiveBlock, SimpleWaterloggedBlock {
     public static final MapCodec<ForgedCrateBlock> CODEC = simpleCodec(properties -> new ForgedCrateBlock());
-    public static final DirectionProperty propFacing = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> propFacing = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty propStacked = BooleanProperty.create("stacked");
     public static final IntegerProperty propIntegrity = IntegerProperty.create("integrity", 0, 3);
-    public static final ResourceLocation interactionLootTable = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/crate_content");
+    public static final Identifier interactionLootTable = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/crate_content");
     public static final String identifier = "forged_crate";
     static final BlockInteraction[] interactions = new BlockInteraction[] {
             new BlockInteraction(TetraItemAbilities.pry, 1, Direction.EAST, 6, 8, 6, 8,
@@ -151,13 +151,13 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 

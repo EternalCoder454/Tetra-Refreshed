@@ -22,7 +22,7 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -118,7 +118,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         if ((dealtDamage || isNoPhysics()) && shooter != null) {
             int loyaltyLevel = entityData.get(LOYALTY_LEVEL);
             if (loyaltyLevel > 0 && !shouldReturnToThrower()) {
-                if (!level().isClientSide && pickup == AbstractArrow.Pickup.ALLOWED) {
+                if (!level().isClientSide() && pickup == AbstractArrow.Pickup.ALLOWED) {
                     spawnAtLocation(getPickupItem(), 0.1f);
                 }
 
@@ -127,7 +127,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
                 setNoPhysics(true);
                 Vec3 Vector3d = new Vec3(shooter.getX() - getX(), shooter.getEyeY() - getY(), shooter.getZ() - getZ());
                 setPosRaw(getX(), getY() + Vector3d.y * 0.015 * (double) loyaltyLevel, getZ());
-                if (level().isClientSide) {
+                if (level().isClientSide()) {
                     yOld = getY();
                 }
 
@@ -243,7 +243,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
                 }
             }
 
-            if (!level().isClientSide && shooter != null) {
+            if (!level().isClientSide() && shooter != null) {
                 int jankLevel = getEffectLevel(ItemEffect.janking);
                 if (jankLevel > 0) {
                     JankEffect.jankItemsDelayed((ServerLevel) level(), pos, jankLevel, getEffectEfficiency(ItemEffect.janking), shooter);
@@ -344,7 +344,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
 
                 doPostHurtEffects(targetLivingEntity);
 
-                if (critModifier != 1d && !level().isClientSide) {
+                if (critModifier != 1d && !level().isClientSide()) {
                     Vec3 hitVec = raytrace.getLocation();
                     ((ServerLevel) level()).sendParticles(ParticleTypes.ENCHANTED_HIT,
                             hitVec.x(), hitVec.y(), hitVec.z(), 15, 0.2D, 0.2D, 0.2D, 0.0D);
@@ -353,7 +353,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         }
 
         float f1 = 1.0F;
-        if (!level().isClientSide && level().isThundering() && EffectHelper.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.CHANNELING, thrownStack) > 0) {
+        if (!level().isClientSide() && level().isThundering() && EffectHelper.getEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.CHANNELING, thrownStack) > 0) {
             BlockPos blockpos = target.blockPosition();
             if (level().canSeeSky(blockpos)) {
                 LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level());
@@ -373,7 +373,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
 
         if (dealtDamage) {
             setDeltaMovement(getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
-        } else if (ricochetLevel > 0 && !level().isClientSide) {
+        } else if (ricochetLevel > 0 && !level().isClientSide()) {
             Vec3 hitPos = raytrace.getLocation();
             setPosRaw(hitPos.x(), hitPos.y(), hitPos.z());
             setDeltaMovement(level().getEntities(shooter, new AABB(target.blockPosition()).inflate(8d), entity ->

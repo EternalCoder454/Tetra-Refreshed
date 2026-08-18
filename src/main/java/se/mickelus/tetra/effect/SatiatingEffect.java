@@ -64,7 +64,7 @@ public class SatiatingEffect {
     }
 
     public static boolean handleFoodExhaustion(Player player, float exhaustion) {
-        if (!player.level().isClientSide && !player.getAbilities().invulnerable) {
+        if (!player.level().isClientSide() && !player.getAbilities().invulnerable) {
             MobEffectInstance satiatedEffect = player.getEffect(EffectHelper.effectHolder(SatiatedPotionEffect.instance));
             if (satiatedEffect != null && exhaustion > 0) {
                 float reduction = Math.min(exhaustion, satiatedEffect.getAmplifier() + 1);
@@ -82,7 +82,7 @@ public class SatiatingEffect {
     }
 
     public static void onPlayerTickPre(Player player) {
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
             exhaustionCache.put(player.getUUID(), player.getFoodData().getExhaustionLevel());
         }
     }
@@ -93,7 +93,7 @@ public class SatiatingEffect {
      * perfectly distinguish every vanilla exhaustion source that fires inside FoodData#tick.
      */
     public static void onPlayerTickPost(Player player) {
-        if (player.level().isClientSide || player.getAbilities().invulnerable) {
+        if (player.level().isClientSide() || player.getAbilities().invulnerable) {
             return;
         }
 

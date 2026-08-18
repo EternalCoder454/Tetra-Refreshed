@@ -3,7 +3,7 @@ package se.mickelus.tetra.blocks.forged.transfer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -11,7 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -57,12 +57,12 @@ import static com.google.common.base.Predicates.equalTo;
 public class TransferUnitBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock {
     public static final String identifier = "transfer_unit";
 
-    public static final DirectionProperty facingProp = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty plateProp = BooleanProperty.create("plate");
     public static final IntegerProperty cellProp = IntegerProperty.create("cell", 0, 2);
     public static final EnumProperty<EnumTransferConfig> configProp = EnumProperty.create("config", EnumTransferConfig.class);
     public static final EnumProperty<EnumTransferState> transferProp = EnumProperty.create("transfer", EnumTransferState.class);
-    private static final ResourceLocation plateLootTable = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/plate_break");
+    private static final Identifier plateLootTable = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/plate_break");
     public static final BlockInteraction[] interactions = new BlockInteraction[] {
             new BlockInteraction(TetraItemAbilities.pry, 1, Direction.SOUTH, 3, 11, 4, 6,
                     new PropertyMatcher().where(plateProp, equalTo(true)),
@@ -89,7 +89,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
     }
 
     public static boolean removePlate(Level world, BlockPos pos, BlockState blockState, @Nullable Player player, @Nullable InteractionHand hand, Direction hitFace) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             if (player != null) {
                 BlockInteraction.dropLoot(plateLootTable, player, hand, (ServerLevel) world, blockState);
             } else {
@@ -190,7 +190,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
 
         if (hit.getDirection().equals(Direction.UP)) {
             if (tile.hasCell()) { // remove cell
-                if (!world.isClientSide) {
+                if (!world.isClientSide()) {
                     ItemStack cell = tile.removeCell();
                     if (player.getInventory().add(cell)) {
                         player.playSound(SoundEvents.ITEM_PICKUP, 1, 1);
@@ -203,9 +203,9 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
                     BlockUseCriterion.trigger((ServerPlayer) player, state, ItemStack.EMPTY);
                 }
 
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return InteractionResult.SUCCESS;
             } else if (heldStack.getItem() instanceof ThermalCellItem) { // put cell
-                if (world.isClientSide) {
+                if (world.isClientSide()) {
                     return InteractionResult.SUCCESS;
                 }
 
@@ -225,7 +225,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
             attachPlate(world, pos, state, player);
             heldStack.shrink(1);
 
-            if (!player.level().isClientSide) {
+            if (!player.level().isClientSide()) {
                 BlockUseCriterion.trigger((ServerPlayer) player, state, ItemStack.EMPTY);
             }
 
@@ -236,13 +236,13 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 
@@ -324,7 +324,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
-        return !level.isClientSide
+        return !level.isClientSide()
                 ? getTicker(entityType, TransferUnitBlockEntity.type.get(), (lvl, pos, blockState, tile) -> tile.serverTick(lvl, pos, blockState))
                 : null;
     }

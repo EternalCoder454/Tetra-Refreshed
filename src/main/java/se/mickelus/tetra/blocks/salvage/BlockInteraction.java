@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -156,11 +156,11 @@ public class BlockInteraction {
                 player.getCooldowns().addCooldown(heldStack.getItem(), cooldown);
             }
 
-            if (player.level().isClientSide) {
+            if (player.level().isClientSide()) {
                 InteractiveBlockOverlay.markDirty();
             }
 
-            return InteractionResult.sidedSuccess(player.level().isClientSide);
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
@@ -214,7 +214,7 @@ public class BlockInteraction {
         };
     }
 
-    public static List<ItemStack> getLoot(ResourceLocation lootTable, Player player, InteractionHand hand, ServerLevel world,
+    public static List<ItemStack> getLoot(Identifier lootTable, Player player, InteractionHand hand, ServerLevel world,
             BlockState blockState) {
         LootTable table = world.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTable));
 
@@ -229,7 +229,7 @@ public class BlockInteraction {
         return table.getRandomItems(context);
     }
 
-    public static List<ItemStack> getLoot(ResourceLocation lootTable, ServerLevel world, BlockPos pos, BlockState blockState) {
+    public static List<ItemStack> getLoot(Identifier lootTable, ServerLevel world, BlockPos pos, BlockState blockState) {
         LootTable table = world.getServer().reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTable));
 
         LootParams context = new LootParams.Builder(world)
@@ -241,7 +241,7 @@ public class BlockInteraction {
         return table.getRandomItems(context);
     }
 
-    public static void dropLoot(ResourceLocation lootTable, @Nullable Player player, @Nullable InteractionHand hand, ServerLevel world,
+    public static void dropLoot(Identifier lootTable, @Nullable Player player, @Nullable InteractionHand hand, ServerLevel world,
             BlockState blockState) {
         if (player == null || hand == null) return;
         getLoot(lootTable, player, hand, world, blockState).forEach(itemStack -> {
@@ -251,7 +251,7 @@ public class BlockInteraction {
         });
     }
 
-    public static void dropLoot(ResourceLocation lootTable, ServerLevel world, BlockPos pos, BlockState blockState) {
+    public static void dropLoot(Identifier lootTable, ServerLevel world, BlockPos pos, BlockState blockState) {
         getLoot(lootTable, world, pos, blockState).forEach(itemStack -> Block.popResource(world, pos, itemStack));
     }
 

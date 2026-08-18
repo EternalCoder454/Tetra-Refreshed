@@ -2,7 +2,7 @@ package se.mickelus.tetra.effect.data.outcome;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.functions.CommandFunction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import se.mickelus.tetra.effect.data.ItemEffectContext;
@@ -10,7 +10,7 @@ import se.mickelus.tetra.effect.data.provider.entity.EntityProvider;
 import se.mickelus.tetra.effect.data.provider.vector.VectorProvider;
 
 public class RunFunctionItemEffectOutcome extends ItemEffectOutcome {
-    ResourceLocation function;
+    Identifier function;
     EntityProvider entity;
     VectorProvider position;
 

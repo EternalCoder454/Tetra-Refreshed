@@ -16,7 +16,7 @@ import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -414,7 +414,7 @@ public class TetraCommand {
 
     private static String getEnchantmentId(Holder<Enchantment> enchantment) {
         return TetraEnchantmentHelper.getEnchantmentKey(enchantment)
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .orElseGet(enchantment::getRegisteredName);
     }
 }

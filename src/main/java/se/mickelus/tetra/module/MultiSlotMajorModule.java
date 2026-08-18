@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.mutil.gui.SimpleColor;
 import se.mickelus.mutil.util.Filter;
@@ -20,7 +20,7 @@ public class MultiSlotMajorModule extends ItemModuleMajor {
 
     protected String unlocalizedName;
 
-    public MultiSlotMajorModule(ResourceLocation identifier, ModuleData data) {
+    public MultiSlotMajorModule(Identifier identifier, ModuleData data) {
         super(data.slots[0], identifier.getPath());
 
         slotSuffix = data.slotSuffixes[0];

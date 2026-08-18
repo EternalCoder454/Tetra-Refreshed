@@ -1,7 +1,7 @@
 package se.mickelus.tetra.module.model;
 
 import com.mojang.math.Transformation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import se.mickelus.mutil.gui.SimpleColor;
@@ -13,17 +13,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GridTextureModelData extends AbstractTextureModelData {
-    public static final ResourceLocation TYPE = ResourceLocation.fromNamespaceAndPath("tetra", "grid_texture");
+    public static final Identifier TYPE = Identifier.fromNamespaceAndPath("tetra", "grid_texture");
 
     public GridTextureModelData() {
         super();
     }
 
-    public GridTextureModelData(ResourceLocation location) {
+    public GridTextureModelData(Identifier location) {
         this(TYPE, location, null, null, 0, null, null, null, false, null);
     }
 
-    public GridTextureModelData(ResourceLocation type, ResourceLocation location, ResourceLocation renderType, Transformation transform,
+    public GridTextureModelData(Identifier type, Identifier location, Identifier renderType, Transformation transform,
             Integer emission, SimpleColor tint, SimpleColor overlayTint, Priority renderLayer, Boolean invertPerspectives,
             ItemDisplayContext[] contexts) {
         super();
@@ -58,7 +58,7 @@ public class GridTextureModelData extends AbstractTextureModelData {
             return copy;
         }
 
-        ResourceLocation updatedLocation = Arrays.stream(material.textures)
+        Identifier updatedLocation = Arrays.stream(material.textures)
                 .filter(availableTextures::contains)
                 .findFirst()
                 .map(texture -> appendString(location, texture))
@@ -70,13 +70,13 @@ public class GridTextureModelData extends AbstractTextureModelData {
         return copy;
     }
 
-    protected static ResourceLocation appendString(ResourceLocation resourceLocation, String string) {
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + string);
+    protected static Identifier appendString(Identifier resourceLocation, String string) {
+        return Identifier.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + string);
     }
 
     public GridTextureModelData withSlotSuffix(String suffix) {
         GridTextureModelData copy = copy();
-        copy.location = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + suffix);
+        copy.location = Identifier.fromNamespaceAndPath(location.getNamespace(), location.getPath() + suffix);
         return copy;
     }
 

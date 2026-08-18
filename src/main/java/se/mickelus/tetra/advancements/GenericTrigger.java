@@ -1,7 +1,7 @@
 package se.mickelus.tetra.advancements;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.ParametersAreNonnullByDefault;

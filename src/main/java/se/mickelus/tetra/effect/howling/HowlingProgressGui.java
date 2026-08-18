@@ -3,7 +3,7 @@ package se.mickelus.tetra.effect.howling;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiRoot;
@@ -96,7 +96,7 @@ public class HowlingProgressGui extends GuiRoot {
     }
 
     @Override
-    public void draw(GuiGraphics graphics) {
+    public void draw(GuiGraphicsExtractor graphics) {
         if (container.isVisible()) {
             Window window = mc.getWindow();
             int width = window.getGuiScaledWidth();

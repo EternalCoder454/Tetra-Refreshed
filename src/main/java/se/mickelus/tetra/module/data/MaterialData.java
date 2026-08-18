@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.data;
 
 import com.google.common.collect.Multimap;
 import com.google.gson.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -223,7 +223,7 @@ public class MaterialData {
                 return element.getAsInt();
             }
 
-            return Optional.ofNullable(HarvestTierRegistry.byName(ResourceLocation.parse(element.getAsString())))
+            return Optional.ofNullable(HarvestTierRegistry.byName(Identifier.parse(element.getAsString())))
                     .map(TierHelper::getIndex)
                     .map(index -> index + 1)
                     .orElse(0);

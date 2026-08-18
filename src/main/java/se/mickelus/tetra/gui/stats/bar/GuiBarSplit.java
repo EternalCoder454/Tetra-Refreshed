@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui.stats.bar;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiAlignment;
 import se.mickelus.mutil.gui.GuiAttachment;
 import se.mickelus.mutil.gui.GuiElement;
@@ -37,7 +37,7 @@ public class GuiBarSplit extends GuiBar {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         drawChildren(graphics, refX, refY, screenWidth, screenHeight, mouseX, mouseY, opacity);
     }
 }

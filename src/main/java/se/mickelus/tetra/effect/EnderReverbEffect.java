@@ -16,7 +16,7 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class EnderReverbEffect {
     public static void perform(LivingEntity entity, ItemStack itemStack, double multiplier) {
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             double effectProbability = EffectHelper.getEffectEfficiency(itemStack, ItemEffect.enderReverb);
             if (effectProbability > 0
                     && !CastOptional.cast(entity, Player.class).map(Player::isCreative).orElse(false)

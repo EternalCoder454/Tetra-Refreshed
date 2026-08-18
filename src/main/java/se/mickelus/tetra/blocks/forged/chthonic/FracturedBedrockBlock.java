@@ -39,7 +39,7 @@ public class FracturedBedrockBlock extends TetraBlock implements EntityBlock {
             world.setBlock(pos, instance.defaultBlockState(), 2);
             tile = TileEntityOptional.from(world, pos, FracturedBedrockTile.class).orElse(null);
 
-            if (!world.isClientSide && tile != null) {
+            if (!world.isClientSide() && tile != null) {
                 tile.updateLuck();
             }
         }

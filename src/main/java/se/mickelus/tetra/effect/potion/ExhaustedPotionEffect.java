@@ -1,6 +1,6 @@
 package se.mickelus.tetra.effect.potion;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,9 +17,9 @@ public class ExhaustedPotionEffect extends MobEffect {
     public ExhaustedPotionEffect() {
         super(MobEffectCategory.HARMFUL, 0x222222);
 
-        addAttributeModifier(Attributes.MOVEMENT_SPEED, ResourceLocation.fromNamespaceAndPath("tetra", "exhausted_movement_speed"), -0.1,
+        addAttributeModifier(Attributes.MOVEMENT_SPEED, Identifier.fromNamespaceAndPath("tetra", "exhausted_movement_speed"), -0.1,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-        addAttributeModifier(Attributes.ATTACK_SPEED, ResourceLocation.fromNamespaceAndPath("tetra", "exhausted_attack_speed"), -0.05,
+        addAttributeModifier(Attributes.ATTACK_SPEED, Identifier.fromNamespaceAndPath("tetra", "exhausted_attack_speed"), -0.05,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         instance = this;

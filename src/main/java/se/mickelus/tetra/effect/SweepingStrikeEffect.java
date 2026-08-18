@@ -73,7 +73,7 @@ public class SweepingStrikeEffect {
     }
 
     public static void causeEffect(Level world, Player breakingPlayer, ItemStack toolStack, BlockPos origin, ItemAbility tool) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return;
         }
 
@@ -128,7 +128,7 @@ public class SweepingStrikeEffect {
      *                       match this
      */
     public static List<Pair<Integer, BlockPos>> breakBlocksAround(Level world, Player breakingPlayer, ItemStack toolStack, BlockPos originPos, ItemAbility tool, boolean alternate) {
-        if (world.isClientSide) {
+        if (world.isClientSide()) {
             return Collections.emptyList();
         }
 

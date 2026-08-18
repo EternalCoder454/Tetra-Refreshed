@@ -1,6 +1,6 @@
 package se.mickelus.tetra.effect;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 public class ArmorPenetrationEffect {
 
-    private static final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "armor_pen");
+    private static final Identifier id = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "armor_pen");
 
     /**
      * Applies the armor reduction effect before the damage value is calculated.

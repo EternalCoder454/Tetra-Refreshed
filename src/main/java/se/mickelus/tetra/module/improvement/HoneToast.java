@@ -1,11 +1,11 @@
 package se.mickelus.tetra.module.improvement;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.TetraSounds;
@@ -16,7 +16,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class HoneToast implements Toast {
-    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/toasts.png");
+    private static final Identifier texture = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/toasts.png");
     private final ItemStack itemStack;
     private boolean hasPlayedSound = false;
 
@@ -25,7 +25,7 @@ public class HoneToast implements Toast {
     }
 
     @Override
-    public Visibility render(GuiGraphics graphics, ToastComponent toastGui, long delta) {
+    public Visibility render(GuiGraphicsExtractor graphics, ToastComponent toastGui, long delta) {
         if (itemStack != null) {
             graphics.blit(texture, 0, 0, 0, 0, 160, 32);
 

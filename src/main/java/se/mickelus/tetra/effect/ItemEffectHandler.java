@@ -12,7 +12,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,7 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -164,7 +164,7 @@ public class ItemEffectHandler {
                     .ifPresent(itemStack -> {
                         ItemModularHandheld item = (ItemModularHandheld) itemStack.getItem();
                         LivingEntity blocker = event.getEntity();
-                        if (UseAnim.BLOCK.equals(itemStack.getUseAnimation())) {
+                        if (ItemUseAnimation.BLOCK.equals(itemStack.getUseAnimation())) {
                             item.applyUsageEffects(blocker, itemStack, Mth.ceil(event.getBlockedDamage() / 2f));
                         }
 
@@ -188,7 +188,7 @@ public class ItemEffectHandler {
                     .map(Player.class::cast)
                     .map(Player::getUseItem)
                     .filter(itemStack -> itemStack.getItem() instanceof ItemModularHandheld)
-                    .filter(itemStack -> UseAnim.BLOCK.equals(itemStack.getUseAnimation()))
+                    .filter(itemStack -> ItemUseAnimation.BLOCK.equals(itemStack.getUseAnimation()))
                     .filter(itemStack -> event.getDamageSource().getDirectEntity() instanceof LivingEntity attacker && attacker.canDisableShield())
                     .ifPresent(itemStack -> ((ItemModularHandheld) itemStack.getItem()).onShieldDisabled((Player) event.getEntity(), itemStack));
         }
@@ -313,7 +313,7 @@ public class ItemEffectHandler {
 
         if (itemStack != null) {
             Level level = event.getEntity().level();
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 int jankLevel = getEffectLevel(itemStack, ItemEffect.janking);
                 if (jankLevel > 0) {
                     JankEffect.jankItemsDelayed((ServerLevel) level, event.getEntity().blockPosition(), jankLevel, getEffectEfficiency(itemStack,
@@ -434,7 +434,7 @@ public class ItemEffectHandler {
                         return;
                     }
 
-                    if (!event.getLevel().isClientSide) {
+                    if (!event.getLevel().isClientSide()) {
                         int critLevel = getEffectLevel(itemStack, ItemEffect.criticalStrike);
                         if (critLevel > 0) {
                             if (CritEffect.critBlock(world, breakingPlayer, pos, blockState, itemStack, critLevel)) {
@@ -467,12 +467,12 @@ public class ItemEffectHandler {
 
     @SubscribeEvent
     public void onEnderTeleport(EntityTeleportEvent event) {
-        if (!event.getEntity().getCommandSenderWorld().isClientSide) {
+        if (!event.getEntity().level().isClientSide()) {
             AABB aabb = new AABB(
                     event.getTargetX() - 24, event.getTargetY() - 24, event.getTargetZ() - 24,
                     event.getTargetX() + 24, event.getTargetY() + 24, event.getTargetZ() + 24);
 
-            event.getEntity().getCommandSenderWorld().getEntitiesOfClass(Player.class, aabb).forEach(player -> {
+            event.getEntity().level().getEntitiesOfClass(Player.class, aabb).forEach(player -> {
                 int reverbLevel = PropertyHelper.getPlayerEffectLevel(player, ItemEffect.enderReverb);
                 if (reverbLevel > 0 && !player.isCreative()) {
                     double effectProbability = PropertyHelper.getPlayerEffectEfficiency(player, ItemEffect.enderReverb);
@@ -498,7 +498,7 @@ public class ItemEffectHandler {
 
             if (ToolbeltHelper.loadQuickAccessAmmoFromQuiver(player, event.getHand(), count)) {
                 player.startUsingItem(event.getHand());
-                event.setAction(new InteractionResultHolder<>(InteractionResult.SUCCESS, event.getBow()));
+                event.setAction(new InteractionResult<>(InteractionResult.SUCCESS, event.getBow()));
             }
         }
     }

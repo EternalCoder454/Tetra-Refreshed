@@ -5,7 +5,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,17 +54,17 @@ public class ItemPredicateDeserializer implements JsonDeserializer<TetraItemPred
     }
 
     private static TetraItemPredicate deserializeSimple(JsonObject jsonObject) {
-        Stream<ResourceLocation> items = Stream.empty();
+        Stream<Identifier> items = Stream.empty();
         if (jsonObject.has("items")) {
             items = StreamSupport.stream(GsonHelper.getAsJsonArray(jsonObject, "items").spliterator(), false)
                     .map(JsonElement::getAsString)
-                    .map(ResourceLocation::parse);
+                    .map(Identifier::parse);
         } else if (jsonObject.has("item")) {
-            items = Stream.of(ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "item")));
+            items = Stream.of(Identifier.parse(GsonHelper.getAsString(jsonObject, "item")));
         }
 
-        ResourceLocation tagId = jsonObject.has("tag")
-                ? ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "tag"))
+        Identifier tagId = jsonObject.has("tag")
+                ? Identifier.parse(GsonHelper.getAsString(jsonObject, "tag"))
                 : null;
 
         return new SimpleItemPredicate(items.toList(), tagId);

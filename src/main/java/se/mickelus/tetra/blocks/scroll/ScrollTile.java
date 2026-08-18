@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -47,22 +47,22 @@ public class ScrollTile extends BlockEntity {
                 .orElse(false);
     }
 
-    public ResourceLocation[] getSchematics() {
+    public Identifier[] getSchematics() {
         boolean isIntricate = isIntricate();
         return Arrays.stream(scrolls)
                 .filter(data -> data.isIntricate == isIntricate)
                 .map(data -> data.schematics)
                 .flatMap(Collection::stream)
-                .toArray(ResourceLocation[]::new);
+                .toArray(Identifier[]::new);
     }
 
-    public ResourceLocation[] getCraftingEffects() {
+    public Identifier[] getCraftingEffects() {
         boolean isIntricate = isIntricate();
         return Arrays.stream(scrolls)
                 .filter(data -> data.isIntricate == isIntricate)
                 .map(data -> data.craftingEffects)
                 .flatMap(Collection::stream)
-                .toArray(ResourceLocation[]::new);
+                .toArray(Identifier[]::new);
     }
 
     public boolean isIntricate() {

@@ -76,7 +76,7 @@ public class HoloMaterialDetailGui extends GuiElement {
         icon.setAttachment(GuiAttachment.topCenter);
         content.addChild(icon);
 
-        var labelOffset = new ZOffsetGui(0, 50, 200); // GuiGraphics.renderItem offsets by 150
+        var labelOffset = new ZOffsetGui(0, 50, 200); // GuiGraphicsExtractor.renderItem offsets by 150
         labelOffset.setAttachment(GuiAttachment.topCenter);
         label = new GuiStringOutline(0, 0, "");
         label.setAttachment(GuiAttachment.topCenter);

@@ -10,7 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -167,7 +167,7 @@ public class TetraEnchantmentHelper {
 
                 itemStack.getTagEnchantments().entrySet().forEach(entry ->
                         getEnchantmentKey(entry.getKey())
-                                .map(ResourceLocation::toString)
+                                .map(Identifier::toString)
                                 .map(mapped::get)
                                 .ifPresent(slot -> {
                                     Enchantment enchantment = entry.getKey().value();
@@ -177,7 +177,7 @@ public class TetraEnchantmentHelper {
 
                 itemStack.getTagEnchantments().entrySet().stream()
                         .filter(entry -> getEnchantmentKey(entry.getKey())
-                                .map(ResourceLocation::toString)
+                                .map(Identifier::toString)
                                 .map(key -> !mapped.containsKey(key))
                                 .orElse(false))
                         .forEach(entry -> {
@@ -215,7 +215,7 @@ public class TetraEnchantmentHelper {
 
     @Nullable
     public static Pair<Enchantment, Integer> getEnchantment(CompoundTag nbt) {
-        return Optional.ofNullable(RegistryHelper.get(Registries.ENCHANTMENT, ResourceLocation.parse(nbt.getString("id"))))
+        return Optional.ofNullable(RegistryHelper.get(Registries.ENCHANTMENT, Identifier.parse(nbt.getString("id"))))
                 .map(enchantment -> Pair.of(enchantment, nbt.getInt("lvl")))
                 .orElse(null);
     }
@@ -236,7 +236,7 @@ public class TetraEnchantmentHelper {
             }
         });
         EnchantmentHelper.updateEnchantments(itemStack, mutable -> mutable.removeIf(holder -> getEnchantmentKey(holder)
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .filter(enchantment::equals)
                 .isPresent()));
     }
@@ -251,7 +251,7 @@ public class TetraEnchantmentHelper {
                 .collect(Collectors.toSet());
 
         EnchantmentHelper.updateEnchantments(itemStack, mutable -> mutable.removeIf(holder -> getEnchantmentKey(holder)
-                .map(ResourceLocation::toString)
+                .map(Identifier::toString)
                 .filter(matchingEnchantments::contains)
                 .isPresent()));
         mutate(itemStack, tag -> {
@@ -305,8 +305,8 @@ public class TetraEnchantmentHelper {
 
         public EnchantmentRules(List<ItemStack> supportedItems, String additions, String exclusions) {
             this.supportedItems = supportedItems;
-            this.additions = RegistryHelper.tag(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, additions));
-            this.exclusions = RegistryHelper.tag(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, exclusions));
+            this.additions = RegistryHelper.tag(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, additions));
+            this.exclusions = RegistryHelper.tag(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, exclusions));
 
         }
 
@@ -321,7 +321,7 @@ public class TetraEnchantmentHelper {
     }
 
     public static Holder<Enchantment> getHolder(Enchantment enchantment) {
-        ResourceLocation key = requireEnchantmentKey(enchantment);
+        Identifier key = requireEnchantmentKey(enchantment);
         return getRegistryLookup().getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, key));
     }
 
@@ -329,21 +329,21 @@ public class TetraEnchantmentHelper {
         return getRegistryLookup().listElements();
     }
 
-    public static Optional<ResourceLocation> getEnchantmentKey(Enchantment enchantment) {
+    public static Optional<Identifier> getEnchantmentKey(Enchantment enchantment) {
         return RegistryHelper.key(Registries.ENCHANTMENT, enchantment);
     }
 
-    public static Optional<ResourceLocation> getEnchantmentKey(Holder<Enchantment> enchantment) {
-        Optional<ResourceLocation> key = enchantment.unwrapKey().map(ResourceKey::location);
+    public static Optional<Identifier> getEnchantmentKey(Holder<Enchantment> enchantment) {
+        Optional<Identifier> key = enchantment.unwrapKey().map(ResourceKey::location);
         return key.isPresent() ? key : getEnchantmentKey(enchantment.value());
     }
 
-    private static ResourceLocation requireEnchantmentKey(Enchantment enchantment) {
+    private static Identifier requireEnchantmentKey(Enchantment enchantment) {
         return getEnchantmentKey(enchantment)
                 .orElseThrow(() -> new IllegalStateException("Unregistered enchantment: " + enchantment));
     }
 
-    private static ResourceLocation requireEnchantmentKey(Holder<Enchantment> enchantment) {
+    private static Identifier requireEnchantmentKey(Holder<Enchantment> enchantment) {
         return getEnchantmentKey(enchantment)
                 .orElseThrow(() -> new IllegalStateException("Unregistered enchantment: " + enchantment));
     }

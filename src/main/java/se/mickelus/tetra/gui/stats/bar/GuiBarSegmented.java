@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui.stats.bar;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiAlignment;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -37,7 +37,7 @@ public class GuiBarSegmented extends GuiBar {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (alignment == GuiAlignment.right) {
             for (int i = 0; i < segmentCount; i++) {
                 drawSegmentReverse(graphics, refX, refY, i, 0xffffffff, opacity);
@@ -61,7 +61,7 @@ public class GuiBarSegmented extends GuiBar {
         }
     }
 
-    private void drawSegment(GuiGraphics graphics, int refX, int refY, int index, int color, float opacity) {
+    private void drawSegment(GuiGraphicsExtractor graphics, int refX, int refY, int index, int color, float opacity) {
         drawRect(graphics,
                 refX + x + (index * (segmentLength)),
                 refY + y + 6,
@@ -70,7 +70,7 @@ public class GuiBarSegmented extends GuiBar {
                 color, opacity);
     }
 
-    private void drawSegmentReverse(GuiGraphics graphics, int refX, int refY, int index, int color, float opacity) {
+    private void drawSegmentReverse(GuiGraphicsExtractor graphics, int refX, int refY, int index, int color, float opacity) {
         drawSegment(graphics, refX + width, refY, -index - 1, color, opacity);
     }
 }

@@ -88,7 +88,7 @@ public class ExtractionEffect {
 
     private static void breakInner(Level world, Player player, ItemModularHandheld item, ItemStack itemStack, Direction direction, BlockPos pos,
             float refHardness, ItemAbility refTool) {
-        Vec3i axis1 = RotationHelper.shiftAxis(direction.getNormal());
+        Vec3i axis1 = RotationHelper.shiftAxis(direction.getUnitVec3i());
         Vec3i axis2 = RotationHelper.shiftAxis(axis1);
         breakBlock(world, player, item, itemStack, pos.offset(axis1), refHardness, refTool);
         breakBlock(world, player, item, itemStack, pos.subtract(axis1), refHardness, refTool);
@@ -98,7 +98,7 @@ public class ExtractionEffect {
 
     private static void breakOuter(Level world, Player player, ItemModularHandheld item, ItemStack itemStack, Direction direction, BlockPos pos,
             float refHardness, ItemAbility refTool) {
-        Vec3i axis1 = RotationHelper.shiftAxis(direction.getNormal());
+        Vec3i axis1 = RotationHelper.shiftAxis(direction.getUnitVec3i());
         Vec3i axis2 = RotationHelper.shiftAxis(axis1);
         breakBlock(world, player, item, itemStack, pos.offset(axis1).offset(axis2), refHardness, refTool);
         breakBlock(world, player, item, itemStack, pos.subtract(axis1).subtract(axis2), refHardness, refTool);

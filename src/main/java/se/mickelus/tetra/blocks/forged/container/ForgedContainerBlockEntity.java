@@ -11,7 +11,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -50,10 +50,10 @@ import java.util.function.Supplier;
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvider, ItemHandlerBlockEntity {
     private static final String inventoryKey = "inv";
-    private static final ResourceLocation lockLootTable = ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/lock_break");
+    private static final Identifier lockLootTable = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/lock_break");
     private static final ResourceKey<LootTable> containerLootTable = ResourceKey.create(
             Registries.LOOT_TABLE,
-            ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/container_content"));
+            Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "forged/container_content"));
     public static Supplier<BlockEntityType<ForgedContainerBlockEntity>> type;
     public static int lockIntegrityMax = 4;
     public static int lockCount = 4;
@@ -120,7 +120,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
             lidIntegrity--;
             setChanged();
 
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 ServerLevel worldServer = (ServerLevel) level;
                 if (lidIntegrity == 0) {
                     populateInventory(worldServer, (ServerPlayer) player);
@@ -156,7 +156,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
 
     private void causeOpeningEffects(ServerLevel worldServer) {
         Direction facing = worldServer.getBlockState(worldPosition).getValue(HorizontalDirectionalBlock.FACING);
-        Vec3 smokeDirection = Vec3.atLowerCornerOf(facing.getClockWise().getNormal());
+        Vec3 smokeDirection = Vec3.atLowerCornerOf(facing.getClockWise().getUnitVec3i());
         Random random = new Random();
         int smokeCount = 5 + random.nextInt(4);
 
@@ -220,7 +220,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                 level.playSound(player, worldPosition, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.PLAYERS, 1, 0.5f);
             }
 
-            if (!level.isClientSide && lockIntegrity[index] == 0) {
+            if (!level.isClientSide() && lockIntegrity[index] == 0) {
                 if (player != null) {
                     BlockInteraction.dropLoot(lockLootTable, player, hand, (ServerLevel) level, getBlockState());
                 } else {

@@ -1,7 +1,7 @@
 package se.mickelus.tetra.data;
 
 import com.google.gson.JsonElement;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import se.mickelus.mutil.data.AbstractUpdateDataPacket;
 
@@ -13,7 +13,7 @@ public class UpdateDataPacket extends AbstractUpdateDataPacket {
     public UpdateDataPacket() {
     }
 
-    public UpdateDataPacket(String directory, Map<ResourceLocation, JsonElement> data) {
+    public UpdateDataPacket(String directory, Map<Identifier, JsonElement> data) {
         super(directory, data);
     }
 

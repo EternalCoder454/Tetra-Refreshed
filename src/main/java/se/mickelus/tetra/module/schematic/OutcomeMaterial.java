@@ -6,7 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -118,7 +118,7 @@ public class OutcomeMaterial {
                     try {
                         material.itemStacks = StreamSupport.stream(GsonHelper.getAsJsonArray(jsonObject, "items", emptyArray).spliterator(), false)
                                 .map(jsonElement -> GsonHelper.convertToString(jsonElement, "item"))
-                                .map(ResourceLocation::parse)
+                                .map(Identifier::parse)
                                 .map(itemId -> RegistryHelper.get(BuiltInRegistries.ITEM, itemId))
                                 .filter(Objects::nonNull)
                                 .map(item -> new ItemStack(item, material.count))
@@ -137,7 +137,7 @@ public class OutcomeMaterial {
                     }
 
                 } else if (jsonObject.has("tag")) {
-                    material.tagLocation = ItemTags.create(ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "tag")));
+                    material.tagLocation = ItemTags.create(Identifier.parse(GsonHelper.getAsString(jsonObject, "tag")));
                 }
 
                 if (!jsonObject.has("type") && jsonObject.has("tag")) {

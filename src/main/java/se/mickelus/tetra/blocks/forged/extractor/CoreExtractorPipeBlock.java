@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.blocks.TetraBlock;
 import se.mickelus.tetra.blocks.forged.ForgedBlockCommon;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorPipeBlock extends TetraBlock {
-    public static final DirectionProperty facingProp = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> facingProp = BlockStateProperties.FACING;
     public static final BooleanProperty poweredProp = BooleanProperty.create("powered");
 
     public static final String identifier = "extractor_pipe";

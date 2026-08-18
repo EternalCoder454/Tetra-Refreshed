@@ -1,7 +1,7 @@
 package se.mickelus.tetra.trades;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class TradeHandler {
-    public static final TagKey<Structure> ruinsTag = TagKey.create(Registries.STRUCTURE, ResourceLocation.fromNamespaceAndPath("tetra", "forged_ruins"));
+    public static final TagKey<Structure> ruinsTag = TagKey.create(Registries.STRUCTURE, Identifier.fromNamespaceAndPath("tetra", "forged_ruins"));
 
     private static void add(VillagerTradesEvent event, int level, VillagerTrades.ItemListing... listings) {
         event.getTrades().get(level).addAll(Arrays.asList(listings));

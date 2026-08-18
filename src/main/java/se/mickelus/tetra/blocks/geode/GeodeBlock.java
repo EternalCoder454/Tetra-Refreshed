@@ -45,7 +45,7 @@ public class GeodeBlock extends TetraBlock {
             if (level.hasChunk(SectionPos.blockToSectionCoord(offsetPos.getX()), SectionPos.blockToSectionCoord(offsetPos.getZ()))
                     && level.getRawBrightness(offsetPos, 0) > 2) {
                 // based on ParticleUtils.spawnParticleOnFace
-                Vec3 particlePos = Vec3.atCenterOf(blockPos).add(Vec3.atLowerCornerOf(direction.getNormal()).scale(0.55));
+                Vec3 particlePos = Vec3.atCenterOf(blockPos).add(Vec3.atLowerCornerOf(direction.getUnitVec3i()).scale(0.55));
                 double dx = (direction.getStepX() == 0 ? Mth.nextDouble(random, -0.5D, 0.5D) : 0);
                 double dy = (direction.getStepY() == 0 ? Mth.nextDouble(random, -0.5D, 0.5D) : 0);
                 double dz = (direction.getStepZ() == 0 ? Mth.nextDouble(random, -0.5D, 0.5D) : 0);

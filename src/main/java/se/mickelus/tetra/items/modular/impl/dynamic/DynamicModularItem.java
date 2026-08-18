@@ -1,7 +1,7 @@
 package se.mickelus.tetra.items.modular.impl.dynamic;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.tetra.TetraMod;
@@ -40,7 +40,7 @@ public class DynamicModularItem extends ItemModularHandheld {
     protected Optional<ArchetypeDefinition> getDefinition(ItemStack itemStack) {
         return Optional.ofNullable(ItemStackTagHelper.getTag(itemStack))
                 .map(DynamicModularItem::getArchetypeKey)
-                .map(key -> ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, key))
+                .map(key -> Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, key))
                 .map(rl -> DataManager.instance.archetypeData.getData(rl));
     }
 

@@ -4,7 +4,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
 import se.mickelus.tetra.effect.revenge.RevengeTracker;
 import se.mickelus.tetra.items.modular.ItemModularHandheld;
@@ -17,7 +17,7 @@ public class PryChargedEffect extends ChargedAbilityEffect {
     public static final PryChargedEffect instance = new PryChargedEffect();
 
     PryChargedEffect() {
-        super(20, 0, 40, 3, ItemEffect.pry, TargetRequirement.entity, UseAnim.SPEAR, "raised");
+        super(20, 0, 40, 3, ItemEffect.pry, TargetRequirement.entity, ItemUseAnimation.SPEAR, "raised");
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PryChargedEffect extends ChargedAbilityEffect {
     @Override
     public void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, LivingEntity target, Vec3 hitVec, int chargedTicks) {
 
-        if (!target.level().isClientSide) {
+        if (!target.level().isClientSide()) {
             int amplifier = item.getEffectLevel(itemStack, ItemEffect.pry);
             amplifier += (int) (getOverchargeBonus(item, itemStack, chargedTicks) * item.getEffectEfficiency(itemStack, ItemEffect.abilityOvercharge));
 

@@ -5,12 +5,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -122,7 +122,7 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
         tooltip.add(Component.translatable(description).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.literal(" "));
 
-        if (Screen.hasShiftDown()) {
+        if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Tooltips.expanded);
             tooltip.add(Component.literal(" "));
             tooltip.add(ForgedBlockCommon.locationTooltip);
@@ -155,7 +155,7 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
     @Override
     public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder lootParams) {
         if (lootParams.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof ChthonicExtractorTile tile) {
-            lootParams = lootParams.withDynamicDrop(ResourceLocation.parse("tetra:cthtonic_drop"),
+            lootParams = lootParams.withDynamicDrop(Identifier.parse("tetra:cthtonic_drop"),
                     consumer -> consumer.accept(getItemStack(tile)));
         }
 
@@ -194,13 +194,13 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
         return switch (useInternal(state, world, pos, player, hand, hit)) {
-            case SUCCESS, CONSUME -> ItemInteractionResult.sidedSuccess(world.isClientSide);
-            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
-            case FAIL -> ItemInteractionResult.FAIL;
-            default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            case SUCCESS, CONSUME -> InteractionResult.SUCCESS;
+            case CONSUME_PARTIAL -> InteractionResult.CONSUME;
+            case FAIL -> InteractionResult.FAIL;
+            default -> InteractionResult.PASS;
         };
     }
 

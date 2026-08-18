@@ -6,14 +6,14 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,11 +22,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -75,9 +75,9 @@ public class ModularBowItem extends ModularItem {
     private static final GuiModuleOffsets minorOffsets = new GuiModuleOffsets(-14, 23);
     public static final int maxUseDuration = 37000;
     public static ModularBowItem instance;
-    protected GridTextureModelData arrowModel0 = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_0"));
-    protected GridTextureModelData arrowModel1 = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_1"));
-    protected GridTextureModelData arrowModel2 = new GridTextureModelData(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_2"));
+    protected GridTextureModelData arrowModel0 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_0"));
+    protected GridTextureModelData arrowModel1 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_1"));
+    protected GridTextureModelData arrowModel2 = new GridTextureModelData(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/module/bow/arrow_2"));
     protected ItemStack vanillaBow;
 
     public ModularBowItem() {
@@ -245,7 +245,7 @@ public class ModularBowItem extends ModularItem {
                 double baseYaw = looseProjectilesEvent.getBaseYaw();
 
                 if (projectileVelocity > 0.1f) {
-                    if (!world.isClientSide) {
+                    if (!world.isClientSide()) {
                         int piercingLevel = getEffectLevel(itemStack, ItemEffect.piercing)
                                 + EffectHelper.getEnchantmentLevel(Enchantments.PIERCING, itemStack);
 
@@ -436,26 +436,26 @@ public class ModularBowItem extends ModularItem {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.BOW;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.BOW;
     }
 
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack bowStack = player.getItemInHand(hand);
         boolean hasAmmo = !player.getProjectile(vanillaBow).isEmpty();
 
         if (isBroken(bowStack)) {
-            return InteractionResultHolder.pass(bowStack);
+            return InteractionResult.pass(bowStack);
         }
 
-        InteractionResultHolder<ItemStack> ret = EventHooks.onArrowNock(bowStack, world, player, hand, hasAmmo);
+        InteractionResult<ItemStack> ret = EventHooks.onArrowNock(bowStack, world, player, hand, hasAmmo);
         if (ret != null) return ret;
 
         if (!hasAmmo && !player.getAbilities().instabuild && EffectHelper.getEnchantmentLevel(Enchantments.INFINITY, bowStack) <= 0) {
-            return InteractionResultHolder.fail(bowStack);
+            return InteractionResult.fail(bowStack);
         } else {
             player.startUsingItem(hand);
-            return InteractionResultHolder.consume(bowStack);
+            return InteractionResult.consume(bowStack);
         }
     }
 

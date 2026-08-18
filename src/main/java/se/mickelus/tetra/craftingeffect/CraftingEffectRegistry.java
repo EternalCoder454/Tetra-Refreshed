@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -44,7 +44,7 @@ public class CraftingEffectRegistry {
         return instance.effectTypes.get(identifier);
     }
 
-    public static CraftingEffect[] getEffects(ResourceLocation[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public static CraftingEffect[] getEffects(Identifier[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] materials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic, Level world, BlockPos pos, BlockState blockState) {
         return DataManager.instance.craftingEffectData.getData().values().stream()
                 .filter(effect -> effect.active)
@@ -52,7 +52,7 @@ public class CraftingEffectRegistry {
                 .toArray(CraftingEffect[]::new);
     }
 
-    public static CraftingEffect[] getEffects(ResourceLocation[] identifiers) {
+    public static CraftingEffect[] getEffects(Identifier[] identifiers) {
         return Arrays.stream(identifiers)
                 .flatMap(rl -> rl.getPath().endsWith("/")
                         ? DataManager.instance.craftingEffectData.getDataIn(rl).stream()

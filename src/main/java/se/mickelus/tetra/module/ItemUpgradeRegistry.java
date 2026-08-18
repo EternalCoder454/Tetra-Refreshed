@@ -1,6 +1,6 @@
 package se.mickelus.tetra.module;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,7 +70,7 @@ public class ItemUpgradeRegistry {
     }
 
     public ItemModule getModule(String key) {
-        return ModuleRegistry.instance.getModule(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, key));
+        return ModuleRegistry.instance.getModule(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, key));
     }
 
     public Collection<ItemModule> getAllModules() {

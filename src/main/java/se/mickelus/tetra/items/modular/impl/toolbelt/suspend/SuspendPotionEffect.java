@@ -1,6 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.suspend;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,7 +19,7 @@ public class SuspendPotionEffect extends MobEffect {
     public SuspendPotionEffect() {
         super(MobEffectCategory.BENEFICIAL, 0x006600);
 
-        addAttributeModifier(Attributes.GRAVITY, ResourceLocation.fromNamespaceAndPath("tetra", "suspend_entity_gravity"), -1,
+        addAttributeModifier(Attributes.GRAVITY, Identifier.fromNamespaceAndPath("tetra", "suspend_entity_gravity"), -1,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         instance = this;

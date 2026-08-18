@@ -2,7 +2,7 @@ package se.mickelus.tetra.module;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,8 +26,8 @@ public class SchematicRegistry {
     private static final Logger logger = LogManager.getLogger();
 
     public static SchematicRegistry instance;
-    private final Map<ResourceLocation, UpgradeSchematic> dynamicSchematics;
-    private Map<ResourceLocation, UpgradeSchematic> schematicMap;
+    private final Map<Identifier, UpgradeSchematic> dynamicSchematics;
+    private Map<Identifier, UpgradeSchematic> schematicMap;
 
     public SchematicRegistry() {
         instance = this;
@@ -38,12 +38,12 @@ public class SchematicRegistry {
         DataManager.instance.schematicData.onReload(() -> setupSchematics(DataManager.instance.schematicData.getData()));
     }
 
-    public static UpgradeSchematic getSchematic(ResourceLocation identifier) {
+    public static UpgradeSchematic getSchematic(Identifier identifier) {
         return instance.schematicMap.get(identifier);
     }
 
     public static UpgradeSchematic getSchematic(String key) {
-        return getSchematic(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, key));
+        return getSchematic(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, key));
     }
 
     public static Collection<UpgradeSchematic> getAllSchematics() {
@@ -83,7 +83,7 @@ public class SchematicRegistry {
 
 
     public static UpgradeSchematic[] getSchematics(ItemStack itemStack, String slot, Player player, Level level, BlockPos pos, BlockState blockState,
-            ResourceLocation[] unlocks) {
+            Identifier[] unlocks) {
         return getSchematics(new CraftingContext(level, pos, blockState, player, itemStack, slot, unlocks));
     }
 
@@ -93,10 +93,10 @@ public class SchematicRegistry {
      * @param schematic
      */
     public void registerSchematic(UpgradeSchematic schematic) {
-        dynamicSchematics.put(ResourceLocation.fromNamespaceAndPath(TetraMod.MOD_ID, schematic.getKey()), schematic);
+        dynamicSchematics.put(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, schematic.getKey()), schematic);
     }
 
-    private void setupSchematics(Map<ResourceLocation, SchematicDefinition> data) {
+    private void setupSchematics(Map<Identifier, SchematicDefinition> data) {
         schematicMap = data.entrySet().stream()
                 .filter(entry -> validateSchematicDefinition(entry.getKey(), entry.getValue()))
                 .flatMap(entry -> createSchematics(entry.getKey(), entry.getValue()).stream())
@@ -108,7 +108,7 @@ public class SchematicRegistry {
         RepairRegistry.instance.injectFromSchematics(data.values());
     }
 
-    private boolean validateSchematicDefinition(ResourceLocation identifier, SchematicDefinition definition) {
+    private boolean validateSchematicDefinition(Identifier identifier, SchematicDefinition definition) {
         if (definition == null) {
             logger.warn("Failed to create schematic from schematic definition '{}': Data is null (probably due to it failing to parse)",
                     identifier);
@@ -124,14 +124,14 @@ public class SchematicRegistry {
     }
 
     // todo: hacky stuff to get multislot modules to work, there has to be another way
-    private Collection<Pair<ResourceLocation, ConfigSchematic>> createSchematics(ResourceLocation identifier, SchematicDefinition definition) {
+    private Collection<Pair<Identifier, ConfigSchematic>> createSchematics(Identifier identifier, SchematicDefinition definition) {
         processDefinition(definition);
 
         if (definition.slots.length == definition.keySuffixes.length) {
-            ArrayList<Pair<ResourceLocation, ConfigSchematic>> result = new ArrayList<>(definition.slots.length);
+            ArrayList<Pair<Identifier, ConfigSchematic>> result = new ArrayList<>(definition.slots.length);
             for (int i = 0; i < definition.slots.length; i++) {
                 try {
-                    ResourceLocation suffixedIdentifier = ResourceLocation.fromNamespaceAndPath(
+                    Identifier suffixedIdentifier = Identifier.fromNamespaceAndPath(
                             identifier.getNamespace(), identifier.getPath() + definition.keySuffixes[i]);
 
                     result.add(new ImmutablePair<>(suffixedIdentifier,
@@ -159,7 +159,7 @@ public class SchematicRegistry {
                     .flatMap(outcome -> {
                         if (outcome instanceof MaterialOutcomeDefinition) {
                             return Arrays.stream(((MaterialOutcomeDefinition) outcome).materials)
-                                    .map(ResourceLocation::getPath)
+                                    .map(Identifier::getPath)
                                     .map(path -> {
                                         if (path.endsWith("/")) {
                                             return "#" + path.substring(0, path.length() - 1);

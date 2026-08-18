@@ -154,7 +154,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
         entity.hurt(level.damageSources().inFire(), 0.5f);
 
         if (!level.isClientSide() && level.getGameTime() % 10 == 0 && entity instanceof LivingEntity livingEntity) {
-            UnstablePowerMobEffect.addOrUpdate(livingEntity, 30, level.random.nextFloat() < 0.04f ? 1 : 0);
+            UnstablePowerMobEffect.addOrUpdate(livingEntity, 30, level.getRandom().nextFloat() < 0.04f ? 1 : 0);
             drainOrExtinguish(state, level, pos);
         }
     }
@@ -174,7 +174,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
-        level.scheduleTick(pos, this, getFireTickDelay(level.random));
+        level.scheduleTick(pos, this, getFireTickDelay(level.getRandom()));
     }
 
     private static int getFireTickDelay(RandomSource random) {

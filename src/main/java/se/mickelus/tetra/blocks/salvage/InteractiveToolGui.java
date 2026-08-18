@@ -1,6 +1,6 @@
 package se.mickelus.tetra.blocks.salvage;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.ItemAbility;
 import se.mickelus.mutil.gui.GuiElement;
@@ -72,7 +72,7 @@ public class InteractiveToolGui extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         if (player.getInventory().selected != currentSlot) {
             updateTint();
             currentSlot = player.getInventory().selected;

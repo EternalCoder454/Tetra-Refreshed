@@ -1,6 +1,6 @@
 package se.mickelus.tetra.effect.potion;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -16,7 +16,7 @@ public class SmallHealthPotionEffect extends MobEffect {
     public SmallHealthPotionEffect() {
         super(MobEffectCategory.BENEFICIAL, 0xbb4444);
 
-        addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.fromNamespaceAndPath("tetra", "small_health_max_health"), 1,
+        addAttributeModifier(Attributes.MAX_HEALTH, Identifier.fromNamespaceAndPath("tetra", "small_health_max_health"), 1,
                 AttributeModifier.Operation.ADD_VALUE);
 
         instance = this;

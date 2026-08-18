@@ -1,7 +1,7 @@
 package se.mickelus.tetra.craftingeffect.outcome;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class ExplosionOutcome implements CraftingEffectOutcome {
     Level.ExplosionInteraction type = Level.ExplosionInteraction.NONE;
 
     @Override
-    public boolean apply(final ResourceLocation[] unlockedEffects, final ItemStack upgradedStack, final String slot, final boolean isReplacing,
+    public boolean apply(final Identifier[] unlockedEffects, final ItemStack upgradedStack, final String slot, final boolean isReplacing,
             final Player player, final ItemStack[] preMaterials, final Map<ItemAbility, Integer> tools, final Level world,
             final UpgradeSchematic schematic, final BlockPos pos, final BlockState blockState, final boolean consumeResources,
             final ItemStack[] postMaterials, float severity) {

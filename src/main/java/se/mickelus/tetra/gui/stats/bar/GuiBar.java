@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui.stats.bar;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiAlignment;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.tetra.gui.GuiColors;
@@ -78,7 +78,7 @@ public class GuiBar extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         drawRect(graphics, refX + x, refY + y + 6, refX + x + width, refY + y + 6 + height, color, 0.14f * opacity);
 
         if (alignment == GuiAlignment.right) {

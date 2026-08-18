@@ -2,7 +2,7 @@ package se.mickelus.tetra.craftingeffect.outcome;
 
 import com.google.common.collect.Streams;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class ApplyListOutcome implements CraftingEffectOutcome {
 
-    ResourceLocation[] references = new ResourceLocation[0];
+    Identifier[] references = new Identifier[0];
     EffectPair[] effects = new EffectPair[0];
     boolean random = false;
     int count = Integer.MAX_VALUE;
@@ -42,7 +42,7 @@ public class ApplyListOutcome implements CraftingEffectOutcome {
     LazyOptional<EffectPair[]> resolvedReferences = LazyOptional.of(() -> resolveReferences(references));
 
     @Override
-    public boolean apply(ResourceLocation[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
+    public boolean apply(Identifier[] unlockedEffects, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] preMaterials,
             Map<ItemAbility, Integer> tools, Level world, UpgradeSchematic schematic, BlockPos pos, BlockState blockState, boolean consumeResources,
             ItemStack[] postMaterials, float severity) {
@@ -61,7 +61,7 @@ public class ApplyListOutcome implements CraftingEffectOutcome {
         return !applicableOutcomes.isEmpty();
     }
 
-    private static EffectPair[] resolveReferences(ResourceLocation[] references) {
+    private static EffectPair[] resolveReferences(Identifier[] references) {
         return Arrays.stream(CraftingEffectRegistry.getEffects(references))
                 .map(EffectPair::fromEffect)
                 .toArray(EffectPair[]::new);

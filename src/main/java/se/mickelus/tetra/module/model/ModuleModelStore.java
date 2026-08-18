@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.model;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -46,7 +46,7 @@ public class ModuleModelStore implements ResourceManagerReloadListener {
     }
 
     @Nullable
-    private static IModuleModel parseModel(ResourceLocation resourceLocation, Resource resource) {
+    private static IModuleModel parseModel(Identifier resourceLocation, Resource resource) {
         try (BufferedReader reader = resource.openAsReader()) {
             return GsonHelper.fromJson(StatRegistry.gson, reader, IModuleModel.class);
         } catch (IOException | JsonParseException e) {

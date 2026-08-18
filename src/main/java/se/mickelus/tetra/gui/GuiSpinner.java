@@ -1,6 +1,6 @@
 package se.mickelus.tetra.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -12,7 +12,7 @@ public class GuiSpinner extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         drawBlip(graphics, refX + x, refY + y, 0);
         drawBlip(graphics, refX + x + 2, refY + y - 1, 1);
         drawBlip(graphics, refX + x + 4, refY + y, 2);
@@ -23,7 +23,7 @@ public class GuiSpinner extends GuiElement {
         drawBlip(graphics, refX + x - 1, refY + y + 2, 7);
     }
 
-    private void drawBlip(GuiGraphics graphics, int x, int y, int offset) {
+    private void drawBlip(GuiGraphicsExtractor graphics, int x, int y, int offset) {
         float opacity = 1 - Math.max((System.currentTimeMillis() - offset * 200) % 1600 / 1600f, 0f);
         drawRect(graphics, x, y, x + 1, y + 1, GuiColors.normal, opacity);
     }

@@ -3,7 +3,7 @@ package se.mickelus.tetra;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;
 
@@ -29,7 +29,7 @@ public class LooseItemPredicate implements TetraItemPredicate {
     public boolean matches(ItemStack itemStack) {
         String target = Optional.of(itemStack.getItem())
                 .map(BuiltInRegistries.ITEM::getKey)
-                .map(ResourceLocation::getPath)
+                .map(Identifier::getPath)
                 .orElse(null);
         for (String key : keys) {
             if (key.equals(target)) {

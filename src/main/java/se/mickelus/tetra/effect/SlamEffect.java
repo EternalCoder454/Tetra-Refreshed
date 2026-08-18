@@ -17,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -39,7 +39,7 @@ public class SlamEffect extends ChargedAbilityEffect {
     public static final SlamEffect instance = new SlamEffect();
 
     SlamEffect() {
-        super(10, 1f, 40, 6, ItemEffect.slam, TargetRequirement.either, UseAnim.SPEAR, "raised");
+        super(10, 1f, 40, 6, ItemEffect.slam, TargetRequirement.either, ItemUseAnimation.SPEAR, "raised");
     }
 
     private static void groundSlamEntity(Player attacker, LivingEntity target, ItemModularHandheld item, ItemStack itemStack, Vec3 origin,
@@ -50,9 +50,9 @@ public class SlamEffect extends ChargedAbilityEffect {
             AbilityUseResult result = item.hitEntity(itemStack, attacker, target, damageMultiplier, knockback, knockback);
 
             if (momentumEfficiency > 0) {
-                target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.GENERIC_BIG_FALL, SoundSource.PLAYERS, 1, 0.7f);
+                target.level().playSound(null, target.blockPosition(), SoundEvents.GENERIC_BIG_FALL, SoundSource.PLAYERS, 1, 0.7f);
             } else {
-                target.getCommandSenderWorld().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.9f);
+                target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.9f);
             }
 
             if (result != AbilityUseResult.fail) {
@@ -179,9 +179,9 @@ public class SlamEffect extends ChargedAbilityEffect {
                             hitVec.x, hitVec.y, hitVec.z, 10,
                             rand.nextGaussian() * 0.3, rand.nextGaussian() * target.getBbHeight() * 0.8, rand.nextGaussian() * 0.3, 0.1f));
 
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.7f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1, 0.7f);
         } else {
-            target.getCommandSenderWorld().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.7f);
+            target.level().playSound(attacker, target.blockPosition(), SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.PLAYERS, 1, 0.7f);
         }
 
         return result;
@@ -203,7 +203,7 @@ public class SlamEffect extends ChargedAbilityEffect {
 
     @Override
     public void perform(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, BlockPos targetPos, Vec3 hitVec, int chargedTicks) {
-        if (!attacker.level().isClientSide) {
+        if (!attacker.level().isClientSide()) {
             int overchargeBonus = canOvercharge(item, itemStack) ? getOverchargeBonus(item, itemStack, chargedTicks) : 0;
             int slowDuration = isDefensive(item, itemStack, hand) ? (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20) : 0;
             double momentumEfficiency = item.getEffectEfficiency(itemStack, ItemEffect.abilityMomentum);
@@ -261,7 +261,7 @@ public class SlamEffect extends ChargedAbilityEffect {
     }
 
     private void echoTarget(Player attacker, InteractionHand hand, ItemModularHandheld item, ItemStack itemStack, LivingEntity target, Vec3 hitVec, int chargedTicks) {
-        if (!attacker.level().isClientSide) {
+        if (!attacker.level().isClientSide()) {
             EchoHelper.echo(attacker, 60, () -> {
                 directSlam(attacker, hand, item, itemStack, target, hitVec, chargedTicks);
 

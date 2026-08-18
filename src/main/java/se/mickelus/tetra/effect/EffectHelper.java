@@ -136,7 +136,7 @@ public class EffectHelper {
      */
     public static boolean breakBlock(Level world, Player breakingPlayer, ItemStack toolStack, BlockPos pos, BlockState blockState,
             boolean harvest, boolean tryReplant) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             ServerLevel serverWorld = (ServerLevel) world;
             ServerPlayer serverPlayer = (ServerPlayer) breakingPlayer;
             GameType gameType = serverPlayer.gameMode.getGameModeForPlayer();

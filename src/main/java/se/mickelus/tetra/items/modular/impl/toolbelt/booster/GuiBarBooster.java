@@ -1,6 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.booster;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.animation.VisibilityFilter;
 
@@ -25,7 +25,7 @@ public class GuiBarBooster extends GuiElement {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    public void draw(GuiGraphicsExtractor graphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
         opacity = filter.apply(visibleIndicators) * opacity;
         if (opacity > 0) {
             graphics.pose().translate(opacity * -10, 0, 0);

@@ -1,7 +1,7 @@
 package se.mickelus.tetra.effect.potion;
 
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
@@ -21,16 +21,16 @@ public class SeveredPotionEffect extends MobEffect {
     public SeveredPotionEffect() {
         super(MobEffectCategory.HARMFUL, 0x880000);
 
-        addAttributeModifier(Attributes.MAX_HEALTH, ResourceLocation.fromNamespaceAndPath("tetra", "severed_max_health"), -0.1,
+        addAttributeModifier(Attributes.MAX_HEALTH, Identifier.fromNamespaceAndPath("tetra", "severed_max_health"), -0.1,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-        addAttributeModifier(Attributes.ATTACK_DAMAGE, ResourceLocation.fromNamespaceAndPath("tetra", "severed_attack_damage"), -0.05,
+        addAttributeModifier(Attributes.ATTACK_DAMAGE, Identifier.fromNamespaceAndPath("tetra", "severed_attack_damage"), -0.05,
                 AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         instance = this;
     }
 
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
+        if (!entity.level().isClientSide()) {
             RandomSource rand = entity.getRandom();
             ((ServerLevel) entity.level()).sendParticles(new DustParticleOptions(new Vector3f(0.5f, 0, 0), 0.5f),
                     entity.getX() + entity.getBbWidth() * (0.3 + rand.nextGaussian() * 0.4),

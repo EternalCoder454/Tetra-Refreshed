@@ -2,7 +2,7 @@ package se.mickelus.tetra.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import se.mickelus.mutil.gui.GuiElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,7 +19,7 @@ public class InvertColorGui extends GuiElement {
     }
 
     @Override
-    protected void drawChildren(GuiGraphics guiGraphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
+    protected void drawChildren(GuiGraphicsExtractor guiGraphics, int refX, int refY, int screenWidth, int screenHeight, int mouseX, int mouseY, float opacity) {
 
         // todo: doesn't handle opacity since render system changes in 1.18
         RenderSystem.enableBlend();

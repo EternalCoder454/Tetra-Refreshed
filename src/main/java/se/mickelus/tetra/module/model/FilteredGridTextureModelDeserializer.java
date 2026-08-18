@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.model;
 
 import com.google.gson.*;
 import com.mojang.math.Transformation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemDisplayContext;
 import se.mickelus.mutil.data.deserializer.ResourceLocationDeserializer;
@@ -19,8 +19,8 @@ public class FilteredGridTextureModelDeserializer implements JsonDeserializer<Fi
     public FilteredGridTextureModelData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         return new FilteredGridTextureModelData(
-                ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "type")),
-                ResourceLocation.parse(GsonHelper.getAsString(jsonObject, "location")),
+                Identifier.parse(GsonHelper.getAsString(jsonObject, "type")),
+                Identifier.parse(GsonHelper.getAsString(jsonObject, "location")),
                 jsonObject.has("renderType") ? ResourceLocationDeserializer.deserialize(jsonObject.get("renderType")) : null,
                 jsonObject.has("transform") ? context.deserialize(jsonObject.getAsJsonObject("transform"), Transformation.class) : null,
                 jsonObject.has("emission") ? jsonObject.get("emission").getAsInt() : null,
