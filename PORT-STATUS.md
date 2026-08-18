@@ -290,9 +290,30 @@ after the tool materials are all it. Rendering moved to extract a render state, 
 Read `client/particle/SweepingStrikeParticle.java` and any of the ported renderers first. They
 are the same change already made, at a size you can hold in your head.
 
-**Villager trades.** `VillagerTrades.ItemListing` is gone, `VillagerTrade` is a codec driven
-record, and NeoForge's `VillagerTradesEvent` no longer exists. Trades are registry data now, so
-Tetra's four listing classes have nothing to plug into. That is a redesign, not a lookup.
+**Villager trades, removed and needing readding as data.** `VillagerTrades.ItemListing` is
+gone, NeoForge's `VillagerTradesEvent` and `WandererTradesEvent` no longer exist, and trades are
+registry data. Tetra's `trades` package had nothing left to plug into, so it is deleted rather
+than left as code that reads as live and never runs. **Tetra currently sells nothing.** The five
+classes are in git at the commit that removed them, which is where the full table of professions,
+levels, items and prices lives.
+
+Re adding them is data, not code. One file per trade under
+`data/tetra/villager_trade/<name>.json`:
+
+```json
+{ "wants": { "id": "minecraft:emerald", "count": 4 },
+  "gives": { "id": "tetra:scroll", "count": 1 },
+  "max_uses": 1.0, "xp": 5, "reputation_discount": 0.05 }
+```
+
+and then each one appended to the vanilla profession level tag it belongs in, at
+`data/minecraft/tags/villager_trade/<profession>/level_<n>.json` with `"replace": false`. The
+wandering trader uses `wandering_trader/common` and `uncommon` the same way. `additional_wants`
+carries the second cost the scrap trades charged.
+
+The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends are stacks
+built with scroll data components, so their `gives` needs the component patch spelled out rather
+than just an item id.
 
 **Shield disabling.** `IItemExtension.canDisableShield` is gone. Disabling a shield is the
 weapon component's `disableBlockingForSeconds` now, so Tetra's shieldbreaker effect needs

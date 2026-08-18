@@ -61,7 +61,6 @@ import se.mickelus.tetra.module.schematic.CleanseSchematic;
 import se.mickelus.tetra.module.schematic.RemoveSchematic;
 import se.mickelus.tetra.module.schematic.requirement.*;
 import se.mickelus.tetra.properties.TetraAttributes;
-import se.mickelus.tetra.trades.TradeHandler;
 import se.mickelus.tetra.util.TierHelper;
 import se.mickelus.tetra.util.ItemAbilityHelper;
 
@@ -101,7 +100,6 @@ public class TetraMod {
 
         NeoForge.EVENT_BUS.addListener(this::registerCommands);
         NeoForge.EVENT_BUS.register(new ItemEffectHandler());
-        NeoForge.EVENT_BUS.register(new TradeHandler());
         NeoForge.EVENT_BUS.register(new DataManager());
         NeoForge.EVENT_BUS.register(new VibrationDebuffer());
         NeoForge.EVENT_BUS.register(GrindstoneMergeHandler.class);
