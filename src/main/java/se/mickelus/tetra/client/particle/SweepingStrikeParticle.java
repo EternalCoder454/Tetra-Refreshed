@@ -3,7 +3,6 @@ package se.mickelus.tetra.client.particle;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -20,7 +19,6 @@ import org.joml.Vector3f;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
-@MethodsReturnNonnullByDefault
 public class SweepingStrikeParticle extends TextureSheetParticle {
     @OnlyIn(Dist.CLIENT)
     ParticleRenderType renderType = new ParticleRenderType() {

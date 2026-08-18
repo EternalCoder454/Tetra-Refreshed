@@ -1,6 +1,5 @@
 package se.mickelus.tetra.client.particle;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -9,7 +8,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-@MethodsReturnNonnullByDefault
 public class PlainParticle extends SimpleAnimatedParticle {
     protected PlainParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, PlainParticleOption options,
             SpriteSet sprites) {

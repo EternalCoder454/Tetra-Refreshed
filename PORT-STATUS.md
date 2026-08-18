@@ -19,6 +19,7 @@ a 1.21.1 to 26.1.2 one, which is the same jump Mutil Refreshed just made.
 | After ResourceLocation, GuiGraphics, isClientSide, critereon, FastColor | 1601 |
 | After package moves and merged result types | 1601 |
 | After getCommandSenderWorld, sidedSuccess, hasShiftDown, getNormal | 1475 |
+| After RenderType, ArmorMaterial, MethodsReturnNonnullByDefault | 1451 |
 
 `javac` caps error output. Early numbers were capped at 100 and then 2000, so they understated
 the real count. 1941 is the first honest figure. Anything lower than that is real progress.
@@ -58,7 +59,21 @@ moves for `AbstractArrow`, `Material` and `ItemTransforms`.
 | 30 | 2% | `BlockEntity` load and save signatures |
 | 24 | 2% | GUI and render layers |
 
-## Why this is not a grind
+## The tail is flat
+
+Measured rather than assumed. 1451 errors sit across 256 files. The twelve worst files hold
+409 of them, 28 percent. 121 files hold two or fewer, 152 in total.
+
+That shape matters. The early wins were cascades: getCommandSenderWorld was 46 edits that
+cleared several hundred errors, because failing to resolve it broke type inference in every
+method that used it. Nothing of that shape is left. Recent passes moved 1475 to 1451, so
+roughly 25 errors per distinct API change now.
+
+At that rate what remains is on the order of sixty to a hundred more individual API
+resolutions, each needing its own javap lookup, plus the two subsystem rewrites below. It is
+tractable and it is not a grind that finishes in one sitting.
+
+## Why the last part is not mechanical
 
 Two of those groups are not renames and cannot be batched.
 
