@@ -19,12 +19,15 @@
         "default"
     ],
     "material": {
-        "items": [ "minecraft:copper_ingot" ]
+        "items": [
+            "minecraft:copper_ingot"
+        ]
     },
     "improvements": {
         "workable": 1
     },
     "requiredTools": {
         "hammer_dig": "minecraft:wood"
-    }
+    },
+    "palette": "tetra:colormap/material/copper"
 }

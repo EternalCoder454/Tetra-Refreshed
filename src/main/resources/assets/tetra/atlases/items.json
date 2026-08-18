@@ -1,0 +1,16 @@
+{
+    "sources": [
+        {
+            "type": "minecraft:paletted_permutations",
+            "textures": [
+                "tetra:item/module/double/head/basic_hammer/greyscale_left",
+                "tetra:item/module/double/head/basic_hammer/greyscale_right"
+            ],
+            "palette_key": "tetra:colormap/palette_key",
+            "permutations": {
+                "copper": "tetra:colormap/material/copper",
+                "iron": "tetra:colormap/material/iron"
+            }
+        }
+    ]
+}

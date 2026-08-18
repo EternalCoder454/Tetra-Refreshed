@@ -19,9 +19,12 @@
         "default"
     ],
     "material": {
-        "items": [ "minecraft:iron_ingot" ]
+        "items": [
+            "minecraft:iron_ingot"
+        ]
     },
     "requiredTools": {
         "hammer_dig": "minecraft:gold"
-    }
+    },
+    "palette": "tetra:colormap/material/iron"
 }
