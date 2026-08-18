@@ -3,7 +3,7 @@
 Self contained. A session with no prior context can pick this up from here.
 
 Port of Tetra from 1.21.1 NeoForge to Minecraft 26.1.2 NeoForge, Java 25. In progress.
-**1941 errors down to 663. Does not compile yet.**
+**1941 errors down to 578. Does not compile yet.**
 
 ## 1. Where things are
 
@@ -90,6 +90,12 @@ cd "../Mutil Refreshed" && ./gradlew.bat publishToMavenLocal
 | Character input, sounds, clone stacks | 718 |
 | Sound holders corrected | 679 |
 | Access transformer, particle colours, permissions | 663 |
+| Packet payload types, fixed in mutil | 638 |
+| Overlay messages, toasts, command permissions | 632 |
+| Spelling, registry lookups, modifier keys | 627 |
+| appendHoverText onto the tooltip consumer | 603 |
+| Light dampening and comparator output | 600 |
+| Block removal, effect ticks, item release | 578 |
 
 `javac` caps error output. Early figures were capped at 100 and then 2000 and understated the
 real count. `-Xmaxerrs 20000` is set in `build.gradle` now, so 1941 is the first honest number.
@@ -161,10 +167,9 @@ helpers, so those helpers took `ValueOutput` and each processor wraps a `TagValu
 the registry access it already held and merges the built tag back in. Update packets still
 carry a `CompoundTag` over the wire, so those readers wrap it in a `TagValueInput`.
 
-## 6. What is left, 663
+## 6. What is left, 578
 
-The tail is flat. Measured, not assumed: 663 errors across 194 files, the twelve worst holding
-223 of them, 34 percent, and 129 files holding two or fewer for 165 total.
+Measured, not assumed: 578 errors across 134 files, 75 of which hold two or fewer for 107 total.
 
 The count is not monotonic and a rise is not a regression. Resolving a symbol lets javac finish
 analysing a file it had given up on, and it then reports errors that were always there. One
@@ -181,12 +186,12 @@ What remains is concentrated in one place. By area rather than by message:
 |---|---|
 | 127 | `client/model`, the custom model loader |
 | 89 | block entity and entity renderers |
-| 62 | gui screens and widgets |
-| 39 | `data/provider`, datagen |
-| 5 | particles |
+| 61 | gui screens and widgets |
+| 37 | `data/provider`, datagen |
+| 264 | everything else, thin |
 
-The rest is the thin spread. Everything in the first three rows is the same render pipeline
-change, described in section 7.
+The first three rows are 277 between them and are all one change, described in section 7. The
+thin spread is still the cheapest work per error.
 
 Worst files:
 
@@ -245,6 +250,13 @@ worked example of it and is finished.
 **Villager trades.** `VillagerTrades.ItemListing` is gone, `VillagerTrade` is a codec driven
 record, and NeoForge's `VillagerTradesEvent` no longer exists. Trades are registry data now, so
 Tetra's four listing classes have nothing to plug into. That is a redesign, not a lookup.
+
+**Block tooltips.** `Block.appendHoverText` does not exist, and NeoForge's `IBlockExtension`
+does not add it back, so 17 block classes override a method that is not there. They each add one
+static line, `ForgedBlockCommon.locationTooltip`. The routes are a custom `BlockItem` per block
+or a component on the item properties, and the second changes how the line renders, so this
+wants deciding rather than guessing. Do not simply drop the `@Override`: the method would
+compile and never run, and the tooltips would go missing silently.
 
 ## 8. Traps already hit, do not repeat
 
@@ -325,15 +337,15 @@ content or assets.
 
 ## 11. Next session, start here
 
-1. `bash tools/port-compile.sh`, then `bash tools/port-check.sh`, and confirm it says 663.
-2. `python tools/port-show.py` and work the thin spread. 129 files hold two or fewer errors and
-   are mostly one lookup each. That is the cheap 165.
+1. `bash tools/port-compile.sh`, then `bash tools/port-check.sh`, and confirm it says 578.
+2. `python tools/port-show.py` and work the thin spread. 75 files hold two or fewer errors and
+   are mostly one lookup each. That is the cheap 107.
 3. Re-measure every pass, and let `port-check.sh` decide whether the number means anything. A
    rise on its own is not a regression, see section 8.
 4. Then the render pipeline, as one piece. `client/model`, the renderers and the gui screens are
-   278 of the remaining 663 between them and they are all the same change. Start by reading
+   277 of the remaining 578 between them and they are all the same change. Start by reading
    `client/particle/SweepingStrikeParticle.java`, which is that change already done.
-5. Villager trades need a decision rather than a lookup. Section 7.
+5. Villager trades and block tooltips both need a decision rather than a lookup. Section 7.
 6. At 0: build, run `python ../../tools/check-mixin-targets.py` if any mixins exist and
    `python tools/check-at.py`, then deploy alongside Mutil Refreshed and launch. Mutil has never
    been exercised by a real consumer, so that launch tests both at once.
