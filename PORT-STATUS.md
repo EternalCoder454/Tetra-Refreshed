@@ -2,8 +2,8 @@
 
 Self contained. A session with no prior context can pick this up from here.
 
-Port of Tetra from 1.21.1 NeoForge to Minecraft 26.1.2 NeoForge, Java 25. In progress.
-**1941 errors down to 328. Does not compile yet.**
+Port of Tetra from 1.21.1 NeoForge to Minecraft 26.1.2 NeoForge, Java 25.
+**1941 errors down to 0. It compiles and the jar builds. It has never been launched.**
 
 ## 1. Where things are
 
@@ -33,6 +33,11 @@ measurement if a parse error is present, because a parse error aborts analysis a
 the count into something that reads like near success. Run it before believing any number.
 `port-show.py` prints every error with its source line, optionally filtered by a path fragment.
 
+`portedit.py` applies literal replacements to a source file without disturbing its line endings,
+and fails loudly if a search string does not match exactly once. Every Java file here is CRLF, so a
+multi line replacement written with `\n` silently matches nothing otherwise. Use it from a script
+file rather than a heredoc, for the reason in section 8.
+
 Before writing any fix, get the real signature. Guessing costs a wrong commit:
 
 ```bash
@@ -41,14 +46,20 @@ bash tools/jp.sh net.minecraft.nbt.CompoundTag getInt
 bash tools/src.sh net/minecraft/world/InteractionResult
 ```
 
-`jp.sh` runs javap against the patched Minecraft jar and the NeoForge jar together. The patched
-Minecraft jar carries **no** NeoForge classes at all, so pinning the NeoForge one to the version
-in `gradle.properties` matters. It used to glob for any `forge-universal.jar` and found a
-26.1.2.78 copy from another project's cache, which answered confidently and wrongly: `Capabilities`
-read as an empty class for a while because of it. Same trap as `_minecraft_jar.py` guards for
-Minecraft, one layer up. `src.sh` prints the decompiled source from the sources jar,
-which is the faster read when the question is about behaviour rather than a signature. To find
-where a class moved to, list the jar:
+`jp.sh` runs javap against the whole compile classpath, read from `build/port/cp.txt`, which
+`tools/cp.gradle` writes from the configuration Gradle actually compiles against:
+
+```bash
+./gradlew.bat -I tools/cp.gradle dumpCp
+```
+
+Asking the build rather than globbing the cache matters twice over. An older `forge-universal.jar`
+from another project's cache answered confidently and wrongly, which is why `Capabilities` read as
+an empty class for a while. And `FMLEnvironment` is not in NeoForge at all, it is in the
+fancymodloader jar, so a glob over the two obvious jars reports it missing when it is right there
+on the classpath. `src.sh` prints the decompiled source from the sources jar, which is the faster
+read when the question is about behaviour rather than a signature. To find where a class moved to,
+list the jar:
 
 ```bash
 unzip -l build/moddev/artifacts/minecraft-patched-26.1.2.95-merged.jar | grep VillagerTrades
@@ -108,6 +119,16 @@ cd "../Mutil Refreshed" && ./gradlew.bat publishToMavenLocal
 | Block tooltips onto BlockTooltip | 353 |
 | Toasts, key mappings, key events | 336 |
 | ItemModularHandheld finished | 328 |
+| Immediate mode render state, tags provider | 308 |
+| Trades package removed | 293 |
+| Item transfer api, block and item hooks | 261 |
+| Registry api, reload listeners, entity spawning | 231 |
+| Gui, containers, loot, time | 200 |
+| Datagen, block entity packets, debug rendering | 183 |
+| Shield disabling, drip particles, joml codecs | 166 |
+| Block outline overlay | 161 |
+| The custom item model rebuilt | 25 |
+| Shield renderer and tag mixins | **0** |
 
 `javac` caps error output. Early figures were capped at 100 and then 2000 and understated the
 real count. `-Xmaxerrs 20000` is set in `build.gradle` now, so 1941 is the first honest number.
@@ -179,127 +200,26 @@ helpers, so those helpers took `ValueOutput` and each processor wraps a `TagValu
 the registry access it already held and merges the built tag back in. Update packets still
 carry a `CompoundTag` over the wire, so those readers wrap it in a `TagValueInput`.
 
-## 6. What is left, 328
+## 6. What is left
 
-Measured, not assumed: 328 errors, and they split cleanly in two. **127 are the custom item
-model loader in `client/model`.** The other 201 are spread thin across everything else.
+Nothing, as measured by the compiler. `bash tools/port-compile.sh` reports 0 errors,
+`tools/port-check.sh` confirms the number is comparable, `./gradlew.bat build` succeeds, and
+`tools/check-at.py` and `tools/check-mixin-targets.py` both come back clean.
 
-The renderers are done. Every block entity renderer, every entity renderer, the particles, the
-screens and the gui draw calls are all on the extract and submit pipeline now. What is left of
-the render work is the model loader alone.
+What is left is everything a compiler cannot see. **The mod has never been launched.** Section 7
+lists the behaviour that changed on the way here and section 11 is the order to check it in.
 
-The count is not monotonic and a rise is not a regression. Resolving a symbol lets javac finish
-analysing a file it had given up on, and it then reports errors that were always there. One
-pass here went 700 to 718 while clearing six groups outright. Read the groups, not just the
-total, and use `port-check.sh` to rule out the one rise that does mean something.
+## 7. What changed in behaviour, not just in signature
 
-That shape is the point. Early wins were cascades. `getCommandSenderWorld` was 46 edits that
-cleared several hundred errors, because failing to resolve it broke type inference in every
-method that used it. Nothing of that shape remains among the renames.
+Every item here compiles. Each one is a place where the new API could not express what the old code
+did, so the port made a decision. Read this before deciding a bug is a regression.
 
-What remains is concentrated in one place. By area rather than by message:
-
-| Count | Area |
-|---|---|
-| 127 | `client/model`, the custom model loader |
-| 201 | everything else, thin |
-
-The model loader is described in section 7. The thin spread is the cheapest work per error and
-is mostly one lookup each.
-
-Worst files:
-
-```
-34  client/model/UnresolvedItemModel.java
-30  data/provider/TetraBlockStateProvider.java
-30  client/model/ItemLayerModel.java
-22  client/model/ModularOverrideList.java
-17  blocks/holo/HolosphereEntityRenderer.java
-15  blocks/forged/extractor/CoreExtractorPistonRenderer.java
-14  client/model/BakingContextWrapper.java
-13  client/model/TetraSeparateTransformsModel.java
-13  blocks/forged/chthonic/ExtractorProjectileRenderer.java
-13  ClientSetup.java
-```
-
-Two findings worth having in writing. `LootItemFunctionType` and `LootItemConditionType` are
-gone while `LootItemFunction` and `LootItemCondition` remain, so the registry wrapper types
-went and registration changed shape. `ItemAbilities` still exists but `HOE_DIG`, `AXE_DIG`,
-`PICKAXE_DIG` and `SHOVEL_DIG` are gone from it.
-
-## 7. What is not a rename
-
-**Tool materials, done.** This was called a design decision here and measured out as a rename.
-`ToolMaterial` is a record carrying exactly the fields `Tier` exposed and keeps the constants
-`Tiers` held, and `HarvestTierRegistry` only ever treated a tier as an opaque ordering key. One
-getter call and one construction were the whole change. The missing dig abilities were the same
-story: Tetra used them as identity keys, an `ItemAbility` is still a name interned in a shared
-map, so `TetraItemAbilities` declares the five under the names NeoForge used to intern.
-
-The lesson generalises. Measure the area before calling it a redesign.
-
-**The render pipeline.** This is one change wearing three faces, and the three worst areas
-after the tool materials are all it. Rendering moved to extract a render state, then submit it.
-
-* `BlockEntityRenderer` takes two type parameters now, the entity and a `BlockEntityRenderState`,
-  and the work moved from `render` into `createRenderState`, `extractRenderState` and `submit`.
-  Ten renderers declare the old single parameter form.
-* Block entity and entity renderers are **done**, all ten of them. A renderer gathers what it
-  needs into a render state and submits from that state afterwards. Items go through an
-  `ItemStackRenderState` filled by the `ItemModelResolver`, blocks drawn away from their own
-  position go through `MovingBlockRenderState` and `submitMovingBlock`, model parts take a
-  `SpriteId` and a render type, and hand built quads go through `submitCustomGeometry`, which
-  hands back a pose and a vertex consumer so the geometry code itself survives intact.
-* Screens and the gui are **done**. `render` became `extractRenderState`, `renderBg` became
-  `extractBackground`, `drawString` became `text`, and the gui transform stack is a two
-  dimensional joml matrix stack where depth is a stratum rather than a z offset.
-* Particles are **done**. `SingleQuadParticle` replaced `TextureSheetParticle`, the hand rolled
-  quad loops became `extractRotatedQuad`, and `SingleQuadParticle.Layer` replaced the anonymous
-  `ParticleRenderType`. That pair went from 101 errors to zero, and almost all of it was one
-  unresolved supertype taking every inherited field with it. Read those two files before
-  starting on the renderers, they are the worked example.
-* **The model loader is what is left, and it is the last of the render work.** `BakedModel`,
-  `ItemOverrides`, `ModelState`, `IGeometryBakingContext`, `IQuadTransformer`,
-  `BlockRenderDispatcher` and the whole `net.neoforged.neoforge.client.model.geometry` package
-  are gone. Tetra ships a custom loader so a modular item renders as a stack of layers, one per
-  module, and that has to be rebuilt against the new item model system.
-
-  The shape it wants: an `ItemModel.Unbaked` with a `MapCodec` registered into the item model
-  type registry, baking to an `ItemModel` whose `update` appends layers to the
-  `ItemStackRenderState` it is handed. `LayerRenderState.prepareQuadList()` returns a list to
-  add `BakedQuad`s to, and `setItemTransform` carries what `ItemTransforms` used to.
-  `ItemOverrides` has no replacement because it does not need one: picking a model per stack is
-  what `update` does, so `ModularOverrideList` collapses into it, cache and all.
-
-  Read `net.minecraft.client.renderer.item.CuboidItemModelWrapper` first. It is the whole
-  pattern in one small class, unbaked record with a codec, a bake that resolves and builds a
-  `QuadCollection`, and an `update` that appends one layer.
-
-  **The piece that was not obvious.** `UnbakedGeometryHelper.createUnbakedItemElements`, which
-  is what turned a module's sprite into the extruded item quads, is gone with the rest of
-  NeoForge's model package. Vanilla still does exactly that job in
-  `client.resources.model.cuboid.ItemModelGenerator`, whose
-  `bake(TextureSlots, ModelBaker, ModelState, ModelDebugName)` takes texture slots and returns a
-  `QuadCollection`. It is private, so it needs an access transformer entry, which is what
-  `tools/check-at.py` is there to keep honest. Build a `TextureSlots` with `layer0` set to the
-  module's material and that method gives back the same geometry the old helper did, per layer,
-  at runtime. `ItemModel.BakingContext` hands over both the `ModelBaker` and the `SpriteGetter`
-  at bake time and both can be held for later, which is what makes the runtime cache possible.
-
-  Tetra's per layer work then applies to the resulting quads: the tint, emissivity and transform
-  in `ModularOverrideList.createLayerModel`, and the per display context filtering that
-  `TetraSeparateTransformsModel` handled. `BakedQuad` is a different class now, in
-  `client.resources.model.geometry`, reached through `position(int)` and `materialInfo()`.
-
-Read `client/particle/SweepingStrikeParticle.java` and any of the ported renderers first. They
-are the same change already made, at a size you can hold in your head.
-
-**Villager trades, removed and needing readding as data.** `VillagerTrades.ItemListing` is
-gone, NeoForge's `VillagerTradesEvent` and `WandererTradesEvent` no longer exist, and trades are
-registry data. Tetra's `trades` package had nothing left to plug into, so it is deleted rather
-than left as code that reads as live and never runs. **Tetra currently sells nothing.** The five
-classes are in git at the commit that removed them, which is where the full table of professions,
-levels, items and prices lives.
+**Villager trades, removed and needing readding as data.** `VillagerTrades.ItemListing` is gone,
+NeoForge's `VillagerTradesEvent` and `WandererTradesEvent` no longer exist, and trades are registry
+data. Tetra's `trades` package had nothing left to plug into, so it is deleted rather than left as
+code that reads as live and never runs. **Tetra currently sells nothing.** The five classes are in
+git at the commit that removed them, which is where the full table of professions, levels, items
+and prices lives.
 
 Re adding them is data, not code. One file per trade under
 `data/tetra/villager_trade/<name>.json`:
@@ -315,23 +235,101 @@ and then each one appended to the vanilla profession level tag it belongs in, at
 wandering trader uses `wandering_trader/common` and `uncommon` the same way. `additional_wants`
 carries the second cost the scrap trades charged.
 
-The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends are stacks
-built with scroll data components, so their `gives` needs the component patch spelled out rather
-than just an item id.
+The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends are stacks built
+with scroll data components, so their `gives` needs the component patch spelled out rather than just
+an item id.
 
-**The item transfer API.** `Capabilities.ItemHandler` is `Capabilities.Item` now and its `BLOCK`
-capability is a `ResourceHandler<ItemResource>` rather than an `IItemHandler`. `ItemStackHandler`
-still exists and is still `IItemHandler`, so it no longer satisfies the capability it was written
-for. `net.neoforged.neoforge.transfer.item.ItemStackResourceHandler` looks like the replacement,
-with `ItemResourceHandlerAdapter` going the other way for consumers that still want the old
-interface. This reaches every Tetra inventory, the workbench, the rack, the forged container and
-the toolbelt, and every insert and extract call on them, so it is a migration rather than a
-rename.
+**The interactive block overlay does not draw.** `RenderHighlightEvent.Block` became
+`ExtractBlockOutlineRenderStateEvent`, which is an extract phase event carrying no way to draw, and
+a `GuiGraphicsExtractor` is built over a `GuiRenderState` the gui renderer later draws in screen
+space, so the constructor taking a world pose stack and buffer source is gone. The overlay still
+tracks what is being looked at, and `gui.update` still runs, but the interaction hints on block
+faces render nothing. Putting them back means giving mutil's `GuiElement` tree a world space draw
+path, which is a redesign of mutil's gui layer rather than a signature change.
 
-**Shield disabling.** `IItemExtension.canDisableShield` is gone. Disabling a shield is the
-weapon component's `disableBlockingForSeconds` now, so Tetra's shieldbreaker effect needs
-rehoming onto that component rather than onto an item hook. The override is removed, so the
-effect currently does nothing.
+**Stored inventories do not carry over.** The item capability is a `ResourceHandler<ItemResource>`
+now and nothing adapts an `IItemHandler` to it, so the workbench, the rack and the forged container
+hold an `ItemStacksResourceHandler` and expose the old interface through `IItemHandler.of`. That
+handler writes under `stacks` where `ItemStackHandler` wrote `Items` and `Size`, so a world saved
+before this port loses those three inventories' contents. Nothing else about the format moved.
+
+**Transfer units and core extractors recompute more often.** `neighborChanged` takes an
+`Orientation` rather than the position the change came from, and vanilla passes null for it on
+ordinary neighbour updates, so the guard that skipped the block a unit outputs into cannot be
+reconstructed. `updateTransferState` runs unconditionally instead. It reaches the same state, and
+`setSending` and `setReceiving` write with `UPDATE_CLIENTS` alone, so it cannot feed back.
+
+**Modular items cannot be enchanted from a book at an anvil, by omission.**
+`IItemExtension.isBookEnchantable` is gone and Tetra returned false from it, so the restriction it
+expressed is simply absent now. Enchantability itself survived: `Item#getEnchantmentValue` is gone
+too, so `ModularItemComponentHelper` mirrors the per stack value into the `ENCHANTABLE` component
+beside the `TOOL` and `MAX_DAMAGE` ones it already syncs.
+
+**A modular item's components sync on the first tick rather than on load.**
+`Item#verifyComponentsAfterLoad` is gone, and `inventoryTick` is server only now and names the slot
+the stack sits in rather than passing a selected flag, so the load time sync moved there.
+
+**Shieldbreaker reads the attacker's weapon.** `LivingEntity#canDisableShield` is gone. Whether an
+attack disables blocking is the attacking weapon's `disableBlockingForSeconds` now, so the effect
+tests that instead of the old hook.
+
+**A material outside vanilla's set can no longer be named in data.** `ArmorMaterial` stopped being a
+registry entry and became a plain record, so there is no registry to resolve an id against.
+`ArmorMaterialDeserializer` maps the ids that used to name the vanilla materials onto the
+`ArmorMaterials` constants.
+
+**The drip particles no longer animate their sprite.** Vanilla's `DripParticle` subclasses take a
+sprite chosen up front rather than one picked from the particle's age, which is how vanilla builds
+its own now.
+
+**The moon phase is read for the dimension rather than a position.** It became a positional
+environment attribute, and `TimeNumberProvider` has no position, so it reads the dimension value.
+`Level#getDayTime` became the dimension's own clock.
+
+## 7a. The item model system, rebuilt
+
+This was the largest single piece and is worth understanding before touching item rendering.
+
+NeoForge's `net.neoforged.neoforge.client.model.geometry` package is gone, and with it `BakedModel`,
+`ItemOverrides`, `IGeometryBakingContext`, `IQuadTransformer`, `ModelState` and `IUnbakedGeometry`.
+There is no baked model left to swap per stack. Picking geometry per stack is what
+`ItemModel#update` does, which is why `ModularOverrideList`, `BakingContextWrapper`,
+`ItemLayerModel`, `TetraSeparateTransformsModel`, `ColorQuadTransformer` and `QuadTransformerBuilder`
+all collapsed into one class, `client/model/ModularItemModel.java`.
+
+A module model is one `LayerRenderState` now. That is a better fit than the old single baked model:
+a layer carries its own local transform, tint list and item transform, so the per layer work that
+needed quad transformers is state on the layer. Only emissivity still reaches into the quads,
+because it lives on a quad's `MaterialInfo`. The per display context filtering that
+`TetraSeparateTransformsModel` did happens in `update`, which is handed the context it draws for.
+
+**The piece that was not obvious.** `UnbakedGeometryHelper.createUnbakedItemElements`, which turned
+a module's sprite into extruded item quads, went with the package. Vanilla still does exactly that
+job in `client.resources.model.cuboid.ItemModelGenerator.bake`, which is private, as is the only
+constructor that builds the `TextureSlots` it wants. Both are widened in
+`src/main/resources/META-INF/accesstransformer.cfg` and checked by `tools/check-at.py`.
+
+Item colours and item model properties moved the same way, from a handler bound to an item to a
+registered type named in the model json. `ItemColor` became `ItemTintSource` (`ScrollItemColor`),
+and `ItemProperties.register` became `RangeSelectItemModelProperty` (`ScrollMaterialProperty`,
+`CellChargedProperty`) or `ConditionalItemModelProperty` (`HandheldStateProperty`, which covers the
+shield's blocking and throwing states in one type).
+
+`BlockEntityWithoutLevelRenderer` is gone and `IClientItemExtensions` no longer hands out a custom
+renderer, so the shield is a `SpecialModelRenderer`, registered by id and submitting into the render
+pipeline rather than drawing immediately. It no longer registers itself as a reload listener,
+because it is rebaked from its unbaked form whenever models reload.
+
+Display transforms have no vanilla codec, because they belong to a block model and reach an item
+model through `ModelRenderProperties`. Tetra needs them named per transform variant, which a block
+model has no room for, so `TransformCodecs` reads them on Tetra's side and the model files keep the
+`display` and `variants` shape they already had.
+
+**The resource layout moved with it.** An item's model used to be
+`assets/tetra/models/item/<id>.json`, found by name. It is `assets/tetra/items/<id>.json` now, and
+it names a model type rather than being one. The block models under `models/item` keep their
+geometry and display transforms.
+
 
 ## 8. Traps already hit, do not repeat
 
@@ -377,6 +375,21 @@ file it had given up on, and it then reports errors that were always there. One 
 so a global rewrite of `.x` breaks correct code. `tools/port_lines.py` applies a regex only to
 the lines javac flagged, which is the right tool whenever a name is legal somewhere else.
 
+**A for loop over paths with a space in them.** `for j in $(find "$HOME/.gradle/..." ...)` splits
+`C:\Users\Zachary Smith\...` on the space and searches two paths that do not exist, silently. That
+is how `FMLEnvironment` read as absent from every jar in the cache when it was sitting in the
+fancymodloader jar the build resolves. `tools/jp.sh` reads `build/port/cp.txt` now, which
+`tools/cp.gradle` writes from the configuration Gradle actually compiles against. Ask the build,
+do not guess, and do not iterate over paths as words.
+
+**A multi line replacement that matches nothing.** Every Java file here is CRLF. Reading one with
+the line endings preserved and then searching for a block written with `\n` finds nothing, and a
+`str.replace` that matches nothing returns the string unchanged and reports no error, so the edit
+reads as applied and did nothing. `tools/portedit.py` reads with universal newlines, matches
+against `\n`, asserts the match count, and writes back in the file's original ending. Use it for
+anything spanning more than one line.
+
+
 ## 9. Repo status
 
 `EternalCoder454/Tetra-Refreshed` is a fork. The API reports `fork: true`, parent
@@ -412,15 +425,29 @@ content or assets.
 
 ## 11. Next session, start here
 
-1. `bash tools/port-compile.sh`, then `bash tools/port-check.sh`, and confirm it says 578.
-2. `python tools/port-show.py` and work the thin spread. 75 files hold two or fewer errors and
-   are mostly one lookup each. That is the cheap 107.
-3. Re-measure every pass, and let `port-check.sh` decide whether the number means anything. A
-   rise on its own is not a regression, see section 8.
-4. Then the render pipeline, as one piece. `client/model`, the renderers and the gui screens are
-   277 of the remaining 578 between them and they are all the same change. Start by reading
-   `client/particle/SweepingStrikeParticle.java`, which is that change already done.
-5. Villager trades and block tooltips both need a decision rather than a lookup. Section 7.
-6. At 0: build, run `python ../../tools/check-mixin-targets.py` if any mixins exist and
-   `python tools/check-at.py`, then deploy alongside Mutil Refreshed and launch. Mutil has never
-   been exercised by a real consumer, so that launch tests both at once.
+The compiler has nothing left to say. Everything below is about launching it.
+
+1. Confirm the baseline before changing anything: `bash tools/port-compile.sh` then
+   `bash tools/port-check.sh` should report 0, and `./gradlew.bat build` should succeed.
+2. `python tools/check-at.py` and, from `Projects\Minecraft`,
+   `python tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"`. Both are clean now, so
+   any output is something you introduced.
+3. Deploy Tetra and Mutil Refreshed together into the test pack and launch. Mutil has never been
+   exercised by a real consumer, so that launch tests both at once. Remove the stale jars first.
+4. Read `debug.log` before playing. A mixin that fails to apply, a model type that fails to
+   resolve and a capability that fails to register all say so there and nowhere else.
+5. Then check the item model work by looking at things, in this order, because it is the largest
+   piece and the least verifiable without running:
+   * A modular item in the inventory renders as a stack of module layers rather than a missing
+     model. If it is missing, the item model json under `assets/tetra/items` is not resolving.
+   * Module tints, emissive modules and per perspective modules each look right. Those are the
+     three pieces of per layer state that moved onto `LayerRenderState`.
+   * A modular item held in hand, on the ground, in an item frame and on a head, which is what
+     the transform variants select between.
+   * A modular shield, which goes through the special renderer rather than the layer path, and
+     its blocking and throwing models, which go through the conditional property.
+   * A scroll of each material, and a charged and uncharged thermal cell.
+6. Then the behaviour in section 7. Every entry there is a decision the port made that a compiler
+   cannot check, and each names what to look at.
+7. Villager trades are the one feature known to be missing outright. Section 7 has the format and
+   the commit the old table lives in.
