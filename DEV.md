@@ -35,6 +35,7 @@ is short enough to read whole.
 bash tools/port-compile.sh && bash tools/port-check.sh   # compile and count errors honestly
 python tools/check-at.py                                 # every access transformer entry still resolves
 python tools/check-data-fields.py                        # every data key is read by the codec that owns it
+python tools/check-material-tints.py                     # every tint still matches the item it is made from
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -45,6 +46,17 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-material-tints.py` matters because nothing validates a tint. A material carrying another
+material's colours parses, loads and renders, it just renders wrong, and the only way to notice is to
+look at the item and already know what it should look like. That is how mangrove shipped tinted
+cherry pink: its file held a verbatim copy of cherry's two hex values. So the checker measures the
+texture of the item the material is made from and reports how far the declared tint sits from it.
+
+Its findings are candidates rather than verdicts, and the false positives are worth knowing. A white
+tint is the idiom for letting module artwork through unchanged, so those are listed separately rather
+than flagged. Gems and dyed wool are drawn brighter than the item they come from on purpose, so they
+sit near the top of the list and belong there. Read a finding before changing it.
 
 `check-data-fields.py` matters for the same reason one level up. A data file that fails to parse is
 logged and dropped, which gets noticed. A field that was renamed is ignored, which does not: the
@@ -168,6 +180,9 @@ Deriving a tint from the mod's own texture beats picking one by eye. Averaging t
 textures against the tints Tetra declares for them gives a median ratio of about 1.1 per channel, and
 Tetra's glyph tint sits at about 0.85 of its texture tint, so a modded material lands in the same
 relationship to its art as a built in one.
+
+`tools/check-material-tints.py <name>` does that measurement and prints what the tint would be, for
+any material in any mod the test pack has installed. With no argument it audits every material.
 
 ### Adding a material with a palette
 

@@ -41,6 +41,16 @@ vanilla woods already use, rather than a colour picked by eye.
 **None of this has been crafted.** The files load and parse, and the materials appear where they
 should, but no tool has been built from one.
 
+### Fixed
+
+* **Mangrove was tinted cherry pink.** Its material file carried a verbatim copy of cherry's two hex
+  values, so mangrove parts rendered pale pink rather than the dark red brown the planks actually
+  are. Measured from the texture instead. Cherry itself was correct and is unchanged.
+* **Nether star sockets had no name**, so the workbench and holosphere showed a raw translation key
+  where every other material shows a name.
+
+`tools/check-material-tints.py` is the check that would have caught the first one, and now does.
+
 ### The port
 
 1941 compile errors down to zero, then nine further failures that only appeared on launch. The

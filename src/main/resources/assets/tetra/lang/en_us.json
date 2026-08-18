@@ -713,6 +713,8 @@
   "tetra.material.socket_pristine_amethyst.prefix": "§dAmethyst+§r",
   "tetra.material.socket_ender_pearl": "Ender pearl",
   "tetra.material.socket_ender_pearl.prefix": "§3Ender pearl§r",
+  "tetra.material.socket_nether_star": "Nether star",
+  "tetra.material.socket_nether_star.prefix": "§eNether star§r",
   "tetra.material.crimson": "Crimson",
   "tetra.material.crimson.prefix": "Crimson",
   "tetra.material.ru_alpha": "Alpha",
