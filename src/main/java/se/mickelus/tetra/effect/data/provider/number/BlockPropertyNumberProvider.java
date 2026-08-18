@@ -22,9 +22,9 @@ public class BlockPropertyNumberProvider implements NumberProvider {
         BlockState blockState = level.getBlockState(blockPos);
         return switch (property) {
             case hardness -> blockState.getDestroySpeed(level, blockPos);
-            case lightValue -> blockState.getLightBlock(level, blockPos);
+            case lightValue -> blockState.getLightDampening();
             case experienceDrop -> getExpDrop(context, level, blockPos, blockState);
-            case comparatorValue -> blockState.getAnalogOutputSignal(level, blockPos);
+            case comparatorValue -> blockState.getAnalogOutputSignal(level, blockPos, Direction.UP);
             case flammability -> blockState.getFlammability(level, blockPos, Direction.UP);
             case friction -> blockState.getFriction(level, blockPos, null);
         };

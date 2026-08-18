@@ -241,7 +241,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
     }
 
     @Override
-    public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
+    protected int getLightDampening(BlockState state) {
         return 0;
     }
 }
