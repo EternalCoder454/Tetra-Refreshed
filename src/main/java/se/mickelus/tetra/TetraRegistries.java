@@ -185,11 +185,11 @@ public class TetraRegistries {
     private static DeferredHolder<Item, QuickLatchItem> quickLatch;
     private static DeferredHolder<Item, MeshItem> mesh;
     private static DeferredHolder<Item, BeamItem> beam;
-    private static DeferredHolder<Item, PristineDiamondItem> pristineDiamond;
-    private static DeferredHolder<Item, PristineEmeraldItem> pristineEmerald;
-    private static DeferredHolder<Item, PristineLapisItem> pristineLapis;
-    private static DeferredHolder<Item, PristineAmethystItem> pristineAmethyst;
-    private static DeferredHolder<Item, PristineQuartzItem> pristineQuartz;
+    private static DeferredHolder<Item, PristineGemItem> pristineDiamond;
+    private static DeferredHolder<Item, PristineGemItem> pristineEmerald;
+    private static DeferredHolder<Item, PristineGemItem> pristineLapis;
+    private static DeferredHolder<Item, PristineGemItem> pristineAmethyst;
+    private static DeferredHolder<Item, PristineGemItem> pristineQuartz;
     private static DeferredHolder<Item, GeodeItem> geode;
     public static Supplier<DataComponentType<ScrollData>> scrollData;
 
@@ -330,15 +330,11 @@ public class TetraRegistries {
 
         // random loot
         geode = register(items, GeodeItem.identifier, GeodeItem::new, value -> GeodeItem.instance = value);
-        pristineLapis = register(items, PristineLapisItem.identifier, PristineLapisItem::new, value -> PristineLapisItem.instance = value);
-        pristineEmerald = register(items, PristineEmeraldItem.identifier, PristineEmeraldItem::new,
-                value -> PristineEmeraldItem.instance = value);
-        pristineDiamond = register(items, PristineDiamondItem.identifier, PristineDiamondItem::new,
-                value -> PristineDiamondItem.instance = value);
-        pristineAmethyst = register(items, PristineAmethystItem.identifier, PristineAmethystItem::new,
-                value -> PristineAmethystItem.instance = value);
-        pristineQuartz = register(items, PristineQuartzItem.identifier, PristineQuartzItem::new,
-                value -> PristineQuartzItem.instance = value);
+        pristineLapis = register(items, PristineGemItem.lapisIdentifier, PristineGemItem::new);
+        pristineEmerald = register(items, PristineGemItem.emeraldIdentifier, PristineGemItem::new);
+        pristineDiamond = register(items, PristineGemItem.diamondIdentifier, PristineGemItem::new);
+        pristineAmethyst = register(items, PristineGemItem.amethystIdentifier, PristineGemItem::new);
+        pristineQuartz = register(items, PristineGemItem.quartzIdentifier, PristineGemItem::new);
         dragonSinew = register(items, DragonSinewItem.identifier, DragonSinewItem::new);
 
         // ruins loot
