@@ -182,9 +182,15 @@ Things that will bite somebody later if nobody writes them down.
   datagen provider, none on a path a server takes. The residual risk is a server path calling one
   of those methods, which is a question about call sites rather than about class loading.
 * **Silent drops are the failure mode of this codebase.** The attribute prefix bug discarded every
-  module attribute without a word, and was found by reading data rather than by playing. The same
-  shape exists wherever a deserializer resolves a name and returns null on a miss. Worth an audit of
-  the data deserializers, and worth logging a warning at each one.
+  module attribute without a word. The Long Gone advancement then did it again, in vanilla data
+  rather than Tetra's: a location predicate renamed `structure` to `structures`, the old field was
+  ignored rather than rejected, and a predicate with nothing left to check matches everywhere. Both
+  were found by reading data rather than by playing.
+
+  So the audit is wider than the deserializers. Tetra's own deserializers resolve names and return
+  null on a miss, and should log a warning at each one. Vanilla's codecs ignore unknown fields
+  entirely, which means every renamed field in ported data fails open and looks like nothing
+  happened. Advancements are now checked. Loot tables, recipes and predicates are not.
 * **Upstream issues are now in scope.** Rule 5 held them until the port was done. It is done. See
   <https://github.com/mickelus/tetra/issues>.
 * **Mutil has no developer documentation.** It is the shared library and the generic half of the api
