@@ -92,6 +92,26 @@ Reading used to cost two deep copies of an item's entire tag, because `getTag` c
 it. Pulling one string out of an item copied the whole thing twice. That is what `readTag` is for,
 and it is why the access transformer widens `CustomData.tag`.
 
+## Things that run every frame or every tick
+
+Three rules the code already follows. Each was a measured cost rather than a preference, so undoing
+one puts the cost back.
+
+**Caches on a modular item are keyed by `getDataCacheKey`.** There are six: attributes, tool data,
+effects, properties, enchantability and the tool component. The key is the item's module identifier,
+so a cache holds while the modules do. **Anything that depends on the item's damage cannot go behind
+that key**, because damage is not part of it. The tool component is the live example: it returns
+nothing for a broken item, so broken is checked outside the cache. Cached inside, a broken tool would
+have kept the mining rules it had when it was whole.
+
+**The gui toolkit iterates with indexed loops, not streams.** Every element draws its children, so
+`drawChildren`, `updateFocusState` and `getTooltipLines` run once per element per frame, and a stream
+there allocates a pipeline, a spliterator and a lambda each time. The duplication between
+`GuiElement` and the classes that override those methods is deliberate.
+
+**Reading an item's tag is free, copying it is not.** See the table above. `readTag` for reads,
+`mutate` for writes, `getTag` only when the tag has to outlive the call.
+
 ## The data formats
 
 Tetra is data driven across these datapack directories under `data/tetra`:
