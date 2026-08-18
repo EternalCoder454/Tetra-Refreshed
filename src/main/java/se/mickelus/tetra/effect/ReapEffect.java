@@ -167,7 +167,7 @@ public class ReapEffect extends ChargedAbilityEffect {
                 }
             } else if (kills > 0) {
                 int duration = (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20);
-                attacker.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, duration, kills - 1, false, true));
+                attacker.addEffect(new MobEffectInstance(MobEffects.SPEED, duration, kills - 1, false, true));
             }
         }
 
@@ -183,7 +183,7 @@ public class ReapEffect extends ChargedAbilityEffect {
 
             int speedLevel = item.getEffectLevel(itemStack, ItemEffect.abilitySpeed);
             if (speedLevel > 0) {
-                attacker.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilitySpeed) * 20),
+                attacker.addEffect(new MobEffectInstance(MobEffects.HASTE, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilitySpeed) * 20),
                         kills - 1, false, true));
             }
 
@@ -199,7 +199,7 @@ public class ReapEffect extends ChargedAbilityEffect {
 
                 duration += comboEfficiency * comboPoints * 20;
 
-                attacker.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, (int) duration, kills - 1, false, true));
+                attacker.addEffect(new MobEffectInstance(MobEffects.HASTE, (int) duration, kills - 1, false, true));
             }
 
 

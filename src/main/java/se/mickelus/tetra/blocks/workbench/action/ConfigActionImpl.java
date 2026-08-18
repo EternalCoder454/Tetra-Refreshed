@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbility;
@@ -30,7 +30,7 @@ import java.util.Map;
 @ParametersAreNonnullByDefault
 public class ConfigActionImpl extends ConfigAction {
 
-    private static final LootContextParamSet lootParameters = new LootContextParamSet.Builder()
+    private static final ContextKeySet lootParameters = new ContextKeySet.Builder()
             .required(LootContextParams.ORIGIN)
             .optional(LootContextParams.TOOL)
             .optional(LootContextParams.THIS_ENTITY)

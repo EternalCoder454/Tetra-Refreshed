@@ -24,6 +24,7 @@ import se.mickelus.tetra.blocks.forged.ForgedBlockCommon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import net.minecraft.world.level.redstone.Orientation;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorPipeBlock extends TetraBlock implements BlockTooltip {
@@ -65,7 +66,7 @@ public class CoreExtractorPipeBlock extends TetraBlock implements BlockTooltip {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, @Nullable Orientation orientation, boolean isMoving) {
         boolean getsPowered = shouldGetPower(world, pos, state.getValue(facingProp));
 
         if (state.getValue(poweredProp) != getsPowered) {

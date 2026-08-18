@@ -235,7 +235,7 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
         }
 
         public void build(DeferredRegister<Block> blocks, DeferredRegister<Item> items) {
-            if (FMLEnvironment.dist.isClient()) {
+            if (FMLEnvironment.getDist().isClient()) {
                 MultiblockSchematicScrollHandler.setupSchematic(identifier, width * height);
             }
             for (int i = 0; i < width; i++) {
@@ -257,7 +257,7 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
 
                     items.register(id, () -> {
                         StackedMultiblockSchematicItem item = new StackedMultiblockSchematicItem(ref.get(), ruinedRef.get());
-                        if (FMLEnvironment.dist.isClient()) {
+                        if (FMLEnvironment.getDist().isClient()) {
                             MultiblockSchematicScrollHandler.addSchematic(identifier, y * width + x, item);
                         }
                         return item;

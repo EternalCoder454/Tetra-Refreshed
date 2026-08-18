@@ -677,8 +677,8 @@ public class TetraRegistries {
     }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, WorkbenchTile.type.get(), WorkbenchTile::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, RackTile.type, RackTile::getItemHandler);
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ForgedContainerBlockEntity.type.get(), ForgedContainerBlockEntity::getItemHandler);
+        event.registerBlockEntity(Capabilities.Item.BLOCK, WorkbenchTile.type.get(), WorkbenchTile::getResourceHandler);
+        event.registerBlockEntity(Capabilities.Item.BLOCK, RackTile.type, RackTile::getResourceHandler);
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ForgedContainerBlockEntity.type.get(), ForgedContainerBlockEntity::getResourceHandler);
     }
 }

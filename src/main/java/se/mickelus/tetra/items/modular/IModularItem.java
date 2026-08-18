@@ -947,7 +947,7 @@ public interface IModularItem {
 
     default String getItemName(ItemStack itemStack) {
         // todo: since getItemStackDisplayName is called on the server we cannot use the I18n service
-        if (FMLEnvironment.dist.isDedicatedServer()) {
+        if (FMLEnvironment.getDist().isDedicatedServer()) {
             return "";
         }
 

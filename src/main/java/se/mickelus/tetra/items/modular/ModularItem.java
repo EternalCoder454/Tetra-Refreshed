@@ -35,6 +35,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EquipmentSlot;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ModularItem extends TetraItem implements IModularItem, IToolProvider {
     private static final Logger logger = LogManager.getLogger();
@@ -208,24 +211,25 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
     }
 
     @Override
-    public void onCraftedBy(ItemStack itemStack, Level world, Player player) {
+    public void onCraftedBy(ItemStack itemStack, Player player) {
         IModularItem.updateIdentifier(itemStack);
     }
 
+    /**
+     * inventoryTick runs on the server alone now and names the slot the stack sits in rather than
+     * passing a selected flag, so the old client side guard is gone and "is it held" is a question
+     * about the slot. Item#verifyComponentsAfterLoad no longer exists, so the sync that ran on load
+     * happens here, on the first tick after the stack comes back.
+     */
     @Override
-    public void verifyComponentsAfterLoad(ItemStack itemStack) {
-        super.verifyComponentsAfterLoad(itemStack);
-        ModularItemComponentHelper.sync(itemStack);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean isSelected) {
-        if (!world.isClientSide() && entity instanceof LivingEntity livingEntity
-                && (isSelected || livingEntity.getMainHandItem() == itemStack || livingEntity.getOffhandItem() == itemStack)) {
+    public void inventoryTick(ItemStack itemStack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
+        if (entity instanceof LivingEntity livingEntity
+                && (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND
+                        || livingEntity.getMainHandItem() == itemStack || livingEntity.getOffhandItem() == itemStack)) {
             ModularItemComponentHelper.sync(itemStack);
         }
 
-        super.inventoryTick(itemStack, world, entity, slot, isSelected);
+        super.inventoryTick(itemStack, world, entity, slot);
     }
 
     /**
@@ -254,11 +258,6 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
     }
 
     @Override
-    public boolean isBookEnchantable(final ItemStack itemStack, final ItemStack bookStack) {
-        return false;
-    }
-
-    @Override
     public boolean isPrimaryItemFor(ItemStack itemStack, Holder<Enchantment> enchantment) {
         return acceptsEnchantment(itemStack, enchantment, true);
     }
@@ -266,10 +265,5 @@ public abstract class ModularItem extends TetraItem implements IModularItem, ITo
     @Override
     public boolean supportsEnchantment(ItemStack itemStack, Holder<Enchantment> enchantment) {
         return acceptsEnchantment(itemStack, enchantment, false);
-    }
-
-    @Override
-    public int getEnchantmentValue(ItemStack itemStack) {
-        return getEnchantability(itemStack);
     }
 }

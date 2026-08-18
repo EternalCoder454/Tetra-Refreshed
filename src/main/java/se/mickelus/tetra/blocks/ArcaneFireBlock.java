@@ -40,6 +40,7 @@ import se.mickelus.tetra.client.particle.SpawnParticlesPacket;
 import se.mickelus.tetra.effect.potion.UnstablePowerMobEffect;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 
 @ParametersAreNonnullByDefault
 public class ArcaneFireBlock extends BaseFireBlock {
@@ -154,7 +155,7 @@ public class ArcaneFireBlock extends BaseFireBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean flag) {
         entity.hurt(level.damageSources().inFire(), 0.5f);
 
         if (!level.isClientSide() && level.getGameTime() % 10 == 0 && entity instanceof LivingEntity livingEntity) {

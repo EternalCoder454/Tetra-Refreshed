@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 import static net.minecraft.world.level.material.Fluids.WATER;
+import net.minecraft.world.level.redstone.Orientation;
 
 @ParametersAreNonnullByDefault
 public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements EntityBlock, BlockTooltip {
@@ -76,12 +77,17 @@ public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements Ent
                 .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 
+    /**
+     * neighborChanged no longer carries the position the change came from. Orientation replaces it
+     * and describes a propagation direction rather than a source block, and vanilla passes null for
+     * it on ordinary neighbour updates, so the old "ignore the block we output into" guard cannot be
+     * reconstructed. Recomputing unconditionally reaches the same state, only slightly more often.
+     * setSending and setReceiving write with UPDATE_CLIENTS alone, so this cannot feed back.
+     */
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {
-        if (!pos.relative(world.getBlockState(pos).getValue(facingProp)).equals(fromPos)) {
-            TileEntityOptional.from(world, pos, CoreExtractorBaseBlockEntity.class)
-                    .ifPresent(CoreExtractorBaseBlockEntity::updateTransferState);
-        }
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, @Nullable Orientation orientation, boolean isMoving) {
+        TileEntityOptional.from(world, pos, CoreExtractorBaseBlockEntity.class)
+                .ifPresent(CoreExtractorBaseBlockEntity::updateTransferState);
     }
 
     @Override

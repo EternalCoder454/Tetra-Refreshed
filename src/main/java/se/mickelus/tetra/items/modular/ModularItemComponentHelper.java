@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
 
 import java.util.Objects;
+import net.minecraft.world.item.enchantment.Enchantable;
 
 public final class ModularItemComponentHelper {
     private ModularItemComponentHelper() {
@@ -17,6 +18,7 @@ public final class ModularItemComponentHelper {
 
         syncToolComponent(itemStack);
         syncMaxDamageComponent(itemStack);
+        syncEnchantableComponent(itemStack);
     }
 
     private static void syncToolComponent(ItemStack itemStack) {
@@ -71,6 +73,29 @@ public final class ModularItemComponentHelper {
         // Workbench upgrades can lower max durability below the current damage value; clamp.
         if (itemStack.getDamageValue() > expectedMax) {
             itemStack.setDamageValue(expectedMax);
+        }
+    }
+
+    // Item#getEnchantmentValue is gone. Enchantability reads off the ENCHANTABLE component now, so
+    // a modular item's per stack value has to be mirrored into it the same way TOOL and MAX_DAMAGE
+    // already are, rather than returned from an override.
+    private static void syncEnchantableComponent(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof IModularItem item)) {
+            return;
+        }
+
+        int expected = item.getEnchantability(itemStack);
+        Enchantable current = itemStack.get(DataComponents.ENCHANTABLE);
+
+        if (expected <= 0) {
+            if (current != null) {
+                itemStack.remove(DataComponents.ENCHANTABLE);
+            }
+            return;
+        }
+
+        if (current == null || current.value() != expected) {
+            itemStack.set(DataComponents.ENCHANTABLE, new Enchantable(expected));
         }
     }
 }

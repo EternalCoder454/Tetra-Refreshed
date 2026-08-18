@@ -87,7 +87,7 @@ public class TetraMod {
 
         TetraRegistries.init(modBus);
         TetraEnchantmentHelper.init();
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ClientSetup.init(modBus);
         }
 

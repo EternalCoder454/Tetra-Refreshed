@@ -32,6 +32,8 @@ import se.mickelus.tetra.blocks.workbench.AbstractWorkbenchBlock;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.util.RandomSource;
 
 @ParametersAreNonnullByDefault
 public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicProviderBlock, ICraftingEffectProviderBlock {
@@ -117,8 +119,8 @@ public class ScrollBlock extends TetraBlock implements EntityBlock, ISchematicPr
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
-            BlockPos facingPos) {
+    protected BlockState updateShape(BlockState blockState, LevelReader world, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing,
+            BlockPos facingPos, BlockState facingState, RandomSource random) {
         if (!blockState.canSurvive(world, currentPos)) {
             return Blocks.AIR.defaultBlockState();
         }

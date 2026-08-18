@@ -49,6 +49,8 @@ import se.mickelus.tetra.properties.PropertyHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.util.RandomSource;
 
 @ParametersAreNonnullByDefault
 public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, IToolProviderBlock, BlockTooltip {
@@ -139,7 +141,8 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing,
+            BlockPos facingPos, BlockState facingState, RandomSource random) {
         return facing.getOpposite() == stateIn.getValue(facingProp) && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
     }
 

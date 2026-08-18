@@ -25,7 +25,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +70,8 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     public static Supplier<BlockEntityType<WorkbenchTile>> type;
     private static WorkbenchAction[] actions = new WorkbenchAction[0];
 
-    private final ItemStackHandler handler;
+    private final ItemStacksResourceHandler inventory;
+    private final IItemHandler handler;
     private final ItemStack previousTarget = ItemStack.EMPTY;
     private final Map<String, Runnable> changeListeners;
     private UpgradeSchematic currentSchematic;
@@ -81,7 +84,8 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         super(type.get(), p_155268_, p_155269_);
         changeListeners = new HashMap<>();
 
-        handler = createHandler();
+        inventory = createHandler();
+        handler = IItemHandler.of(inventory);
     }
 
     public static void registerPackets(PacketHandler packetHandler) {
@@ -144,13 +148,18 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         return handler;
     }
 
+    @Override
+    public ResourceHandler<ItemResource> getResourceHandler(@Nullable Direction side) {
+        return inventory;
+    }
+
     @NotNull
-    private ItemStackHandler createHandler() {
-        return new ItemStackHandler(inventorySlots) {
+    private ItemStacksResourceHandler createHandler() {
+        return new ItemStacksResourceHandler(inventorySlots) {
 
             @Override
-            protected void onContentsChanged(int slot) {
-                ItemStack itemStack = getStackInSlot(slot);
+            protected void onContentsChanged(int slot, ItemStack previous) {
+                ItemStack itemStack = getResource(slot).toStack(getAmountAsInt(slot));
                 if (slot == 0 && (itemStack.isEmpty() || !ItemStack.matches(getTargetItemStack(), itemStack))) {
                     currentSchematic = null;
                     currentSlot = null;
@@ -169,13 +178,22 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
             }
 
             @Override
-            public int getSlots() {
+            public int size() {
                 if (currentSchematic != null) {
                     return currentSchematic.getNumMaterialSlots() + 1;
                 }
                 return 1;
             }
         };
+    }
+
+    /**
+     * The resource handler replaces what IItemHandlerModifiable.setStackInSlot used to do. The
+     * adapter IItemHandler.of hands back only the read and transfer half of the old interface, so
+     * an outright set goes to the handler itself.
+     */
+    private void setStackInSlot(int slot, ItemStack itemStack) {
+        inventory.set(slot, ItemResource.of(itemStack), itemStack.getCount());
     }
 
     public WorkbenchAction[] getAvailableActions(Player player) {
@@ -421,11 +439,11 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
 
         ItemStack tempStack = upgradedStack;
         for (int i = 0; i < materialsAltered.length; i++) {
-            handler.setStackInSlot(i + 1, materialsAltered[i]);
+            setStackInSlot(i + 1, materialsAltered[i]);
         }
 
         emptyMaterialSlots(player);
-        handler.setStackInSlot(0, tempStack);
+        setStackInSlot(0, tempStack);
 
         clearSchematic();
     }
@@ -451,7 +469,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         CastOptional.cast(tweakedStack.getItem(), IModularItem.class)
                 .ifPresent(item -> item.tweak(tweakedStack, slot, tweaks));
 
-        handler.setStackInSlot(0, tweakedStack);
+        setStackInSlot(0, tweakedStack);
     }
 
     public void addChangeListener(String key, Runnable runnable) {
@@ -495,7 +513,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        input.readChild(inventoryKey, handler);
+        input.readChild(inventoryKey, inventory);
 
         currentSchematic = SchematicRegistry.getSchematic(input.getStringOr(WorkbenchTile.schematicKey, ""));
 
@@ -513,7 +531,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
-        output.putChild(inventoryKey, handler);
+        output.putChild(inventoryKey, inventory);
 
         if (currentSchematic != null) {
             output.putString(schematicKey, currentSchematic.getKey());

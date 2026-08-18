@@ -14,6 +14,8 @@ import se.mickelus.tetra.blocks.scroll.ScrollItem;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 import java.util.stream.Stream;
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 
 @ParametersAreNonnullByDefault
 public class ScrollIngredient implements ICustomIngredient {
@@ -35,11 +37,13 @@ public class ScrollIngredient implements ICustomIngredient {
                 && data.key.equals(ScrollData.read(input).key);
     }
 
+    /**
+     * ICustomIngredient.items lists item holders rather than stacks, so the scroll data this
+     * ingredient matches on cannot be carried here. test still checks it.
+     */
     @Override
-    public Stream<ItemStack> getItems() {
-        ItemStack itemStack = new ItemStack(ScrollItem.instance);
-        data.write(itemStack);
-        return Stream.of(itemStack);
+    public Stream<Holder<Item>> items() {
+        return Stream.of(ScrollItem.instance.builtInRegistryHolder());
     }
 
     @Override

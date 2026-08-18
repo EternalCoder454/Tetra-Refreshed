@@ -18,7 +18,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.blocks.ItemHandlerBlockEntity;
 
@@ -30,12 +32,14 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
     public static final int inventorySize = 2;
     private static final String inventoryKey = "inv";
     public static BlockEntityType<RackTile> type;
-    private final ItemStackHandler handler = new ItemStackHandler(inventorySize) {
-        protected void onContentsChanged(int slot) {
+    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(inventorySize) {
+        @Override
+        protected void onContentsChanged(int slot, ItemStack previous) {
             setChanged();
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     };
+    private final IItemHandler handler = IItemHandler.of(inventory);
 
     public RackTile(BlockPos p_155268_, BlockState p_155269_) {
         super(type, p_155268_, p_155269_);
@@ -44,6 +48,11 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
     @Override
     public IItemHandler getItemHandler(@Nullable Direction side) {
         return handler;
+    }
+
+    @Override
+    public ResourceHandler<ItemResource> getResourceHandler(@Nullable Direction side) {
+        return inventory;
     }
 
     public void slotInteract(int slot, Player playerEntity, InteractionHand hand) {
@@ -83,13 +92,13 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        input.readChild(inventoryKey, handler);
+        input.readChild(inventoryKey, inventory);
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
-        output.putChild(inventoryKey, handler);
+        output.putChild(inventoryKey, inventory);
     }
 }

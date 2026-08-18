@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.core.Holder;
 
 public class ItemAbilityIngredient implements ICustomIngredient {
     public static Supplier<IngredientType<ItemAbilityIngredient>> type;
@@ -57,11 +58,15 @@ public class ItemAbilityIngredient implements ICustomIngredient {
                 && (tier == null || input.getItem() instanceof ItemModularHandheld item && tier.test(item.getHarvestTier(input, toolAction)));
     }
 
+    /**
+     * ICustomIngredient.items lists item holders rather than stacks now. test still does the real
+     * per stack filtering, so this stays the same set, named by holder.
+     */
     @Override
-    public Stream<ItemStack> getItems() {
+    public Stream<Holder<Item>> items() {
         return BuiltInRegistries.ITEM.stream()
-                .map(Item::getDefaultInstance)
-                .filter(this::test);
+                .filter(item -> test(item.getDefaultInstance()))
+                .map(Item::builtInRegistryHolder);
     }
 
     @Override

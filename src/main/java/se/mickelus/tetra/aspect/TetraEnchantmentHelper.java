@@ -151,7 +151,7 @@ public class TetraEnchantmentHelper {
                         ? tag.getCompoundOrEmpty("EnchantmentMapping")
                         : new CompoundTag();
                 Map<String, String> mapped = Optional.of(mappings)
-                        .map(CompoundTag::getAllKeys)
+                        .map(CompoundTag::keySet)
                         .stream()
                         .flatMap(Collection::stream)
                         .collect(Collectors.toMap(Function.identity(), mappings::getString));
@@ -334,7 +334,7 @@ public class TetraEnchantmentHelper {
     }
 
     public static Optional<Identifier> getEnchantmentKey(Holder<Enchantment> enchantment) {
-        Optional<Identifier> key = enchantment.unwrapKey().map(ResourceKey::location);
+        Optional<Identifier> key = enchantment.unwrapKey().map(ResourceKey::identifier);
         return key.isPresent() ? key : getEnchantmentKey(enchantment.value());
     }
 

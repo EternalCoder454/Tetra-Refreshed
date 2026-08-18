@@ -158,7 +158,7 @@ public class ScrollItem extends BlockItem implements InitializableItem {
     public Component getName(ItemStack stack) {
         String key = ScrollData.read(stack).key;
         // sometimes called on the server, need to check before calling I18n
-        if (!FMLEnvironment.dist.isDedicatedServer()) {
+        if (!FMLEnvironment.getDist().isDedicatedServer()) {
             String prefixKey = "item.tetra.scroll." + key + ".prefix";
             if (I18n.exists(prefixKey)) {
                 return Component.translatable("item.tetra.scroll." + key + ".prefix")

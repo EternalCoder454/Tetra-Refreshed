@@ -57,7 +57,7 @@ public class SlamEffect extends ChargedAbilityEffect {
 
             if (result != AbilityUseResult.fail) {
                 if (slowDuration > 0) {
-                    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, slowDuration, 1, false, true));
+                    target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, slowDuration, 1, false, true));
                 }
 
                 if (momentumEfficiency > 0) {

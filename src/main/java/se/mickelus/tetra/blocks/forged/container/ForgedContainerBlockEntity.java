@@ -37,7 +37,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.mutil.util.ItemHandlerWrapper;
 import se.mickelus.mutil.util.TileEntityOptional;
@@ -65,11 +68,13 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
     public static int compartmentCount = 3;
     public static int compartmentSize = 54;
     private final int[] lockIntegrity;
-    private final ItemStackHandler handler = new ItemStackHandler(compartmentSize * compartmentCount) {
-        protected void onContentsChanged(int slot) {
+    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(compartmentSize * compartmentCount) {
+        @Override
+        protected void onContentsChanged(int slot, ItemStack previous) {
             setChanged();
         }
     };
+    private final IItemHandler handler = IItemHandler.of(inventory);
     public long openTime = -1;
     private int lidIntegrity = 0;
 
@@ -119,6 +124,12 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
         return delegate != null ? delegate.handler : null;
     }
 
+    @Override
+    public ResourceHandler<ItemResource> getResourceHandler(@Nullable Direction side) {
+        ForgedContainerBlockEntity delegate = getOrDelegate();
+        return delegate != null ? delegate.inventory : null;
+    }
+
     public void open(@Nullable Player player) {
         if (lidIntegrity > 0) {
             lidIntegrity--;
@@ -134,7 +145,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                 }
 
                 Optional.ofNullable(player)
-                        .filter(p -> !p.hasEffect(MobEffects.DAMAGE_BOOST))
+                        .filter(p -> !p.hasEffect(MobEffects.STRENGTH))
                         .ifPresent(p -> p.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 200, 5)));
             } else if (lidIntegrity == 0) { // start lid open animation on the client
                 openTime = System.currentTimeMillis();
@@ -268,7 +279,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        input.readChild(inventoryKey, handler);
+        input.readChild(inventoryKey, inventory);
 
         for (int i = 0; i < lockIntegrity.length; i++) {
             lockIntegrity[i] = input.getIntOr("lock_integrity" + i, 0);
@@ -281,7 +292,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
-        output.putChild(inventoryKey, handler);
+        output.putChild(inventoryKey, inventory);
 
         writeLockData(output, lockIntegrity);
         writeLidData(output, lidIntegrity);

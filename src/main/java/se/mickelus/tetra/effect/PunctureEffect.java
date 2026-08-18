@@ -150,7 +150,7 @@ public class PunctureEffect extends ChargedAbilityEffect {
         AbilityUseResult result = item.hitEntity(itemStack, attacker, target, 0.3, 0.8f, knockbackMultiplier);
 
         if (result != AbilityUseResult.fail) {
-            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20),
+            target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) (item.getEffectEfficiency(itemStack, ItemEffect.abilityDefensive) * 20),
                     item.getEffectLevel(itemStack, ItemEffect.abilityDefensive), false, true));
 
             target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1, 0.8f);

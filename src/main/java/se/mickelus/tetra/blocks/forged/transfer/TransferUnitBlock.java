@@ -55,6 +55,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.base.Predicates.equalTo;
+import net.minecraft.world.level.redstone.Orientation;
 
 @ParametersAreNonnullByDefault
 public class TransferUnitBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -263,12 +264,17 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
     }
 
 
+    /**
+     * neighborChanged no longer carries the position the change came from. Orientation replaces it
+     * and describes a propagation direction rather than a source block, and vanilla passes null for
+     * it on ordinary neighbour updates, so the old "ignore the block we output into" guard cannot be
+     * reconstructed. Recomputing unconditionally reaches the same state, only slightly more often.
+     * setSending and setReceiving write with UPDATE_CLIENTS alone, so this cannot feed back.
+     */
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, BlockPos fromPos, boolean isMoving) {
-        if (!pos.relative(world.getBlockState(pos).getValue(facingProp)).equals(fromPos)) {
-            TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class)
-                    .ifPresent(TransferUnitBlockEntity::updateTransferState);
-        }
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block fromBlock, @Nullable Orientation orientation, boolean isMoving) {
+        TileEntityOptional.from(world, pos, TransferUnitBlockEntity.class)
+                .ifPresent(TransferUnitBlockEntity::updateTransferState);
     }
 
     @Override

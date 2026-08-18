@@ -1,0 +1,10 @@
+// Dump the real compile classpath so jp.sh and src.sh never have to guess which jar a class is in.
+allprojects {
+  tasks.register("dumpCp") {
+    doLast {
+      def f = new File(rootProject.projectDir, "build/port/cp.txt")
+      f.parentFile.mkdirs()
+      f.text = sourceSets.main.compileClasspath.files.join("\n")
+    }
+  }
+}
