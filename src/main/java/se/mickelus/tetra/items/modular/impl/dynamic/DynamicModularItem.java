@@ -64,7 +64,7 @@ public class DynamicModularItem extends ItemModularHandheld {
     }
 
     public static String getArchetypeKey(ItemStack itemStack) {
-        return getArchetypeKey(ItemStackTagHelper.getTag(itemStack));
+        return getArchetypeKey(ItemStackTagHelper.readTag(itemStack));
     }
 
     public static void setArchetypeKey(ItemStack itemStack, String key) {
@@ -72,7 +72,7 @@ public class DynamicModularItem extends ItemModularHandheld {
     }
 
     protected Optional<ArchetypeDefinition> getDefinition(ItemStack itemStack) {
-        return Optional.ofNullable(ItemStackTagHelper.getTag(itemStack))
+        return Optional.ofNullable(ItemStackTagHelper.readTag(itemStack))
                 .map(DynamicModularItem::getArchetypeKey)
                 .map(key -> Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, key))
                 .map(rl -> DataManager.instance.archetypeData.getData(rl));

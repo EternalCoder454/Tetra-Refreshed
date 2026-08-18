@@ -36,6 +36,8 @@ public final class ItemStackTagHelper {
     /**
      * Returns a detached defensive copy of the stack's CUSTOM_DATA tag, or null if absent/empty.
      * Mutations on the returned tag DO NOT propagate back to the stack — use {@link #mutate} for writes.
+     *
+     * Prefer {@link #readTag} where the tag is only read. This one copies.
      */
     @Nullable
     public static CompoundTag getTag(ItemStack stack) {
@@ -43,7 +45,25 @@ public final class ItemStackTagHelper {
         if (data == null || data.isEmpty()) {
             return null;
         }
-        return safeCopy(data.copyTag());
+        // copyTag is already a deep copy, so it is detached and owned by this caller. Walking it a
+        // second time bought nothing, and could not have guarded against a cycle either, since
+        // copyTag would have recursed forever before any guard ran.
+        return data.copyTag();
+    }
+
+    /**
+     * The stack's CUSTOM_DATA tag itself, or null if absent/empty. **Read only.** Mutating the
+     * returned tag writes straight through to the component, which is shared and interned, so it
+     * would change other stacks.
+     *
+     * This exists because reading was the expensive path. Every module lookup, every improvement
+     * check and every cache key went through {@link #getTag}, so pulling one string out of an item
+     * deep copied its entire tag. Use {@link #mutate} for any write.
+     */
+    @Nullable
+    public static CompoundTag readTag(ItemStack stack) {
+        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        return data == null || data.isEmpty() ? null : data.tag;
     }
 
     /**

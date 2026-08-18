@@ -102,7 +102,7 @@ public class ModularItemModel implements ItemModel {
             return;
         }
 
-        CompoundTag baseTag = ItemStackTagHelper.getTag(itemStack);
+        CompoundTag baseTag = ItemStackTagHelper.readTag(itemStack);
         if (baseTag == null || baseTag.isEmpty()) {
             return;
         }

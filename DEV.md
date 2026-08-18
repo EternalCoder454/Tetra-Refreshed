@@ -72,6 +72,26 @@ and a replace that matches nothing reports success, so the edit reads as applied
 Use `tools/portedit.py`, which asserts each search string matches exactly once and preserves the
 file's line endings.
 
+## Reading and writing modular item data
+
+A modular item keeps its modules, variants, improvements and honing state in the `CUSTOM_DATA`
+component, reached through `ItemStackTagHelper`. Three methods, and which one you pick matters:
+
+| Method | Use for | Cost |
+|---|---|---|
+| `readTag` | reading, and nothing else | free, returns the live tag |
+| `getTag` | when the tag has to outlive the call, or a sub tag escapes | one deep copy |
+| `mutate` | every write | one deep copy, written back atomically |
+
+**`readTag` returns the component's own tag.** Mutating it writes straight through to a value that
+is shared between stacks, so it would change other items. Every write goes through `mutate`, which
+hands you a detached copy and puts it back when the lambda returns.
+
+Reading used to cost two deep copies of an item's entire tag, because `getTag` copied what
+`copyTag` had already copied, and every module lookup, improvement check and cache key went through
+it. Pulling one string out of an item copied the whole thing twice. That is what `readTag` is for,
+and it is why the access transformer widens `CustomData.tag`.
+
 ## The data formats
 
 Tetra is data driven across these datapack directories under `data/tetra`:

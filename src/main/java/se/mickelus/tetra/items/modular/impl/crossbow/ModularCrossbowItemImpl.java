@@ -470,7 +470,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
 
     @Override
     public boolean isLoaded(ItemStack stack) {
-        CompoundTag compoundnbt = ItemStackTagHelper.getTag(stack);
+        CompoundTag compoundnbt = ItemStackTagHelper.readTag(stack);
         return compoundnbt != null && compoundnbt.getBooleanOr("Charged", false);
     }
 

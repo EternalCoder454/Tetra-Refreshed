@@ -89,7 +89,7 @@ public abstract class ItemModuleMajor extends ItemModule {
      * @return
      */
     public int getSettleProgress(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .filter(tag -> tag.contains(settleProgressKey))
                 .map(tag -> tag.getIntOr(settleProgressKey, 0))
                 .orElseGet(() -> getSettleLimit(itemStack));
@@ -134,7 +134,7 @@ public abstract class ItemModuleMajor extends ItemModule {
     }
 
     public int getImprovementLevel(ItemStack itemStack, String improvementKey) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .filter(tag -> tag.contains(slotTagKey + ":" + improvementKey))
                 .map(tag -> tag.getIntOr(slotTagKey + ":" + improvementKey, 0))
                 .orElse(-1);
@@ -142,7 +142,7 @@ public abstract class ItemModuleMajor extends ItemModule {
 
     public ImprovementData getImprovement(ItemStack itemStack, String improvementKey) {
         if (hasTag(itemStack)) {
-            CompoundTag tag = getTag(itemStack);
+            CompoundTag tag = readTag(itemStack);
             return Arrays.stream(improvements)
                     .filter(improvement -> improvementKey.equals(improvement.key))
                     .filter(improvement -> tag.contains(slotTagKey + ":" + improvement.key))
@@ -156,7 +156,7 @@ public abstract class ItemModuleMajor extends ItemModule {
 
     public ImprovementData[] getImprovements(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            CompoundTag tag = getTag(itemStack);
+            CompoundTag tag = readTag(itemStack);
             return Arrays.stream(improvements)
                     .filter(improvement -> tag.contains(slotTagKey + ":" + improvement.key))
                     .filter(improvement -> improvement.level == tag.getIntOr(slotTagKey + ":" + improvement.key, 0))
@@ -308,7 +308,7 @@ public abstract class ItemModuleMajor extends ItemModule {
     @Override
     public TweakData[] getTweaks(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            String variant = getTag(itemStack).getStringOr(this.variantTagKey, "");
+            String variant = readTag(itemStack).getStringOr(this.variantTagKey, "");
             String[] improvementKeys = Arrays.stream(getImprovements(itemStack))
                     .map(improvement -> improvement.key)
                     .toArray(String[]::new);

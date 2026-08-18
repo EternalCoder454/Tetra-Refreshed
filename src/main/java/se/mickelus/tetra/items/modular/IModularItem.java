@@ -144,13 +144,13 @@ public interface IModularItem {
     }
 
     static boolean isHoneable(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.contains(honeAvailableKey))
                 .orElse(false);
     }
 
     static int getHoningSeed(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.getIntOr(honeCountKey, 0))
                 .orElse(0);
     }
@@ -244,7 +244,7 @@ public interface IModularItem {
     @Nullable
     default String getIdentifier(ItemStack itemStack) {
         if (hasTag(itemStack)) {
-            return getTag(itemStack).getStringOr(identifierKey, "");
+            return readTag(itemStack).getStringOr(identifierKey, "");
         }
 
         return null;
@@ -253,13 +253,13 @@ public interface IModularItem {
     default String getDataCacheKey(ItemStack itemStack) {
         return Optional.ofNullable(getIdentifier(itemStack))
                 .filter(id -> !id.isEmpty())
-                .orElseGet(() -> hasTag(itemStack) ? getTag(itemStack).toString() : "INVALID-" + getItem().toString());
+                .orElseGet(() -> hasTag(itemStack) ? readTag(itemStack).toString() : "INVALID-" + getItem().toString());
     }
 
     default String getModelCacheKey(ItemStack itemStack, LivingEntity entity) {
         return Optional.ofNullable(getIdentifier(itemStack))
                 .filter(id -> !id.isEmpty())
-                .orElseGet(() -> hasTag(itemStack) ? getTag(itemStack).toString() : "INVALID-" + getItem().toString());
+                .orElseGet(() -> hasTag(itemStack) ? readTag(itemStack).toString() : "INVALID-" + getItem().toString());
     }
 
     void clearCaches();
@@ -275,7 +275,7 @@ public interface IModularItem {
     }
 
     default Collection<ItemModule> getAllModules(ItemStack stack) {
-        CompoundTag stackTag = getTag(stack);
+        CompoundTag stackTag = readTag(stack);
 
         if (stackTag != null) {
             return Stream.concat(Arrays.stream(getMajorModuleKeys(stack)), Arrays.stream(getMinorModuleKeys(stack)))
@@ -291,7 +291,7 @@ public interface IModularItem {
     default ItemModuleMajor[] getMajorModules(ItemStack itemStack) {
         String[] majorModuleKeys = getMajorModuleKeys(itemStack);
         ItemModuleMajor[] modules = new ItemModuleMajor[majorModuleKeys.length];
-        CompoundTag tag = getTag(itemStack);
+        CompoundTag tag = readTag(itemStack);
 
         if (tag != null) {
             for (int i = 0; i < majorModuleKeys.length; i++) {
@@ -308,7 +308,7 @@ public interface IModularItem {
     default ItemModule[] getMinorModules(ItemStack itemStack) {
         String[] minorModuleKeys = getMinorModuleKeys(itemStack);
         ItemModule[] modules = new ItemModule[minorModuleKeys.length];
-        CompoundTag tag = getTag(itemStack);
+        CompoundTag tag = readTag(itemStack);
 
         if (tag != null) {
             for (int i = 0; i < minorModuleKeys.length; i++) {
@@ -346,7 +346,7 @@ public interface IModularItem {
     }
 
     default ItemModule getModuleFromSlot(ItemStack itemStack, String slot) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.getStringOr(slot, ""))
                 .map(ItemUpgradeRegistry.instance::getModule)
                 .orElse(null);
@@ -390,7 +390,7 @@ public interface IModularItem {
     }
 
     default int getHoningProgress(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .filter(tag -> tag.contains(honeProgressKey))
                 .map(tag -> tag.getIntOr(honeProgressKey, 0))
                 .orElseGet(() -> getHoningLimit(itemStack));
@@ -421,7 +421,7 @@ public interface IModularItem {
     }
 
     default int getHonedCount(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.getIntOr(honeCountKey, 0))
                 .orElse(0);
     }
@@ -718,7 +718,7 @@ public interface IModularItem {
      * @return
      */
     default int getRepairCount(ItemStack itemStack) {
-        return Optional.ofNullable(getTag(itemStack))
+        return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.getIntOr(repairCountKey, 0))
                 .orElse(0);
     }
