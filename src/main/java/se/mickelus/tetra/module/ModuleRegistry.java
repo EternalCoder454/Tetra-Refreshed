@@ -5,7 +5,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.data.DataManager;
+
+import javax.annotation.Nullable;
 import se.mickelus.tetra.module.data.MaterialVariantData;
 import se.mickelus.tetra.module.data.ModuleData;
 import se.mickelus.tetra.module.data.VariantData;
@@ -26,11 +29,18 @@ public class ModuleRegistry {
     private final Map<Identifier, BiFunction<Identifier, ModuleData, ItemModule>> moduleConstructors;
     private Map<Identifier, ItemModule> moduleMap;
 
+    // Modules are looked up by their bare key far more than by identifier, once per slot on every
+    // read of an item's modules, and that runs on tooltips, attributes, tool data and rendering.
+    // Going through an identifier meant allocating and validating one per lookup, so the same
+    // modules are held here under their path as well.
+    private Map<String, ItemModule> moduleKeyMap;
+
     public ModuleRegistry() {
         instance = this;
 
         moduleConstructors = new HashMap<>();
         moduleMap = Collections.emptyMap();
+        moduleKeyMap = Collections.emptyMap();
 
         DataManager.instance.moduleData.onReload(() -> setupModules(DataManager.instance.moduleData.getData()));
     }
@@ -43,6 +53,12 @@ public class ModuleRegistry {
                         Map.Entry::getKey,
                         entry -> setupModule(entry.getKey(), entry.getValue())
                 ));
+
+        // Only the tetra namespaced ones, keyed by path, so that a bare key resolves to exactly
+        // what building a tetra identifier from it would have resolved to.
+        moduleKeyMap = moduleMap.entrySet().stream()
+                .filter(entry -> TetraMod.MOD_ID.equals(entry.getKey().getNamespace()))
+                .collect(Collectors.toMap(entry -> entry.getKey().getPath(), Map.Entry::getValue));
     }
 
     private boolean validateModuleData(Identifier identifier, ModuleData data) {
@@ -132,6 +148,15 @@ public class ModuleRegistry {
 
     public ItemModule getModule(Identifier identifier) {
         return moduleMap.get(identifier);
+    }
+
+    /**
+     * A module by its bare key, which is the tetra namespaced identifier of the same path. Same
+     * answer as building that identifier and asking for it, without building it.
+     */
+    @Nullable
+    public ItemModule getModule(String key) {
+        return moduleKeyMap.get(key);
     }
 
     public Collection<ItemModule> getAllModules() {
