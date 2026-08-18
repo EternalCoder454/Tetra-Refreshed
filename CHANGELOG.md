@@ -59,6 +59,11 @@ detail is in `PORT-STATUS.md`. The parts worth knowing as a player:
   rather than going through the shared helper, so it never asked for the block name prefix.
 * **The advancement tabs had no background.** A background is named as a plain texture id now and
   the game appends `textures/` and `.png` itself, so the old full paths resolved to nothing.
+* **Long Gone was granted on world join** rather than on finding ancient ruins. A location predicate
+  names `structures` now, holding any number of them, where it used to name a single `structure`.
+  The old field was simply ignored, which left the predicate with nothing to check and therefore
+  matching everywhere. Every other advancement was audited for the same shape and none of them fire
+  early.
 
 ### Added
 
