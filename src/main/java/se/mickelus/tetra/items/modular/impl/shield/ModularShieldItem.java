@@ -1,9 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.shield;
 
 import com.google.common.collect.Multimap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -12,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.core.dispenser.EquipmentDispenseItemBehavior;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -66,33 +63,12 @@ public class ModularShieldItem extends ItemModularHandheld {
 
         ItemUpgradeRegistry.instance.registerReplacementHook(this::copyBanner);
 
-        DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public IClientItemExtensions createClientExtensions() {
-        NonNullLazy<BlockEntityWithoutLevelRenderer> renderer = NonNullLazy.of(() -> new ModularShieldRenderer(Minecraft.getInstance()));
-        return new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        };
+        DispenserBlock.registerBehavior(this, EquipmentDispenseItemBehavior.INSTANCE);
     }
 
     @Override
     public void commonInit(PacketHandler packetHandler) {
         DataManager.instance.synergyData.onReload(() -> synergies = DataManager.instance.synergyData.getOrdered("shield/"));
-    }
-
-    @Override
-    public void clientInit() {
-        super.clientInit();
-
-        ItemProperties.register(this, Identifier.withDefaultNamespace("blocking"),
-                (itemStack, world, entity, i) -> isBlocking(itemStack, entity) ? 1.0F : 0.0F);
-        ItemProperties.register(this, Identifier.withDefaultNamespace("throwing"),
-                (itemStack, world, entity, i) -> isThrowing(itemStack, entity) ? 1.0F : 0.0F);
     }
 
     private ItemStack copyBanner(ItemStack original, ItemStack replacement) {

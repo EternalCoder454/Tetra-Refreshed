@@ -9,7 +9,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.util.Unit;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -19,12 +20,10 @@ import java.util.NoSuchElementException;
 // todo 1.18: fix up shield renderer
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
-public class ModularShieldBannerModel extends Model {
-    private final ModelPart root;
+public class ModularShieldBannerModel extends Model<Unit> {
 
     public ModularShieldBannerModel(ModelPart modelPart) {
-        super(RenderType::entityTranslucent);
-        this.root = modelPart;
+        super(modelPart, RenderTypes::entityTranslucent);
     }
 
     public static LayerDefinition createLayer() {
@@ -45,10 +44,6 @@ public class ModularShieldBannerModel extends Model {
                 PartPose.rotation(0, 0, (float) (-Math.PI / 4)));
 
         return LayerDefinition.create(mesh, 64, 64);
-    }
-
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer vertexBuilder, int light, int overlay, int color) {
-//        towerBanner.render(matrixStack, vertexBuilder, light, overlay, red, green, blue, alpha);
     }
 
     public ModelPart getModel(String modelType) {

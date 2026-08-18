@@ -16,7 +16,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.util.Unit;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -35,14 +36,11 @@ import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
-public class ModularShieldModel extends Model {
+public class ModularShieldModel extends Model<Unit> {
     private static final Logger logger = LogManager.getLogger();
-    private final ModelPart root;
 
     public ModularShieldModel(ModelPart modelPart) {
-        super(RenderType::entityTranslucent);
-
-        this.root = modelPart;
+        super(modelPart, RenderTypes::entityTranslucent);
     }
 
     private static Optional<Pair<Identifier, ShieldModelPartData>> getModel(Identifier resourceLocation, Resource resource) {
@@ -87,9 +85,5 @@ public class ModularShieldModel extends Model {
         } catch (NoSuchElementException e) {
         }
         return null;
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer vertexBuilder, int light, int overlay, int color) {
     }
 }

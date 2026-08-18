@@ -12,6 +12,7 @@ import net.minecraft.util.ExtraCodecs;
 import org.joml.Vector3f;
 
 import java.util.List;
+import org.joml.Vector3fc;
 
 public class ShieldModelPartData {
     public static final Codec<UVPair> uvCodec = Codec.FLOAT.listOf().comapFlatMap(list ->
@@ -46,12 +47,12 @@ public class ShieldModelPartData {
     }
 
     static class Part {
-        Vector3f origin;
-        Vector3f dimensions;
-        Vector3f rotation;
+        Vector3fc origin;
+        Vector3fc dimensions;
+        Vector3fc rotation;
         UVPair uv;
 
-        public Part(Vector3f origin, Vector3f dimensions, Vector3f rotation, UVPair uv) {
+        public Part(Vector3fc origin, Vector3fc dimensions, Vector3fc rotation, UVPair uv) {
             this.origin = origin;
             this.dimensions = dimensions;
             this.rotation = rotation;

@@ -91,6 +91,9 @@ import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyE
 import se.mickelus.tetra.client.model.ModularItemModel;
 import se.mickelus.tetra.client.model.ScrollMaterialProperty;
 import se.mickelus.tetra.client.model.CellChargedProperty;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
+import se.mickelus.tetra.client.model.HandheldStateProperty;
 
 public class ClientSetup {
     public static void init(IEventBus modBus) {
@@ -168,6 +171,16 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void registerConditionalItemModelProperties(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(HandheldStateProperty.id, HandheldStateProperty.mapCodec);
+    }
+
+    @SubscribeEvent
+    public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+        event.register(ModularShieldRenderer.Unbaked.id, ModularShieldRenderer.Unbaked.mapCodec);
+    }
+
+    @SubscribeEvent
     public static void registerEntityLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ForgedContainerRenderer.layer, ForgedContainerRenderer::createLayer);
         event.registerLayerDefinition(HammerBaseRenderer.layer, HammerBaseRenderer::createLayer);
@@ -195,7 +208,6 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(ModularShieldItem.instance.createClientExtensions(), ModularShieldItem.instance);
         event.registerItem(ModularCrossbowItemImpl.instance.createClientExtensions(), ModularCrossbowItemImpl.instance);
         event.registerMobEffect(EffectUnRenderer.INSTANCE,
                 BleedingPotionEffect.instance,
