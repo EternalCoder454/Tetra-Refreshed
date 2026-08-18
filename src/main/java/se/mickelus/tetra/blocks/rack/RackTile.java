@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.blocks.ItemHandlerBlockEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import se.mickelus.tetra.blocks.ResourceItemHandler;
 
 @ParametersAreNonnullByDefault
 public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
@@ -39,7 +40,7 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     };
-    private final IItemHandler handler = IItemHandler.of(inventory);
+    private final IItemHandler handler = new ResourceItemHandler(inventory);
 
     public RackTile(BlockPos p_155268_, BlockState p_155269_) {
         super(type, p_155268_, p_155269_);

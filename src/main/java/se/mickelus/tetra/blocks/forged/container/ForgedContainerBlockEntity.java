@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
+import se.mickelus.tetra.blocks.ResourceItemHandler;
 
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvider, ItemHandlerBlockEntity {
@@ -74,7 +75,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
             setChanged();
         }
     };
-    private final IItemHandler handler = IItemHandler.of(inventory);
+    private final IItemHandler handler = new ResourceItemHandler(inventory);
     public long openTime = -1;
     private int lidIntegrity = 0;
 

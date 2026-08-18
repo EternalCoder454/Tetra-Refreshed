@@ -57,6 +57,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import se.mickelus.tetra.blocks.ResourceItemHandler;
 
 @ParametersAreNonnullByDefault
 public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHandlerBlockEntity {
@@ -85,7 +86,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
         changeListeners = new HashMap<>();
 
         inventory = createHandler();
-        handler = IItemHandler.of(inventory);
+        handler = new ResourceItemHandler(inventory);
     }
 
     public static void registerPackets(PacketHandler packetHandler) {
