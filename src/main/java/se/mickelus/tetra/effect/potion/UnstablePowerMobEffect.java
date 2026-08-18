@@ -1,6 +1,5 @@
 package se.mickelus.tetra.effect.potion;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -210,7 +209,6 @@ public class UnstablePowerMobEffect extends MobEffect {
                         Mth.clamp((float) duration / 10.0F / 5.0F * 0.5F, 0.0F, 0.5F) + Mth.cos((float) duration * (float) Math.PI / 5.0F) * Mth.clamp((float) l / 10.0F * 0.25F,
                                 0.0F, 0.25F);
             }
-            RenderSystem.enableBlend();
             TextureAtlasSprite textureatlassprite = Minecraft.getInstance().getMobEffectTextures().get(effect);
             guiGraphics.setColor(1f, 1f, 1f, iconAlpha);
             guiGraphics.blit(x + 3, y + 3, 0, 18, 18, textureatlassprite);

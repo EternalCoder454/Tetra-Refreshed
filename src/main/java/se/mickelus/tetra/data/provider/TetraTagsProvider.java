@@ -1,5 +1,8 @@
 package se.mickelus.tetra.data.provider;
 
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -7,7 +10,6 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.blocks.multischematic.MultiblockSchematicBlock;
 
@@ -15,8 +17,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class TetraTagsProvider extends TagsProvider<Block> {
 
-    public TetraTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId, ExistingFileHelper existingFileHelper) {
-        super(packOutput, Registries.BLOCK, lookupProvider, modId, existingFileHelper);
+    public TetraTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
+        super(packOutput, Registries.BLOCK, lookupProvider, modId);
+    }
+
+    /** tag() went with the provider's own appender, TagAppender wraps the raw builder now. */
+    private TagAppender<ResourceKey<Block>, Block> appender(TagKey<Block> tag) {
+        return TagAppender.forBuilder(getOrCreateRawBuilder(tag));
     }
 
     @Override
@@ -27,15 +34,15 @@ public class TetraTagsProvider extends TagsProvider<Block> {
                 new MultiblockSchematicEntry("extractor", 3, 3)
         };
 
-        var schematicsAppender = tag(BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "multiblock_schematic")));
+        var schematicsAppender = appender(BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "multiblock_schematic")));
         for (MultiblockSchematicEntry schematic : schematics) {
             var tag = BlockTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, schematic.id));
-            var appender = tag(tag);
+            var appender = appender(tag);
             schematicsAppender.addTag(tag);
             for (int h = 0; h < schematic.width; h++) {
                 for (int v = 0; v < schematic.height; v++) {
                     String id = String.format(MultiblockSchematicBlock.Builder.format, schematic.id, h, v);
-                    appender.addOptional(Identifier.fromNamespaceAndPath("tetra", id));
+                    appender.addOptional(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("tetra", id)));
                 }
             }
         }

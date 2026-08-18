@@ -1,7 +1,5 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.gui.overlay;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
@@ -66,12 +64,9 @@ public class PotionItemGui extends GuiElement {
     }
 
     private void drawItemStack(GuiGraphicsExtractor graphics, ItemStack itemStack, int x, int y) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         graphics.item(itemStack, x, y);
         graphics.renderItemDecorations(mc.font, itemStack, x, y, "");
-        RenderSystem.disableDepthTest();
     }
 
 

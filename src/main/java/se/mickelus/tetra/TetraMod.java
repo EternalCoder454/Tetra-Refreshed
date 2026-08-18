@@ -245,7 +245,7 @@ public class TetraMod {
 
         if (event.includeServer()) {
             dataGenerator.addProvider(true, new TetraBlockStateProvider(packOutput));
-            dataGenerator.addProvider(true, new TetraTagsProvider(packOutput, lookupProvider, MOD_ID, event.getExistingFileHelper()));
+            dataGenerator.addProvider(true, new TetraTagsProvider(packOutput, lookupProvider, MOD_ID));
             dataGenerator.addProvider(true, new TetraLootTableProvider(packOutput, lookupProvider));
         }
         if (event.includeClient()) {
