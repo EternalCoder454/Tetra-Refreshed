@@ -2,15 +2,17 @@ package se.mickelus.tetra.items.modular;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.items.modular.impl.ModularBladedItem;
@@ -22,74 +24,109 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
-public class ThrownModularItemRenderer extends EntityRenderer<ThrownModularItemEntity> {
+public class ThrownModularItemRenderer extends EntityRenderer<ThrownModularItemEntity, ThrownModularItemRenderer.State> {
+
+    private final ItemModelResolver itemModelResolver;
 
     public ThrownModularItemRenderer(EntityRendererProvider.Context manager) {
         super(manager);
+        itemModelResolver = manager.getItemModelResolver();
     }
 
     @Override
-    public void render(ThrownModularItemEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int packedLightIn) {
-        matrixStack.pushPose();
+    public State createRenderState() {
+        return new State();
+    }
 
-        Item item = entity.getPickupItem().getItem();
+    @Override
+    public void extractRenderState(ThrownModularItemEntity entity, State state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+
+        ItemStack itemStack = entity.getPickupItem();
+        state.item.clear();
+        itemModelResolver.updateForNonLiving(state.item, itemStack, ItemDisplayContext.FIXED, entity);
+
+        state.shape = shapeOf(itemStack.getItem());
+        state.yaw = entity.getYRot();
+        state.pitch = entity.getXRot();
+        state.spin = entity.tickCount + partialTicks;
+        state.dealtDamage = entity.hasDealtDamage();
+        state.onGround = entity.onGround();
+    }
+
+    private static Shape shapeOf(Item item) {
         if (item instanceof ModularSingleHeadedItem) {
-            transformSingleHeaded(entity, partialTicks, matrixStack);
-        } else if (item instanceof ModularDoubleHeadedItem) {
-            transformDoubleHeaded(entity, partialTicks, matrixStack);
-        } else if (item instanceof ModularBladedItem) {
-            transformBlade(entity, partialTicks, matrixStack);
-        } else if (item instanceof ModularShieldItem) {
-            transformShield(entity, partialTicks, matrixStack);
+            return Shape.singleHeaded;
         }
-
-        Minecraft.getInstance().getItemRenderer().renderStatic(entity.getPickupItem(), ItemDisplayContext.FIXED, packedLightIn,
-                OverlayTexture.NO_OVERLAY, matrixStack, renderTypeBuffer, entity.level(), entity.getId());
-
-        matrixStack.popPose();
-        super.render(entity, entityYaw, partialTicks, matrixStack, renderTypeBuffer, packedLightIn);
+        if (item instanceof ModularDoubleHeadedItem) {
+            return Shape.doubleHeaded;
+        }
+        if (item instanceof ModularBladedItem) {
+            return Shape.blade;
+        }
+        if (item instanceof ModularShieldItem) {
+            return Shape.shield;
+        }
+        return Shape.none;
     }
 
     @Override
-    public Identifier getTextureLocation(ThrownModularItemEntity entity) {
-        return null;
-    }
+    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        poseStack.pushPose();
 
-    private void transformSingleHeaded(ThrownModularItemEntity entity, float partialTicks, PoseStack matrixStack) {
-        matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.getYRot(), entity.getYRot()) - 90.0F));
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot()) + 135.0F));
-        matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-        matrixStack.translate(.3f, -.3f, 0);
-    }
-
-    private void transformDoubleHeaded(ThrownModularItemEntity entity, float partialTicks, PoseStack matrixStack) {
-        if (entity.hasDealtDamage()) {
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot()) + 135.0F));
-        } else {
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot()) + entity.tickCount + partialTicks));
+        switch (state.shape) {
+            case singleHeaded -> {
+                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                poseStack.translate(.3f, -.3f, 0);
+            }
+            case doubleHeaded -> {
+                if (state.dealtDamage) {
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
+                } else {
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + state.spin));
+                }
+                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+                poseStack.translate(.3f, -.3f, 0);
+            }
+            case blade -> {
+                poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch + 135.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+            }
+            case shield -> {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(state.pitch));
+                if (state.onGround) {
+                    poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw - 90.0F));
+                } else {
+                    poseStack.mulPose(Axis.YP.rotationDegrees(state.yaw + state.spin * 100));
+                }
+                poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+                poseStack.translate(-0.2, 0, 0);
+            }
+            case none -> {
+            }
         }
 
-        matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.getYRot(), entity.getYRot()) - 90.0F));
-        matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
-        matrixStack.translate(.3f, -.3f, 0);
+        state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+
+        poseStack.popPose();
+        super.submit(state, poseStack, collector, camera);
     }
 
-    private void transformBlade(ThrownModularItemEntity entity, float partialTicks, PoseStack matrixStack) {
-        matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.getYRot(), entity.getYRot()) - 90.0F));
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot()) + 135.0F));
-        matrixStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+    private enum Shape {
+        singleHeaded, doubleHeaded, blade, shield, none
     }
 
-    private void transformShield(ThrownModularItemEntity entity, float partialTicks, PoseStack matrixStack) {
-        matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot())));
-
-        if (entity.onGround()) {
-            matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.getYRot(), entity.getYRot()) - 90.0F));
-        } else {
-            matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.getYRot(), entity.getYRot()) + (entity.tickCount + partialTicks) * 100));
-        }
-
-        matrixStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-        matrixStack.translate(-0.2, 0, 0);
+    public static class State extends EntityRenderState {
+        public final ItemStackRenderState item = new ItemStackRenderState();
+        public Shape shape = Shape.none;
+        public float yaw;
+        public float pitch;
+        public float spin;
+        public boolean dealtDamage;
+        public boolean onGround;
     }
 }
