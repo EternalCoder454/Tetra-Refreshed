@@ -16,7 +16,7 @@ public class VibrationDebuffer {
     public void onPlayerTick(PlayerTickEvent.Pre event) {
         if (!event.getEntity().level().isClientSide() && event.getEntity().level().getGameTime() % 20 == 0
                 && hasApplicableItem(event.getEntity())) {
-            event.getEntity().addEffect(new MobEffectInstance(MobEffects.CONFUSION, 80, 1));
+            event.getEntity().addEffect(new MobEffectInstance(MobEffects.NAUSEA, 80, 1));
         }
     }
 

@@ -255,8 +255,8 @@ public class EffectHelper {
             result *= 1.0F + (MobEffectUtil.getDigSpeedAmplification(player) + 1) * 0.2F;
         }
 
-        if (player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
-            switch (player.getEffect(MobEffects.DIG_SLOWDOWN).getAmplifier()) {
+        if (player.hasEffect(MobEffects.MINING_FATIGUE)) {
+            switch (player.getEffect(MobEffects.MINING_FATIGUE).getAmplifier()) {
                 case 0:
                     result *= 0.3F;
                     break;

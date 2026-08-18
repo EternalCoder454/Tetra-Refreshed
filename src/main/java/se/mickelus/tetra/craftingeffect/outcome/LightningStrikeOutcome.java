@@ -79,7 +79,7 @@ public class LightningStrikeOutcome implements CraftingEffectOutcome {
         if (!entities.isEmpty()) {
             return entities.get(serverLevel.getRandom().nextInt(entities.size())).blockPosition();
         }
-        return targetPos.getY() == serverLevel.getMinBuildHeight() - 1 ? targetPos.above(2) : targetPos;
+        return targetPos.getY() == serverLevel.getMinY() - 1 ? targetPos.above(2) : targetPos;
     }
 
     private static BlockPos getRandomOffset(RandomSource random, int randomOriginDistance) {

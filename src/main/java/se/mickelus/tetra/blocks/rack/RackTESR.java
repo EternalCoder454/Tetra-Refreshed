@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.rack;
 
+import net.minecraft.tags.ItemTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.items.modular.impl.ModularBladedItem;
@@ -68,7 +68,7 @@ public class RackTESR implements BlockEntityRenderer<RackTile> {
             if (itemStack.getItem() instanceof ModularShieldItem) {
                 matrixStack.translate(-0.25, 0, 0.16);
                 matrixStack.scale(2, 2, 2);
-            } else if (itemStack.getItem() instanceof ModularBladedItem || itemStack.getItem() instanceof SwordItem) {
+            } else if (itemStack.getItem() instanceof ModularBladedItem || itemStack.is(ItemTags.SWORDS)) {
                 matrixStack.translate(0, -0.2, 0);
                 matrixStack.mulPose(Axis.ZP.rotationDegrees(135.0F));
             } else if (itemStack.getItem() instanceof ModularCrossbowItemImpl || itemStack.getItem() instanceof CrossbowItem) {

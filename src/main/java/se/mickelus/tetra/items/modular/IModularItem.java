@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.world.item.equipment.Equippable;
+import net.minecraft.core.component.DataComponents;
 import com.google.common.cache.Cache;
 import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
@@ -18,7 +20,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -522,7 +523,8 @@ public interface IModularItem {
      * Mirrors the old Unbreaking chance formula that Forge exposed via DigDurabilityEnchantment.
      */
     private boolean shouldIgnoreDurabilityDrop(ItemStack itemStack, int level, RandomSource random) {
-        if (itemStack.getItem() instanceof ArmorItem && random.nextFloat() < 0.6F) {
+        Equippable equippable = itemStack.get(DataComponents.EQUIPPABLE);
+        if (equippable != null && equippable.slot().isArmor() && random.nextFloat() < 0.6F) {
             return false;
         }
 

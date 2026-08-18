@@ -22,7 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -269,7 +269,7 @@ public class FracturedBedrockTile extends BlockEntity {
             return;
         }
 
-        WeightedRandomList<MobSpawnSettings.SpawnerData> spawners = spawnInfo.getMobs(MobCategory.MONSTER);
+        WeightedList<MobSpawnSettings.SpawnerData> spawners = spawnInfo.getMobs(MobCategory.MONSTER);
         Optional<MobSpawnSettings.SpawnerData> optionalSpawnerData = spawners.getRandom(level.getRandom());
         if (optionalSpawnerData.isEmpty())
             return;
@@ -364,7 +364,7 @@ public class FracturedBedrockTile extends BlockEntity {
 
                     breakBlock(level, hitPos, hitState);
 
-                    int minY = level.getMinBuildHeight();
+                    int minY = level.getMinY();
                     BlockPos spawnPos = traceDown(hitPos, minY, level);
                     BlockState spawnState = level.getBlockState(spawnPos);
 

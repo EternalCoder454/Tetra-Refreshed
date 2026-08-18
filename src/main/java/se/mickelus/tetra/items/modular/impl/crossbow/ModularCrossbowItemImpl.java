@@ -405,11 +405,11 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
             projectile.setCritArrow(true);
 
             // the damage modifier is based on fully drawn damage, vanilla bows deal 3 times base damage + 0-4 crit damage
-            projectile.setBaseDamage(projectile.getBaseDamage() - 2 + strength / 3);
+            projectile.setBaseDamage(projectile.baseDamage - 2 + strength / 3);
 
             // velocity multiplies arrow damage for vanilla projectiles, need to reduce damage if velocity > 1
             if (projectileVelocity > 1) {
-                projectile.setBaseDamage(projectile.getBaseDamage() / projectileVelocity);
+                projectile.setBaseDamage(projectile.baseDamage / projectileVelocity);
             }
 
             int piercingLevel =

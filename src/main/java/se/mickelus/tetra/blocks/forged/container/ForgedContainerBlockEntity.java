@@ -135,7 +135,7 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
 
                 Optional.ofNullable(player)
                         .filter(p -> !p.hasEffect(MobEffects.DAMAGE_BOOST))
-                        .ifPresent(p -> p.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 5)));
+                        .ifPresent(p -> p.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 200, 5)));
             } else if (lidIntegrity == 0) { // start lid open animation on the client
                 openTime = System.currentTimeMillis();
             }

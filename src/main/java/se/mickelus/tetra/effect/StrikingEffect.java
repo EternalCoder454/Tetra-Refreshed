@@ -30,7 +30,7 @@ public class StrikingEffect {
         int strikingLevel = 0;
         ItemAbility tool = null;
 
-        if (breakingPlayer.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+        if (breakingPlayer.hasEffect(MobEffects.MINING_FATIGUE)) {
             return false;
         }
 

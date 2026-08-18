@@ -2,7 +2,7 @@ package se.mickelus.tetra.module.improvement;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.Identifier;
@@ -46,7 +46,7 @@ public class SettleToast implements Toast {
     }
 
     @Override
-    public Visibility render(GuiGraphicsExtractor graphics, ToastComponent toastGui, long delta) {
+    public Visibility render(GuiGraphicsExtractor graphics, ToastManager toastGui, long delta) {
         if (itemStack != null) {
             graphics.blit(texture, 0, 0, 0, 0, 160, 32);
 

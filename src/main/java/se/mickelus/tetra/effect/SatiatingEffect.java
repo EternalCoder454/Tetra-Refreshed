@@ -83,7 +83,7 @@ public class SatiatingEffect {
 
     public static void onPlayerTickPre(Player player) {
         if (!player.level().isClientSide()) {
-            exhaustionCache.put(player.getUUID(), player.getFoodData().getExhaustionLevel());
+            exhaustionCache.put(player.getUUID(), player.getFoodData().exhaustionLevel);
         }
     }
 
@@ -108,7 +108,7 @@ public class SatiatingEffect {
             return;
         }
 
-        float current = player.getFoodData().getExhaustionLevel();
+        float current = player.getFoodData().exhaustionLevel;
         float delta = current - previous;
 
         // FoodData only subtracts 4 exhaustion once per tick. If the value wrapped below the snapshot,
@@ -125,7 +125,7 @@ public class SatiatingEffect {
             }
         }
 
-        exhaustionCache.put(player.getUUID(), player.getFoodData().getExhaustionLevel());
+        exhaustionCache.put(player.getUUID(), player.getFoodData().exhaustionLevel);
     }
 
     private static void drainEffect(Player player, MobEffectInstance satiatedEffect, float reduction) {

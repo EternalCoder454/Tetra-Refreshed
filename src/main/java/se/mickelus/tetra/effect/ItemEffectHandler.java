@@ -78,7 +78,7 @@ public class ItemEffectHandler {
     public static void applyHitEffects(ItemStack itemStack, LivingEntity target, LivingEntity attacker) {
         int bleedingLevel = getEffectLevel(itemStack, ItemEffect.bleeding);
         if (bleedingLevel > 0) {
-            if (!target.getType().is(EntityTypeTags.UNDEAD) && attacker.getRandom().nextFloat() < 0.3f) {
+            if (!target.getType().builtInRegistryHolder().is(EntityTypeTags.UNDEAD) && attacker.getRandom().nextFloat() < 0.3f) {
                 target.addEffect(new MobEffectInstance(EffectHelper.effectHolder(BleedingPotionEffect.instance), 40, bleedingLevel, false, false));
                 BleedingPotionEffect.spawnParticles(target, 8);
             }
@@ -479,7 +479,7 @@ public class ItemEffectHandler {
                     if (effectProbability > 0) {
                         if (player.getRandom().nextDouble() < effectProbability * 2) {
                             player.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
-                            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 40 * reverbLevel));
+                            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 40 * reverbLevel));
                         }
                     }
                 }
