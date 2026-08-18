@@ -43,7 +43,7 @@ public class FortuneBonusCondition implements LootItemCondition {
     @Override
     public boolean test(LootContext context) {
         int fortuneLevel = 0;
-        ItemStack toolStack = context.getOptionalParameter(LootContextParams.TOOL);
+        ItemStack toolStack = context.getOptionalParameter(LootContextParams.TOOL) instanceof ItemStack stack ? stack : null;
 
         if (toolStack != null) {
             if (requiredTool == null) {

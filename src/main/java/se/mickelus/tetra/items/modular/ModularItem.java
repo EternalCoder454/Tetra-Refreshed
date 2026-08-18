@@ -37,7 +37,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class ModularItem extends TetraItem implements IModularItem, IToolProvider {
     private static final Logger logger = LogManager.getLogger();

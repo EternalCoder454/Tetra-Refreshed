@@ -17,6 +17,7 @@ import se.mickelus.tetra.items.TetraItem;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import net.minecraft.core.particles.PowerParticleOption;
 
 @ParametersAreNonnullByDefault
 public class DragonSinewItem extends TetraItem {
@@ -51,7 +52,7 @@ public class DragonSinewItem extends TetraItem {
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
         entity.setDeltaMovement(entity.getDeltaMovement().scale(0.8f));
         if (entity.level().isClientSide() && entity.getAge() % 20 == 0) {
-            entity.level().addParticle(ParticleTypes.DRAGON_BREATH, entity.getRandomX(.2d), entity.getRandomY() + 0.2, entity.getRandomZ(0.2),
+            entity.level().addParticle(PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1.0f), entity.getRandomX(.2d), entity.getRandomY() + 0.2, entity.getRandomZ(0.2),
                     entity.level().getRandom().nextFloat() * 0.02f - 0.01f, -0.01f - entity.level().getRandom().nextFloat() * 0.01f, entity.level().getRandom().nextFloat() * 0.02f - 0.01f);
         }
         return false;

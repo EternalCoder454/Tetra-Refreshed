@@ -57,6 +57,7 @@ import se.mickelus.tetra.blocks.forged.extractor.SeepingBedrockBlock;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 
 @ParametersAreNonnullByDefault
 public class FracturedBedrockTile extends BlockEntity {

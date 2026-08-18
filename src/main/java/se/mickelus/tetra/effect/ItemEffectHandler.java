@@ -65,6 +65,8 @@ import java.util.stream.Stream;
 
 import static se.mickelus.tetra.effect.EffectHelper.getEffectEfficiency;
 import static se.mickelus.tetra.effect.EffectHelper.getEffectLevel;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.Weapon;
 
 @ParametersAreNonnullByDefault
 public class ItemEffectHandler {
@@ -189,7 +191,11 @@ public class ItemEffectHandler {
                     .map(Player::getUseItem)
                     .filter(itemStack -> itemStack.getItem() instanceof ItemModularHandheld)
                     .filter(itemStack -> ItemUseAnimation.BLOCK.equals(itemStack.getUseAnimation()))
-                    .filter(itemStack -> event.getDamageSource().getDirectEntity() instanceof LivingEntity attacker && attacker.canDisableShield())
+                    // LivingEntity#canDisableShield is gone. Whether an attack disables blocking is
+                    // the attacking weapon's own disableBlockingForSeconds now.
+                    .filter(itemStack -> event.getDamageSource().getDirectEntity() instanceof LivingEntity attacker
+                            && attacker.getWeaponItem() != null
+                            && attacker.getWeaponItem().getOrDefault(DataComponents.WEAPON, new Weapon(1)).disableBlockingForSeconds() > 0)
                     .ifPresent(itemStack -> ((ItemModularHandheld) itemStack.getItem()).onShieldDisabled((Player) event.getEntity(), itemStack));
         }
     }

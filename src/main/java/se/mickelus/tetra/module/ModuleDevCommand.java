@@ -43,7 +43,7 @@ public class ModuleDevCommand {
         BlockPos pos = BlockPos.containing(context.getSource().getPosition());
         Level world = context.getSource().getLevel();
 
-        ItemStack baseStack = ItemArgument.getItem(context, "item").createItemStack(1, false);
+        ItemStack baseStack = ItemArgument.getItem(context, "item").createItemStack(1);
 
         if (!(baseStack.getItem() instanceof IModularItem)) {
             baseStack = ItemUpgradeRegistry.instance.getReplacement(baseStack);

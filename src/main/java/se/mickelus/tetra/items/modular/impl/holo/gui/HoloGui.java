@@ -25,6 +25,7 @@ import se.mickelus.tetra.module.schematic.UpgradeSchematic;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.input.CharacterEvent;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
@@ -187,8 +188,9 @@ public class HoloGui extends Screen {
     }
 
     @Override
-    public boolean charTyped(char typedChar, int keyCode) {
-        if (currentPage.onCharType(typedChar, keyCode)) {
+    public boolean charTyped(CharacterEvent event) {
+        char typedChar = (char) event.codepoint();
+        if (currentPage.onCharType(typedChar, event.codepoint())) {
             return true;
         }
 
@@ -203,7 +205,7 @@ public class HoloGui extends Screen {
                     gui.onShow();
                     break;
                 case 't':
-                    getMinecraft().player.connection.sendUnsignedCommand("reload");
+                    getMinecraft().player.connection.sendCommand("reload");
                     spinner.setVisible(true);
                     break;
             }

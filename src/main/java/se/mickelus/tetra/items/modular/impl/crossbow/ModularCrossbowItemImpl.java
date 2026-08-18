@@ -204,7 +204,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
             tooltip.accept((Component.translatable("item.minecraft.crossbow.projectile")).append(" ").append(itemstack.getDisplayName()));
             if (flagIn.isAdvanced() && itemstack.getItem() == Items.FIREWORK_ROCKET) {
                 List<Component> list1 = Lists.newArrayList();
-                Items.FIREWORK_ROCKET.appendHoverText(itemstack, context, list1, flagIn);
+                Items.FIREWORK_ROCKET.appendHoverText(itemstack, context, display, list1::add, flagIn);
                 if (!list1.isEmpty()) {
                     for (int i = 0; i < list1.size(); ++i) {
                         list1.set(i, (Component.literal("  ")).append(list1.get(i)).withStyle(ChatFormatting.GRAY));

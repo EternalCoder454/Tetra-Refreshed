@@ -62,7 +62,7 @@ public class SettleToast implements Toast {
         }
 
         if (!this.hasPlayedSound && delta > 0L) {
-            toastManager.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.settleGain, 1, 1));
+            toastManager.getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(TetraSounds.settle, 1, 1));
             this.hasPlayedSound = true;
         }
 
