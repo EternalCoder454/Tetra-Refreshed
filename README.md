@@ -8,7 +8,8 @@ carries no claim of authorship over the mod. Port by EternalHell.
 
 **Secrets of Forging: Revelations** and **Art of Forging** are by
 [AceTheEldritchKing](https://github.com/AceTheEldritchKing), updated by GamerK_2, and are bundled
-here with his permission, given on Discord on 2026-08-18. They stay his work and his projects. He
+here with his permission, given on Discord on 2026-08-18 and recorded verbatim in
+[dev-permission.md](dev-permission.md). They stay his work and his projects. He
 asked for them to be included as separate projects rather than absorbed, so they ship as jarJar
 bundles and each loads as its own mod with its own id, the way Create bundles Flywheel.
 
