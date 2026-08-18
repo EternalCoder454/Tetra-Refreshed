@@ -19,21 +19,14 @@ public class ImitateItemEffectOutcome extends ItemEffectOutcome {
 
     @Override
     public boolean perform(ItemEffectContext context) {
-        switch (effect) {
-            case swing:
-                return swing(context);
-            case breakBlockStart:
-                return breakBlockStart(context);
-            case hurtEnemy:
-                return hurtEnemy(context);
-            case mineBlock:
-                return mineBlock(context);
-            case leftClickEntity:
-                return leftClickEntity(context);
-            case finishUsing:
-                return finishUsing(context);
-        }
-        return false;
+        return switch (effect) {
+            case swing -> swing(context);
+            case breakBlockStart -> breakBlockStart(context);
+            case hurtEnemy -> hurtEnemy(context);
+            case mineBlock -> mineBlock(context);
+            case leftClickEntity -> leftClickEntity(context);
+            case finishUsing -> finishUsing(context);
+        };
     }
 
     private boolean mineBlock(ItemEffectContext context) {

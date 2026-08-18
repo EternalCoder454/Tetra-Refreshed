@@ -20,16 +20,12 @@ public class CraftTypeCondition implements CraftingEffectCondition {
     @Override
     public boolean test(Identifier[] unlocks, ItemStack upgradedStack, String slot, boolean isReplacing, Player player,
             ItemStack[] materials, Map<ItemAbility, Integer> tools, UpgradeSchematic schematic, Level world, BlockPos pos, BlockState blockState) {
-        switch (craft) {
-            case module:
-                return isReplacing;
-            case improvement:
-                return !isReplacing && !isEnchantment(materials);
-            case enchantment:
-                return !isReplacing && isEnchantment(materials);
-            case repair:
-        }
-        return false;
+        return switch (craft) {
+            case module -> isReplacing;
+            case improvement -> !isReplacing && !isEnchantment(materials);
+            case enchantment -> !isReplacing && isEnchantment(materials);
+            case repair -> false;
+        };
     }
 
     private boolean isEnchantment(ItemStack[] materials) {

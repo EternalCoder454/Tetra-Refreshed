@@ -30,6 +30,18 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class PropertyHelper {
 
+    /**
+     * Every non empty stack the player carries, offhand first, with replacements already applied.
+     *
+     * Five methods here opened with these same three lines, which meant a change to what counts as
+     * carried had to be made five times to take effect.
+     */
+    private static Stream<ItemStack> carriedStacks(Player player) {
+        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
+                .filter(itemStack -> !itemStack.isEmpty())
+                .map(PropertyHelper::getReplacement);
+    }
+
     public static int getItemToolLevel(ItemStack itemStack, ItemAbility tool) {
         return Optional.of(itemStack)
                 .filter(stack -> !stack.isEmpty())
@@ -49,9 +61,7 @@ public class PropertyHelper {
     }
 
     public static int getPlayerEffectLevel(Player player, ItemEffect effect) {
-        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(PropertyHelper::getReplacement)
+        return carriedStacks(player)
                 .filter(itemStack -> itemStack.getItem() instanceof IModularItem)
                 .map(itemStack -> ((IModularItem) itemStack.getItem()).getEffectLevel(itemStack, effect))
                 .max(Integer::compare)
@@ -59,9 +69,7 @@ public class PropertyHelper {
     }
 
     public static float getPlayerEffectEfficiency(Player player, ItemEffect effect) {
-        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(PropertyHelper::getReplacement)
+        return carriedStacks(player)
                 .filter(itemStack -> itemStack.getItem() instanceof IModularItem)
                 .max(Comparator.comparingInt(itemStack -> ((IModularItem) itemStack.getItem()).getEffectLevel(itemStack, effect)))
                 .map(itemStack -> ((IModularItem) itemStack.getItem()).getEffectEfficiency(itemStack, effect))
@@ -69,9 +77,7 @@ public class PropertyHelper {
     }
 
     public static int getPlayerToolLevel(Player player, ItemAbility tool) {
-        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(PropertyHelper::getReplacement)
+        return carriedStacks(player)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
                 .map(itemStack -> ((IToolProvider) itemStack.getItem()).getToolLevel(itemStack, tool))
                 .max(Integer::compare)
@@ -79,18 +85,14 @@ public class PropertyHelper {
     }
 
     public static Set<ItemAbility> getPlayerTools(Player player) {
-        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(PropertyHelper::getReplacement)
+        return carriedStacks(player)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
                 .flatMap(itemStack -> ((IToolProvider) itemStack.getItem()).getTools(itemStack).stream())
                 .collect(Collectors.toSet());
     }
 
     public static Map<ItemAbility, Integer> getPlayerToolLevels(Player player) {
-        return Stream.concat(Stream.of(player.getOffhandItem()), player.getInventory().getNonEquipmentItems().stream())
-                .filter(itemStack -> !itemStack.isEmpty())
-                .map(PropertyHelper::getReplacement)
+        return carriedStacks(player)
                 .filter(itemStack -> itemStack.getItem() instanceof IToolProvider)
                 .map(itemStack -> ((IToolProvider) itemStack.getItem()).getToolLevels(itemStack))
                 .map(Map::entrySet)
