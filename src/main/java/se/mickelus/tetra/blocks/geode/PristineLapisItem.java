@@ -3,7 +3,6 @@ package se.mickelus.tetra.blocks.geode;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +11,6 @@ import se.mickelus.tetra.Tooltips;
 import se.mickelus.tetra.items.TetraItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class PristineLapisItem extends TetraItem {

@@ -10,7 +10,6 @@ import net.minecraft.world.item.TooltipFlag;
 import se.mickelus.tetra.items.TetraItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @ParametersAreNonnullByDefault
 public class GeodeItem extends TetraItem {

@@ -3,8 +3,6 @@ package se.mickelus.tetra.items.modular.impl.shield;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;

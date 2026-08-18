@@ -6,7 +6,6 @@ import com.google.common.cache.Cache;
 import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;

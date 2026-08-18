@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import se.mickelus.tetra.blocks.InitializableBlock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault

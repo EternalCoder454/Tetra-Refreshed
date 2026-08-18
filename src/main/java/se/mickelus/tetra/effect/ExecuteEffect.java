@@ -16,7 +16,6 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import se.mickelus.mutil.util.CastOptional;
 import se.mickelus.tetra.effect.potion.SeveredPotionEffect;
 import se.mickelus.tetra.effect.potion.SmallStrengthPotionEffect;

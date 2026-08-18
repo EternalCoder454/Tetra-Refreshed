@@ -1,7 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.holo.gui.craft.schematic;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import se.mickelus.mutil.gui.*;
 import se.mickelus.tetra.blocks.workbench.gui.GuiModuleGlyph;
 import se.mickelus.tetra.gui.GuiColors;

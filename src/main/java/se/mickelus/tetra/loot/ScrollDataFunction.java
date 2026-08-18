@@ -6,7 +6,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import java.util.function.Supplier;
 import se.mickelus.tetra.blocks.scroll.ScrollData;
 
 import javax.annotation.ParametersAreNonnullByDefault;

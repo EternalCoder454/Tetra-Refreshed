@@ -1,7 +1,5 @@
 package se.mickelus.tetra.blocks.workbench;
 
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;

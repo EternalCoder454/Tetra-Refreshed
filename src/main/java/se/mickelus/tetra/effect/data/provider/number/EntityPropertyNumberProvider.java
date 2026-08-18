@@ -1,18 +1,9 @@
 package se.mickelus.tetra.effect.data.provider.number;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.block.state.BlockState;
 import se.mickelus.tetra.effect.data.ItemEffectContext;
-import se.mickelus.tetra.effect.data.condition.FixedItemEffectCondition;
-import se.mickelus.tetra.effect.data.condition.ItemEffectCondition;
 import se.mickelus.tetra.effect.data.provider.entity.EntityProvider;
-import se.mickelus.tetra.effect.data.provider.vector.VectorProvider;
 
 public class EntityPropertyNumberProvider implements NumberProvider {
     EntityProvider entity;

@@ -9,12 +9,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import se.mickelus.tetra.TetraMod;
-import se.mickelus.tetra.items.modular.ModularItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;

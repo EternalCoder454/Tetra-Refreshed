@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import se.mickelus.tetra.TetraMod;
 
 public class PlainParticleType extends ParticleType<PlainParticleOption> {
     public static final String identifier = "plain";

@@ -10,7 +10,6 @@ import net.minecraft.world.item.TooltipFlag;
 import se.mickelus.tetra.blocks.TetraBlock;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault

@@ -16,7 +16,6 @@ import se.mickelus.tetra.items.TetraItem;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 import net.minecraft.core.particles.PowerParticleOption;
 
 @ParametersAreNonnullByDefault

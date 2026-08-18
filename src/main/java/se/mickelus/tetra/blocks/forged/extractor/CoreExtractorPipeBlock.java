@@ -23,7 +23,6 @@ import se.mickelus.tetra.blocks.TetraBlock;
 import se.mickelus.tetra.blocks.forged.ForgedBlockCommon;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 

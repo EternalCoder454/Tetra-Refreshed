@@ -18,7 +18,6 @@ import se.mickelus.tetra.items.modular.MaterialItemPredicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 

@@ -1,8 +1,5 @@
 package se.mickelus.tetra;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -65,7 +62,6 @@ import se.mickelus.tetra.util.TierHelper;
 import se.mickelus.tetra.util.ItemAbilityHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.concurrent.CompletableFuture;
 
 @Mod(TetraMod.MOD_ID)
 

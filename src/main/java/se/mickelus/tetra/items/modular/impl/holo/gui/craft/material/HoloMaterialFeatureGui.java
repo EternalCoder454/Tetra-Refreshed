@@ -2,7 +2,6 @@ package se.mickelus.tetra.items.modular.impl.holo.gui.craft.material;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import se.mickelus.mutil.gui.*;

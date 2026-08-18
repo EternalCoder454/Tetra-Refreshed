@@ -1,7 +1,6 @@
 package se.mickelus.tetra.items.modular.impl.holo.gui.craft.schematic;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;

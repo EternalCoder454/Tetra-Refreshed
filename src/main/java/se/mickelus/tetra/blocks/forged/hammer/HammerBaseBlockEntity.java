@@ -1,8 +1,6 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
 import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import com.google.common.collect.ImmutableMap;
@@ -11,9 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;

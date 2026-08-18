@@ -1,6 +1,5 @@
 package se.mickelus.tetra.items.modular.impl.toolbelt.booster;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;

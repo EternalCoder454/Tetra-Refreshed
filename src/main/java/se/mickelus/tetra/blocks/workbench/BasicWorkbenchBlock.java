@@ -22,7 +22,6 @@ import net.neoforged.neoforge.common.Tags;
 import se.mickelus.tetra.advancements.BlockUseCriterion;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 @ParametersAreNonnullByDefault
