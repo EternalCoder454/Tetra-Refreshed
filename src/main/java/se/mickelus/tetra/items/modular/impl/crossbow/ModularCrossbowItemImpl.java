@@ -553,7 +553,7 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
             return ItemStack.EMPTY;
         }
 
-        Item item = BuiltInRegistries.ITEM.get(itemId);
+        Item item = BuiltInRegistries.ITEM.getValue(itemId);
         return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
     }
 

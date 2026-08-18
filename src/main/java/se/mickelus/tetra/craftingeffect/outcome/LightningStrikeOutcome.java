@@ -73,7 +73,7 @@ public class LightningStrikeOutcome implements CraftingEffectOutcome {
 
     private static BlockPos findLightningTargetAround(ServerLevel serverLevel, BlockPos pos) {
         BlockPos targetPos = serverLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos);
-        AABB area = AABB.encapsulatingFullBlocks(targetPos, new BlockPos(targetPos.atY(serverLevel.getMaxBuildHeight()))).inflate(3.0);
+        AABB area = AABB.encapsulatingFullBlocks(targetPos, new BlockPos(targetPos.atY(serverLevel.getMaxY()))).inflate(3.0);
         List<LivingEntity> entities = serverLevel.getEntitiesOfClass(LivingEntity.class, area,
                 entity -> entity.isAlive() && serverLevel.canSeeSky(entity.blockPosition()));
         if (!entities.isEmpty()) {

@@ -129,7 +129,7 @@ public class OutcomeMaterial {
 
                     if (!material.itemStacks.isEmpty() && jsonObject.has("nbt")) {
                         try {
-                            CompoundTag compoundnbt = TagParser.parseTag(GsonHelper.convertToString(jsonObject.get("nbt"), "nbt"));
+                            CompoundTag compoundnbt = TagParser.parseCompoundFully(GsonHelper.convertToString(jsonObject.get("nbt"), "nbt"));
                             material.itemStacks.forEach(itemStack -> setTag(itemStack, compoundnbt.copy()));
                         } catch (CommandSyntaxException exception) {
                             throw new JsonSyntaxException("Encountered invalid nbt tag when parsing material: " + exception.getMessage());

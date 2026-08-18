@@ -15,6 +15,8 @@ import se.mickelus.mutil.util.CastOptional;
 import se.mickelus.tetra.TetraMod;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 
 @ParametersAreNonnullByDefault
 public class SweepingEffect {
@@ -67,7 +69,22 @@ public class SweepingEffect {
         attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(),
                 SoundEvents.PLAYER_ATTACK_SWEEP, attacker.getSoundSource(), 1.0F, 1.0F);
 
-        CastOptional.cast(attacker, Player.class).ifPresent(Player::sweepAttack);
+        spawnSweepParticle(attacker);
+    }
+
+    /**
+     * Player#sweepAttack is gone. It only ever spawned the sweep particle, and vanilla now does that
+     * inline at the end of its private doSweepAttack. Tetra deals its own sweep damage and wanted the
+     * visual alone, so the particle is spawned here on the same terms vanilla spawns it.
+     */
+    public static void spawnSweepParticle(LivingEntity attacker) {
+        if (!(attacker.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        double dx = -Mth.sin(attacker.getYRot() * (float) (Math.PI / 180.0));
+        double dz = Mth.cos(attacker.getYRot() * (float) (Math.PI / 180.0));
+        serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK, attacker.getX() + dx, attacker.getY(0.5), attacker.getZ() + dz, 0, dx, 0.0, dz, 0.0);
     }
 
     public static void triggerTruesweep() {
@@ -115,7 +132,7 @@ public class SweepingEffect {
             attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(),
                     SoundEvents.PLAYER_ATTACK_SWEEP, attacker.getSoundSource(), 1.0F, 1.0F);
 
-            CastOptional.cast(attacker, Player.class).ifPresent(Player::sweepAttack);
+            spawnSweepParticle(attacker);
         }
     }
 

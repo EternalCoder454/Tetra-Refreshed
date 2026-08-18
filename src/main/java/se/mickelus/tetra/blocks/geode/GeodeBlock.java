@@ -32,8 +32,10 @@ public class GeodeBlock extends TetraBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
-        return Blocks.DEEPSLATE.getCloneItemStack(world, pos, state, includeData);
+    protected ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
+        // The hook is protected on BlockBehaviour now, so it cannot be called on another block. The
+        // state carrying version reaches the same place.
+        return Blocks.DEEPSLATE.defaultBlockState().getCloneItemStack(world, pos, includeData);
     }
 
     @Override

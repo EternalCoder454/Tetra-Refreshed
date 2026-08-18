@@ -11,6 +11,7 @@ import se.mickelus.tetra.effect.data.ItemEffectContext;
 import se.mickelus.tetra.effect.data.condition.FixedItemEffectCondition;
 import se.mickelus.tetra.effect.data.condition.ItemEffectCondition;
 import se.mickelus.tetra.effect.data.provider.vector.VectorProvider;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 public class SpawnEntityItemEffectOutcome extends ItemEffectOutcome {
     CompoundTag entity;
@@ -22,8 +23,8 @@ public class SpawnEntityItemEffectOutcome extends ItemEffectOutcome {
     @Override
     public boolean perform(ItemEffectContext context) {
         Vec3 resolvedPosition = position.getVector(context);
-        Entity entityInstance = EntityType.loadEntityRecursive(entity, context.getLevel(), e -> {
-            e.moveTo(resolvedPosition.x(), resolvedPosition.y(), resolvedPosition.z());
+        Entity entityInstance = EntityType.loadEntityRecursive(entity, context.getLevel(), EntitySpawnReason.TRIGGERED, e -> {
+            e.snapTo(resolvedPosition.x(), resolvedPosition.y(), resolvedPosition.z());
             return e;
         });
         if (entityInstance != null && context.getLevel() instanceof ServerLevel serverLevel) {

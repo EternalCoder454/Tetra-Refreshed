@@ -121,8 +121,8 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         if ((dealtDamage || isNoPhysics()) && shooter != null) {
             int loyaltyLevel = entityData.get(LOYALTY_LEVEL);
             if (loyaltyLevel > 0 && !shouldReturnToThrower()) {
-                if (!level().isClientSide() && pickup == AbstractArrow.Pickup.ALLOWED) {
-                    spawnAtLocation(getPickupItem(), 0.1f);
+                if (level() instanceof ServerLevel serverLevel && pickup == AbstractArrow.Pickup.ALLOWED) {
+                    spawnAtLocation(serverLevel, getPickupItem(), 0.1f);
                 }
 
                 discard();
@@ -242,7 +242,9 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
                     return;
                 }
                 if (shooter instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.playNotifySound(SoundEvents.ITEM_BREAK.value(), SoundSource.BLOCKS, 0.5f, 0.5f);
+                    // ServerPlayer#playNotifySound is gone; playing into the level is how vanilla does this now.
+                    serverPlayer.level().playSound(null, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
+                            SoundEvents.ITEM_BREAK.value(), SoundSource.BLOCKS, 0.5f, 0.5f);
                 }
             }
 
@@ -382,7 +384,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
             setDeltaMovement(level().getEntities(shooter, new AABB(target.blockPosition()).inflate(8d), entity ->
                             !hitEntities.contains(entity.getId())
                                     && entity instanceof LivingEntity
-                                    && !entity.isInvulnerableTo(damagesource)
+                                    && !(level() instanceof ServerLevel invulnerabilityLevel && entity.isInvulnerableTo(invulnerabilityLevel, damagesource))
                                     && (shooter == null || !entity.isAlliedTo(shooter)))
                     .stream()
                     .map(entity -> entity.position().add(0, entity.getBbHeight() * 0.8, 0))

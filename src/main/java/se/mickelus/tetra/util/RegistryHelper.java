@@ -21,7 +21,8 @@ public final class RegistryHelper {
 
     @Nullable
     public static <T> T get(Registry<T> registry, Identifier location) {
-        return registry.containsKey(location) ? registry.get(location) : null;
+        // Registry#get returns a holder now; getValue is the plain value lookup it used to be.
+        return registry.containsKey(location) ? registry.getValue(location) : null;
     }
 
     @Nullable
@@ -58,7 +59,7 @@ public final class RegistryHelper {
     }
 
     public static <T> Stream<T> streamTag(Registry<T> registry, TagKey<T> key) {
-        return registry.getTag(key)
+        return registry.get(key)
                 .stream()
                 .flatMap(HolderSet.Named::stream)
                 .map(Holder::value);

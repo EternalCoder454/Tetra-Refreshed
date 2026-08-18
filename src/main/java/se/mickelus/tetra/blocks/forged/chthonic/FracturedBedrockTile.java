@@ -115,7 +115,7 @@ public class FracturedBedrockTile extends BlockEntity {
         }
 
         boolean spawnBonus = spawnInfo.getMobs(MobCategory.MONSTER).unwrap().stream()
-                .map(spawner -> spawner.type)
+                .map(MobSpawnSettings.SpawnerData::type)
                 .anyMatch(type -> EntityType.HUSK.equals(type) || EntityType.STRAY.equals(type) || EntityType.WITCH.equals(type));
         if (spawnBonus) {
             luck += 1;

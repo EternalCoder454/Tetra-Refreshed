@@ -42,6 +42,7 @@ import java.util.Map;
 
 import static se.mickelus.tetra.util.ItemStackTagHelper.getTag;
 import static se.mickelus.tetra.util.ItemStackTagHelper.hasTag;
+import net.minecraft.server.level.ServerLevel;
 
 public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBlock {
     public static final String identifier = "holosphere";
@@ -162,7 +163,8 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         BlockState result = super.playerWillDestroy(world, pos, state, player);
 
-        if (!world.isClientSide() && !player.isCreative() && world.getGameRules().getBooleanOr(GameRules.RULE_DOBLOCKDROPS, false)) {
+        // Game rules hang off ServerLevel now, and the isClientSide guard already established this is one.
+        if (world instanceof ServerLevel serverLevel && !player.isCreative() && serverLevel.getGameRules().get(GameRules.BLOCK_DROPS)) {
             world.getBlockEntity(pos, HolosphereBlockEntity.type.get())
                     .ifPresent(blockEntity -> {
                         ItemStack itemStack = blockEntity.getItemStack();

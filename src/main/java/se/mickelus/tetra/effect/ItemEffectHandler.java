@@ -411,7 +411,7 @@ public class ItemEffectHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onKeyInput(InputEvent.Key event) {
         KeyMapping jumpKey = Minecraft.getInstance().options.keyJump;
-        if (jumpKey.matches(event.getKey(), event.getScanCode()) && jumpKey.isDown()) {
+        if (jumpKey.matches(event.getKeyEvent()) && jumpKey.isDown()) {
             LungeEffect.onJump(Minecraft.getInstance().player);
         }
     }

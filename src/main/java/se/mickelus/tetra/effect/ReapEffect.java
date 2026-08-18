@@ -83,7 +83,7 @@ public class ReapEffect extends ChargedAbilityEffect {
 
             item.tickProgression(attacker, itemStack, 1 + kills.get());
 
-            attacker.sweepAttack();
+            SweepingEffect.spawnSweepParticle(attacker);
 
             attacker.causeFoodExhaustion(overextendLevel > 0 ? 6 : 1);
 
@@ -250,7 +250,7 @@ public class ReapEffect extends ChargedAbilityEffect {
                     kills, revengeKills, hits);
 
             applyBuff(player, kills.get(), hits.get(), hand, item, itemStack, chargedTicks, comboPoints, revengeKills.get());
-            player.sweepAttack();
+            SweepingEffect.spawnSweepParticle(player);
         });
     }
 }

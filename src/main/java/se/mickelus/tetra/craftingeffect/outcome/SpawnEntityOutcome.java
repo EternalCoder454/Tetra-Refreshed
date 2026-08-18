@@ -17,6 +17,7 @@ import net.neoforged.neoforge.common.ItemAbility;
 import se.mickelus.tetra.module.schematic.UpgradeSchematic;
 
 import java.util.Map;
+import net.minecraft.world.entity.EntitySpawnReason;
 
 public class SpawnEntityOutcome implements CraftingEffectOutcome {
     CompoundTag entity;
@@ -37,8 +38,8 @@ public class SpawnEntityOutcome implements CraftingEffectOutcome {
                     world.getRandom().nextInt(randomOriginDistance * 2 + 1) - randomOriginDistance)
                     : pos.above();
 
-            Entity entityInstance = EntityType.loadEntityRecursive(entity, serverLevel, e -> {
-                e.moveTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
+            Entity entityInstance = EntityType.loadEntityRecursive(entity, serverLevel, EntitySpawnReason.TRIGGERED, e -> {
+                e.snapTo(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
                 return e;
             });
             if (entityInstance != null) {

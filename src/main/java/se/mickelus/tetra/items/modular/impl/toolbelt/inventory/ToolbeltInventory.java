@@ -51,7 +51,7 @@ public class ToolbeltInventory implements Container {
     protected static Predicate<ItemStack> getPredicate(String inventory) {
         TagKey<Item> acceptKey = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_accept"));
         TagKey<Item> rejectKey = ItemTags.create(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "toolbelt/" + inventory + "_reject"));
-        var acceptTag = BuiltInRegistries.ITEM.getOrCreateTag(acceptKey);
+        var acceptTag = BuiltInRegistries.ITEM.getTagOrEmpty(acceptKey);
 
         return (itemStack -> (acceptTag.size() == 0 || itemStack.is(acceptKey)) && !itemStack.is(rejectKey));
     }

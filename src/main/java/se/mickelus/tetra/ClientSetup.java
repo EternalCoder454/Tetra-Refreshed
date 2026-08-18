@@ -85,6 +85,7 @@ import se.mickelus.tetra.items.modular.impl.toolbelt.booster.OverlayBooster;
 import se.mickelus.tetra.items.modular.impl.toolbelt.ToolbeltContainer;
 import se.mickelus.tetra.items.modular.impl.toolbelt.gui.screen.ToolbeltScreen;
 import se.mickelus.tetra.items.modular.impl.toolbelt.gui.overlay.ToolbeltOverlay;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 
 public class ClientSetup {
     public static void init(IEventBus modBus) {
@@ -120,12 +121,13 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(StatIndicatorStore.instance);
-        event.registerReloadListener(StatBarStore.instance);
-        event.registerReloadListener(StatSorterStore.instance);
-        event.registerReloadListener(HolosphereEntryStore.instance);
-        event.registerReloadListener(ItemAbilityIconStore.instance);
+    public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
+        // The reload events sort listeners by name now, so each one has to be registered under an id.
+        event.addListener(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "stat_indicators"), StatIndicatorStore.instance);
+        event.addListener(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "stat_bars"), StatBarStore.instance);
+        event.addListener(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "stat_sorters"), StatSorterStore.instance);
+        event.addListener(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "holosphere_entries"), HolosphereEntryStore.instance);
+        event.addListener(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item_ability_icons"), ItemAbilityIconStore.instance);
     }
 
     @SubscribeEvent

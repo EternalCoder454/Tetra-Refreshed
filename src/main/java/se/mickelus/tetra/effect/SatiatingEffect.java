@@ -120,7 +120,8 @@ public class SatiatingEffect {
         if (delta > 0) {
             float reduction = Math.min(delta, satiatedEffect.getAmplifier() + 1);
             if (reduction > 0) {
-                player.getFoodData().setExhaustion(Math.max(0.0F, current - reduction));
+                // FoodData#setExhaustion is gone; exhaustionLevel is the public field it wrote to.
+        player.getFoodData().exhaustionLevel = Math.max(0.0F, current - reduction);
                 drainEffect(player, satiatedEffect, reduction);
             }
         }

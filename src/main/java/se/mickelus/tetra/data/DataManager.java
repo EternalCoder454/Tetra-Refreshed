@@ -21,7 +21,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.EventPriority;
@@ -183,9 +183,9 @@ public class DataManager implements DataDistributor {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void addReloadListener(AddReloadListenerEvent event) {
+    public void addReloadListener(AddServerReloadListenersEvent event) {
         logger.debug("Setting up datastore reload listeners");
-        Arrays.stream(dataStores).forEach(event::addListener);
+        Arrays.stream(dataStores).forEach(store -> event.addListener(store.getListenerId(), store));
     }
 
     @SubscribeEvent

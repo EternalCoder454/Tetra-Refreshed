@@ -40,7 +40,7 @@ public class AttributeHelper {
 
     public static Holder<Attribute> getHolder(Attribute attribute) {
         Identifier key = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.getKey(attribute), "Unregistered attribute: " + attribute);
-        Holder.Reference<Attribute> holder = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceKey.create(Registries.ATTRIBUTE, key)).orElse(null);
+        Holder.Reference<Attribute> holder = BuiltInRegistries.ATTRIBUTE.get(ResourceKey.create(Registries.ATTRIBUTE, key)).orElse(null);
         return holder != null ? holder : BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute);
     }
 

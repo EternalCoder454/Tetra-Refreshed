@@ -67,6 +67,6 @@ public class ScanHelper {
     }
 
     private static Optional<? extends HolderSet.ListBacked<Structure>> getHolders(Either<ResourceKey<Structure>, TagKey<Structure>> key, Registry<Structure> registry) {
-        return key.map(p_214494_ -> registry.getHolder(p_214494_).map(HolderSet::direct), registry::getTag);
+        return key.map(structureKey -> registry.get(structureKey).map(HolderSet::direct), registry::get);
     }
 }

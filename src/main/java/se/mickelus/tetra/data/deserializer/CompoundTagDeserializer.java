@@ -15,7 +15,7 @@ public class CompoundTagDeserializer implements JsonDeserializer<CompoundTag> {
     public CompoundTag deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         try {
             if (json.isJsonObject()) {
-                return TagParser.parseTag(json.toString());
+                return TagParser.parseCompoundFully(json.toString());
             }
             throw new JsonSyntaxException("Expected value to be a string, was " + GsonHelper.getType(json));
         } catch (CommandSyntaxException e) {

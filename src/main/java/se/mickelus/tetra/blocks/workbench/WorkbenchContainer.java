@@ -127,7 +127,9 @@ public class WorkbenchContainer extends AbstractContainerMenu {
                 .orElse(0);
 
         for (int i = 0; i < materialSlots.length; i++) {
-            materialSlots[i].setPosition(getMaterialSlotX(i, numMaterialSlots), getMaterialSlotY());
+            // Slot#setPosition is gone; x and y are the public fields it wrote to.
+            materialSlots[i].x = getMaterialSlotX(i, numMaterialSlots);
+            materialSlots[i].y = getMaterialSlotY();
             materialSlots[i].toggle(i < numMaterialSlots);
         }
     }
