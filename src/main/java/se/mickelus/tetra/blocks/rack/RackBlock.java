@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.rack;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.ARGB;
@@ -50,7 +51,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 
 @ParametersAreNonnullByDefault
-public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, IToolProviderBlock {
+public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, IToolProviderBlock, BlockTooltip {
     public static final String identifier = "rack";
     public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     private static final Map<Direction, VoxelShape> shapes = Maps.newEnumMap(ImmutableMap.of(
@@ -158,8 +159,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     }
 
 
-    @Override
-    public void appendHoverText(final ItemStack stack, final net.minecraft.world.item.Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip,
+    public void appendBlockHoverText(final ItemStack stack, final net.minecraft.world.item.Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip,
             final TooltipFlag advanced) {
         if (net.minecraft.client.Minecraft.getInstance().hasShiftDown()) {
             tooltip.accept(Tooltips.expanded);

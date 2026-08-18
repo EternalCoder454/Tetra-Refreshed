@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
@@ -40,7 +41,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.material.Fluids.WATER;
 
 @ParametersAreNonnullByDefault
-public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements SimpleWaterloggedBlock {
+public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements SimpleWaterloggedBlock, BlockTooltip {
     public static final String identifier = "forged_workbench";
     public static final Identifier unlockId = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, identifier);
     public static final EnumProperty<Direction.Axis> axis = BlockStateProperties.HORIZONTAL_AXIS;
@@ -59,8 +60,7 @@ public class ForgedWorkbenchBlock extends AbstractWorkbenchBlock implements Simp
         registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false).setValue(axis, Direction.Axis.X));
     }
 
-    @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+    public void appendBlockHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.network.chat.Component;
@@ -12,7 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class ForgedPlatformBlock extends TetraBlock {
+public class ForgedPlatformBlock extends TetraBlock implements BlockTooltip {
     public static final String identifier = "forged_platform";
 
     public static ForgedPlatformBlock instance;
@@ -21,8 +22,7 @@ public class ForgedPlatformBlock extends TetraBlock {
         super(ForgedBlockCommon.propertiesSolid);
     }
 
-    @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+    public void appendBlockHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 }

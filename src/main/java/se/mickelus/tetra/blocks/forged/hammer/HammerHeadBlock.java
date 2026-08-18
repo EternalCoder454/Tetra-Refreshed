@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -51,7 +52,7 @@ import java.util.List;
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
 
 @ParametersAreNonnullByDefault
-public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteractiveBlock, IToolProviderBlock, EntityBlock {
+public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteractiveBlock, IToolProviderBlock, EntityBlock, BlockTooltip {
     public static final String identifier = "hammer_head";
     public static final VoxelShape shape = box(2, 14, 2, 14, 16, 14);
     public static final VoxelShape jamShape = box(2, 4, 2, 14, 16, 14);
@@ -73,8 +74,7 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
         return true;
     }
 
-    @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+    public void appendBlockHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
         tooltip.accept(locationTooltip);
     }
 

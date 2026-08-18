@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import se.mickelus.tetra.blocks.TooltipBlockItem;
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
@@ -55,7 +57,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBlock, EntityBlock {
+public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
     public static final String identifier = "chthonic_extractor";
     public static final String usedIdentifier = "chthonic_extractor_used";
     public static final String description = "block.tetra.chthonic_extractor.description";
@@ -110,17 +112,16 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
 
     public static DeferredHolder<Item, BlockItem> registerItems(DeferredRegister<Item> registry) {
         registry.register(usedIdentifier, () -> {
-            usedItem = new BlockItem(instance, new Item.Properties().durability(maxDamage));
+            usedItem = new TooltipBlockItem(instance, new Item.Properties().durability(maxDamage));
             return (BlockItem) usedItem;
         });
         return registry.register(identifier, () -> {
-            item = new BlockItem(instance, new Item.Properties().stacksTo(64));
+            item = new TooltipBlockItem(instance, new Item.Properties().stacksTo(64));
             return (BlockItem) item;
         });
     }
 
-    @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+    public void appendBlockHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
         tooltip.accept(Component.translatable(description).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal(" "));
 

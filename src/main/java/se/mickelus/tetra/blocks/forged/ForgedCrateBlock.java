@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
@@ -54,7 +55,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.material.Fluids.WATER;
 
 @ParametersAreNonnullByDefault
-public class ForgedCrateBlock extends FallingBlock implements InitializableBlock, IInteractiveBlock, SimpleWaterloggedBlock {
+public class ForgedCrateBlock extends FallingBlock implements InitializableBlock, IInteractiveBlock, SimpleWaterloggedBlock, BlockTooltip {
     public static final MapCodec<ForgedCrateBlock> CODEC = simpleCodec(properties -> new ForgedCrateBlock());
     public static final EnumProperty<Direction> propFacing = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty propStacked = BooleanProperty.create("stacked");
@@ -141,8 +142,7 @@ public class ForgedCrateBlock extends FallingBlock implements InitializableBlock
         return CODEC;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+    public void appendBlockHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

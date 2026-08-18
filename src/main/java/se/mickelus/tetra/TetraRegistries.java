@@ -1,5 +1,7 @@
 package se.mickelus.tetra;
 
+import se.mickelus.tetra.blocks.TooltipBlockItem;
+import se.mickelus.tetra.blocks.BlockTooltip;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -502,7 +504,10 @@ public class TetraRegistries {
     }
 
     public static <B extends Block> DeferredHolder<Item, BlockItem> registerBlockItem(DeferredHolder<Block, B> block) {
-        return register(items, block.getId().getPath(), () -> new BlockItem(block.get(), itemProperties));
+        return register(items, block.getId().getPath(),
+                () -> block.get() instanceof BlockTooltip
+                        ? new TooltipBlockItem(block.get(), itemProperties)
+                        : new BlockItem(block.get(), itemProperties));
     }
 
     public static <P extends StructureProcessor> DeferredHolder<StructureProcessorType<?>, StructureProcessorType<P>> registerStructureProcessor(

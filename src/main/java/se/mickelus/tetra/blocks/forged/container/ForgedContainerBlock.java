@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import net.minecraft.server.level.ServerLevel;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -51,7 +52,7 @@ import java.util.function.Supplier;
 import static com.google.common.base.Predicates.equalTo;
 
 @ParametersAreNonnullByDefault
-public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock {
+public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
     public static final String identifier = "forged_container";
     public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty flippedProp = BooleanProperty.create("flipped");
@@ -130,8 +131,7 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
         packetHandler.registerPacket(ChangeCompartmentPacket.class, ChangeCompartmentPacket::new);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+    public void appendBlockHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

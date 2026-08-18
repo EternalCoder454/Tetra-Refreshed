@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import net.minecraft.server.level.ServerLevel;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -56,7 +57,7 @@ import static net.minecraft.world.level.material.Fluids.WATER;
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
 
 @ParametersAreNonnullByDefault
-public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, EntityBlock {
+public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
     public static final String identifier = "hammer_base";
     public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
 
@@ -100,8 +101,7 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
         builder.add(facingProp);
     }
 
-    @Override
-    public void appendHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
+    public void appendBlockHoverText(final ItemStack stack, final Item.TooltipContext context, final TooltipDisplay display, final Consumer<Component> tooltip, final TooltipFlag advanced) {
         tooltip.accept(locationTooltip);
         tooltip.accept(Component.literal(" "));
         tooltip.accept(Component.translatable("block.multiblock_hint.1x2x1")

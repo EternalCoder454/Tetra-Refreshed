@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class CoreExtractorPipeBlock extends TetraBlock {
+public class CoreExtractorPipeBlock extends TetraBlock implements BlockTooltip {
     public static final EnumProperty<Direction> facingProp = BlockStateProperties.FACING;
     public static final BooleanProperty poweredProp = BooleanProperty.create("powered");
 
@@ -42,8 +43,7 @@ public class CoreExtractorPipeBlock extends TetraBlock {
         return pipeState.is(instance) && pipeState.getValue(poweredProp);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+    public void appendBlockHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

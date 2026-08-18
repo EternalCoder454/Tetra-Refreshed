@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.core.BlockPos;
@@ -46,7 +47,7 @@ import java.util.List;
 import static com.google.common.base.Predicates.equalTo;
 
 @ParametersAreNonnullByDefault
-public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteractiveBlock {
+public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteractiveBlock, BlockTooltip {
     public static final IntegerProperty propRotation = IntegerProperty.create("rotation", 0, 3);
     public static final BooleanProperty propX = BooleanProperty.create("x");
     public static final BooleanProperty propBroken = BooleanProperty.create("broken");
@@ -184,8 +185,7 @@ public class ForgedVentBlock extends TetraWaterloggedBlock implements IInteracti
         return useInternal(state, world, pos, player, InteractionHand.MAIN_HAND, rayTrace);
     }
 
-    @Override
-    public void appendHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+    public void appendBlockHoverText(ItemStack itemStack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

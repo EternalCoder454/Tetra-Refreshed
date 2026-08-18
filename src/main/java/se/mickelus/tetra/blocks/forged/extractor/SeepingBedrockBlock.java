@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class SeepingBedrockBlock extends TetraBlock {
+public class SeepingBedrockBlock extends TetraBlock implements BlockTooltip {
     public static final IntegerProperty activeProp = IntegerProperty.create("active", 0, 1);
 
     public static final String identifier = "seeping_bedrock";
@@ -43,8 +44,7 @@ public class SeepingBedrockBlock extends TetraBlock {
         return instance.equals(blockState.getBlock()) && blockState.getValue(activeProp) > 0;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+    public void appendBlockHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

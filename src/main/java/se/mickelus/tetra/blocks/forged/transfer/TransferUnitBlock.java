@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.transfer;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.core.BlockPos;
@@ -56,7 +57,7 @@ import java.util.List;
 import static com.google.common.base.Predicates.equalTo;
 
 @ParametersAreNonnullByDefault
-public class TransferUnitBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock {
+public class TransferUnitBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
     public static final String identifier = "transfer_unit";
 
     public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
@@ -297,8 +298,7 @@ public class TransferUnitBlock extends TetraWaterloggedBlock implements IInterac
         return state.setValue(facingProp, context.getHorizontalDirection());
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+    public void appendBlockHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
     }
 

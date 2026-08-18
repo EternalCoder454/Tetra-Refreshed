@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.util.RandomSource;
@@ -40,7 +41,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.material.Fluids.WATER;
 
 @ParametersAreNonnullByDefault
-public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements EntityBlock {
+public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements EntityBlock, BlockTooltip {
     public static final String identifier = "core_extractor";
     public static final EnumProperty<Direction> facingProp = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape capShape = box(3, 14, 3, 13, 16, 13);
@@ -68,8 +69,7 @@ public class CoreExtractorBaseBlock extends TetraWaterloggedBlock implements Ent
         return combinedShapeZ;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+    public void appendBlockHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         tooltip.accept(ForgedBlockCommon.locationTooltip);
         tooltip.accept(Component.literal(" "));
         tooltip.accept(Component.translatable("block.multiblock_hint.1x2x1")

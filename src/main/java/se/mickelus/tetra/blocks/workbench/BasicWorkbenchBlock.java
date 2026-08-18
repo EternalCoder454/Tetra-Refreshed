@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.workbench;
 
+import se.mickelus.tetra.blocks.BlockTooltip;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
@@ -24,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @ParametersAreNonnullByDefault
-public class BasicWorkbenchBlock extends AbstractWorkbenchBlock {
+public class BasicWorkbenchBlock extends AbstractWorkbenchBlock implements BlockTooltip {
     public static final String identifier = "basic_workbench";
     public static AbstractWorkbenchBlock instance;
 
@@ -55,8 +56,7 @@ public class BasicWorkbenchBlock extends AbstractWorkbenchBlock {
         return InteractionResult.PASS;
     }
 
-    @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
+    public void appendBlockHoverText(ItemStack itemStack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag advanced) {
         tooltip.accept(Component.translatable("block.tetra.basic_workbench.description").withStyle(ChatFormatting.GRAY));
     }
 }
