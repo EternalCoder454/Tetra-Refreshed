@@ -123,6 +123,19 @@ dependencies {
     // EMI Refreshed resolves from mavenLocal rather than a remote, because upstream EMI stops at
     // 1.21.1 and this is a fork. Publish it before building here, the same as mutil.
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+
+    // Secrets of Forging: Revelations, by AceTheEldritchKing, bundled rather than absorbed at his
+    // request. jarJar embeds the jar and NeoForge loads it as its own mod, so it keeps its own id
+    // and this project never compiles against it. It resolves from mavenLocal, so publish it first:
+    //   cd "../Secrets-Of-Forging-Revelations" && ./gradlew.bat publishToMavenLocal
+    // The range is what jarJar resolves against when several mods embed the same dependency, and
+    // prefer names the one that ships if nothing else asks for a newer build.
+    jarJar(implementation("net.acetheeldritchking.secrets_of_forging_revelations:secrets_of_forging_revelations")) {
+        version {
+            strictly "[${sofr_version},)"
+            prefer "${sofr_version}"
+        }
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

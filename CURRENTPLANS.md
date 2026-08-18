@@ -116,18 +116,33 @@ alongside.
 
 | Mod | Terms | State |
 |---|---|---|
-| <https://github.com/AceTheEldritchKing/Secrets-Of-Forging-Revelations> | MIT with restrictions, in its README | **ported to 26.1.2, loads clean** |
+| <https://github.com/AceTheEldritchKing/Secrets-Of-Forging-Revelations> | MIT with restrictions, in its README | **bundled with jarJar, loads clean** |
 | <https://github.com/AceTheEldritchKing/art_of_forging> | none at all | not started |
 
-**Secrets of Forging is ported.** It lives beside this one as its own mod and runs against it. Its
-terms permit forking, building and modifying a fork for personal use, so that much is settled.
-**Updating it past 1.19.2 needs the author's explicit permission**, asked for on Discord, and
-reuploading it under another name is forbidden, so merging it into Tetra and shipping that is the
-step still waiting on Ace. Its `PORT-STATUS.md` has the detail.
+**Ace granted permission on 2026-08-18, on Discord**, for both his mods, with two conditions. He
+asked that they be **separate projects included in the mod** rather than flattened into this source
+tree, naming how Create bundles Flywheel as a jarjar file, and that he be **credited as a
+contributor** as well as in the README.
 
-One thing that merge has to decide: roughly a third of it is compatibility content for Art of
-Forging, 22 schematic files and 58 references to a namespace that does not exist here. That half
-does nothing until Art of Forging is ported too, so it either waits for that or gets left out.
+**Secrets of Forging is bundled.** It stays its own repository and its own mod id, is published to
+mavenLocal, and Tetra embeds it with jarJar so NeoForge loads it from inside this jar. Nothing of it
+lives in this source tree. Everything it adds to Tetra's screens is reached from its side: the
+polearm joins Tetra's creative tab by matching the tab id, and its holosphere entry and effect stat
+bars ship as data under `assets/tetra`, which is where Tetra's stores look. Its `PORT-STATUS.md`
+has the detail.
+
+Publish the addon to mavenLocal before building here, the same as mutil:
+
+```bash
+cd "../Secrets-Of-Forging-Revelations" && ./gradlew.bat publishToMavenLocal
+```
+
+A flat merge of it was tried first and is parked on the `flat-merge-sofr` branch. It works, and it
+is the wrong shape, so take integration decisions from it rather than files.
+
+Roughly a third of the addon is compatibility content for Art of Forging, 22 schematic files and 58
+references to a namespace that is not here. That half stays inert, the same way `tetra:draw_damage`
+does, until Art of Forging is ported. The same permission covers it.
 
 **Art of Forging has no licence at all.** No file, nothing in its README, and GitHub reports none,
 so no permission to reuse is granted by default. Ask before touching it.

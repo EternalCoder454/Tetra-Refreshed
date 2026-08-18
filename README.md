@@ -6,6 +6,12 @@ A fork of [Tetra](https://github.com/mickelus/tetra) by Mikael Eriksson Vikner, 
 26.1.2 on NeoForge and Java 25. Tetra is Mikael's work. This fork is a port and nothing more, and
 carries no claim of authorship over the mod. Port by EternalHell.
 
+**Secrets of Forging: Revelations** and **Art of Forging** are by
+[AceTheEldritchKing](https://github.com/AceTheEldritchKing), updated by GamerK_2, and are bundled
+here with his permission, given on Discord on 2026-08-18. They stay his work and his projects. He
+asked for them to be included as separate projects rather than absorbed, so they ship as jarJar
+bundles and each loads as its own mod with its own id, the way Create bundles Flywheel.
+
 The upstream terms below apply to this fork unchanged, including the restrictions on the Perk
 system and on redistribution. Read them before using anything here.
 

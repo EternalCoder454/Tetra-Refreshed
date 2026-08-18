@@ -67,6 +67,19 @@ detail is in `PORT-STATUS.md`. The parts worth knowing as a player:
 
 ### Added
 
+* **Secrets of Forging: Revelations ships inside Tetra now.** The polearm, its heads, handles and
+  bindings, the sword, bow and socket modules and the three effects that drive them arrive with
+  Tetra rather than as a mod you install separately. **Remove any separate
+  `secrets_of_forging_revelations` jar**, since the bundled copy supersedes it and two copies would
+  register `tetra:modular_polearm` twice and fail to load.
+  * It stays its own mod, by AceTheEldritchKing, bundled at his request rather than absorbed. The
+    mod list shows it as its own entry, loaded from inside Tetra's jar.
+  * The polearm is in Tetra's own creative tab and is the fourth entry in the holosphere, between
+    the double headed tool and the bow. It used to sit in vanilla's Combat tab with nothing listing
+    it, which is why most players never found it.
+  * Freezing, infernal and eternal blizzard now show a bar in the holosphere as well as the
+    workbench.
+
 * **Palette foundation.** A material may carry a colour palette, and a module may offer greyscale
   artwork. Where both exist the layer uses a sprite the atlas recoloured for that material, so a
   material can define its own look without artwork. Copper and iron hammer heads use it and render
