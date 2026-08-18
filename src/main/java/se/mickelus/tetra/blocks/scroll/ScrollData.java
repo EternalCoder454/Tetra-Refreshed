@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.scroll;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
@@ -87,25 +89,14 @@ public class ScrollData {
         return Optional.ofNullable(itemStack.get(TetraRegistries.scrollData.get()));
     }
 
-    public static ScrollData[] read(CompoundTag tag) {
-        return tag.getListOrEmpty("data").stream()
-                .map(nbt -> ScrollData.CODEC.decode(NbtOps.INSTANCE, nbt))
-                .map(DataResult::result)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(Pair::getFirst)
+    public static ScrollData[] read(ValueInput input) {
+        return input.listOrEmpty("data", ScrollData.CODEC).stream()
                 .toArray(ScrollData[]::new);
     }
 
-    public static CompoundTag write(ScrollData[] data, CompoundTag tag) {
-        ListTag list = Arrays.stream(data)
-                .map(scroll -> ScrollData.CODEC.encodeStart(NbtOps.INSTANCE, scroll))
-                .map(DataResult::result)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toCollection(ListTag::new));
-        tag.put("data", list);
-        return tag;
+    public static void write(ScrollData[] data, ValueOutput output) {
+        ValueOutput.TypedOutputList<ScrollData> list = output.list("data", ScrollData.CODEC);
+        Arrays.stream(data).forEach(list::add);
     }
 
     public static ScrollData read(JsonObject json) {

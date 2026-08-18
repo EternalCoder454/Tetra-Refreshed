@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.forged.container;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -91,14 +95,14 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                 .setValue(ForgedContainerBlock.openProp, lidIntegrity <= 0);
     }
 
-    public static void writeLockData(CompoundTag compound, int[] lockIntegrity) {
+    public static void writeLockData(ValueOutput output, int[] lockIntegrity) {
         for (int i = 0; i < lockIntegrity.length; i++) {
-            compound.putInt("lock_integrity" + i, lockIntegrity[i]);
+            output.putInt("lock_integrity" + i, lockIntegrity[i]);
         }
     }
 
-    public static void writeLidData(CompoundTag compound, int lidIntegrity) {
-        compound.putInt("lid_integrity", lidIntegrity);
+    public static void writeLidData(ValueOutput output, int lidIntegrity) {
+        output.putInt("lid_integrity", lidIntegrity);
     }
 
     public ForgedContainerBlockEntity getOrDelegate() {
@@ -257,29 +261,29 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        loadWithComponents(pkt.getTag(), lookupProvider);
+        loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
+        input.readChild(inventoryKey, handler);
 
         for (int i = 0; i < lockIntegrity.length; i++) {
-            lockIntegrity[i] = compound.getIntOr("lock_integrity" + i, 0);
+            lockIntegrity[i] = input.getIntOr("lock_integrity" + i, 0);
         }
 
-        lidIntegrity = compound.getIntOr("lid_integrity", 0);
+        lidIntegrity = input.getIntOr("lid_integrity", 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        compound.put(inventoryKey, handler.serializeNBT(registries));
+        output.putChild(inventoryKey, handler);
 
-        writeLockData(compound, lockIntegrity);
-        writeLidData(compound, lidIntegrity);
+        writeLockData(output, lockIntegrity);
+        writeLidData(output, lidIntegrity);
     }
 }

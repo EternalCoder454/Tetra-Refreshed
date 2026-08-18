@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.rack;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -72,20 +76,20 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        loadWithComponents(pkt.getTag(), lookupProvider);
+        loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
+        input.readChild(inventoryKey, handler);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        compound.put(inventoryKey, handler.serializeNBT(registries));
+        output.putChild(inventoryKey, handler);
     }
 }

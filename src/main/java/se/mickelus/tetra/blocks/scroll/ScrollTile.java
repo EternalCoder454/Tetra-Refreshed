@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.scroll;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -82,15 +84,15 @@ public class ScrollTile extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
-        scrolls = ScrollData.read(compound);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        scrolls = ScrollData.read(input);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
-        ScrollData.write(scrolls, compound);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ScrollData.write(scrolls, output);
     }
 
     @Override
@@ -111,8 +113,8 @@ public class ScrollTile extends BlockEntity {
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove("data");
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("data");
     }
 }

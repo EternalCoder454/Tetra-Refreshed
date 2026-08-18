@@ -1,5 +1,7 @@
 package se.mickelus.tetra.levelgen;
 
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.util.ProblemReporter;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -46,10 +48,14 @@ public class ForgedContainerProcessor extends StructureProcessor {
             for (int i = 0; i < lockIntegrity.length; i++) {
                 lockIntegrity[i] = 1 + random.nextInt(ForgedContainerBlockEntity.lockIntegrityMax - 1);
             }
-            ForgedContainerBlockEntity.writeLockData(newCompound, lockIntegrity);
+            TagValueOutput lockOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, world.registryAccess());
+            ForgedContainerBlockEntity.writeLockData(lockOutput, lockIntegrity);
+            newCompound.merge(lockOutput.buildResult());
 
             int lidIntegrity = 1 + random.nextInt(ForgedContainerBlockEntity.lidIntegrityMax - 1);
-            ForgedContainerBlockEntity.writeLidData(newCompound, lidIntegrity);
+            TagValueOutput lidOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, world.registryAccess());
+            ForgedContainerBlockEntity.writeLidData(lidOutput, lidIntegrity);
+            newCompound.merge(lidOutput.buildResult());
 
             BlockState newState = ForgedContainerBlockEntity.getUpdatedBlockState(blockInfo.state(), lockIntegrity, lidIntegrity);
 

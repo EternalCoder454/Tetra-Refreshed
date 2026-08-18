@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,28 +63,31 @@ public class HammerBaseBlockEntity extends BlockEntity {
         slots = new ItemStack[2];
     }
 
-    public static void writeModules(CompoundTag compound, HammerEffect moduleA, HammerEffect moduleB) {
+    public static void writeModules(ValueOutput output, HammerEffect moduleA, HammerEffect moduleB) {
         if (moduleA != null) {
-            compound.put(moduleAKey, ByteTag.valueOf((byte) moduleA.ordinal()));
+            output.putByte(moduleAKey, (byte) moduleA.ordinal());
         }
 
         if (moduleB != null) {
-            compound.put(moduleBKey, ByteTag.valueOf((byte) moduleB.ordinal()));
+            output.putByte(moduleBKey, (byte) moduleB.ordinal());
         }
     }
 
-    public static void writeCells(CompoundTag compound, HolderLookup.Provider registries, ItemStack... cells) {
-        ListTag nbttaglist = new ListTag();
+    public static void writeCells(ValueOutput output, ItemStack... cells) {
+        ValueOutput.ValueOutputList list = output.childrenList(slotsKey);
         for (int i = 0; i < cells.length; i++) {
             ItemStack cell = cells[i];
             if (cell != null && !cell.isEmpty()) {
-                CompoundTag nbttagcompound = (CompoundTag) cell.save(registries, new CompoundTag());
-                nbttagcompound.putByte(indexKey, (byte) i);
-
-                nbttaglist.add(nbttagcompound);
+                ValueOutput entry = list.addChild();
+                entry.store(ItemStack.MAP_CODEC, cell);
+                entry.putByte(indexKey, (byte) i);
             }
         }
-        compound.put(slotsKey, nbttaglist);
+    }
+
+    private static HammerEffect readModule(ValueInput input, String key) {
+        byte data = input.getByteOr(key, (byte) -1);
+        return data >= 0 && data < HammerEffect.values().length ? HammerEffect.values()[data] : null;
     }
 
     public boolean setModule(boolean isA, Item item) {
@@ -340,45 +347,27 @@ public class HammerBaseBlockEntity extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadWithComponents(pkt.getTag(), lookupProvider);
+        this.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
         slots = new ItemStack[2];
-        if (compound.contains(slotsKey)) {
-            ListTag tagList = compound.getListOrEmpty(slotsKey);
+        for (ValueInput cellInput : input.childrenListOrEmpty(slotsKey)) {
+            int slot = cellInput.getByteOr(indexKey, (byte) 0) & 255;
 
-            for (int i = 0; i < tagList.size(); i++) {
-                CompoundTag itemCompound = tagList.getCompoundOrEmpty(i);
-                int slot = itemCompound.getByteOr(indexKey, (byte) 0) & 255;
-
-                if (slot < this.slots.length) {
-                    ItemStack stack = ItemStack.parseOptional(registries, itemCompound);
-                    this.slots[slot] = stack.isEmpty() ? null : stack;
-                }
+            if (slot < this.slots.length) {
+                ItemStack stack = cellInput.read(ItemStack.MAP_CODEC).orElse(ItemStack.EMPTY);
+                this.slots[slot] = stack.isEmpty() ? null : stack;
             }
         }
 
-        moduleA = null;
-        if (compound.contains(moduleAKey)) {
-            byte data = compound.getByteOr(moduleAKey, (byte) 0);
-            if (data < HammerEffect.values().length) {
-                moduleA = HammerEffect.values()[data];
-            }
-        }
+        moduleA = readModule(input, moduleAKey);
+        moduleB = readModule(input, moduleBKey);
 
-        moduleB = null;
-        if (compound.contains(moduleBKey)) {
-            byte data = compound.getByteOr(moduleBKey, (byte) 0);
-            if (data < HammerEffect.values().length) {
-                moduleB = HammerEffect.values()[data];
-            }
-        }
-
-        redstonePower = compound.getIntOr(redstoneKey, 0);
+        redstonePower = input.getIntOr(redstoneKey, 0);
     }
 
     private void sync() {
@@ -387,14 +376,14 @@ public class HammerBaseBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        writeCells(compound, registries, slots);
+        writeCells(output, slots);
 
-        writeModules(compound, moduleA, moduleB);
+        writeModules(output, moduleA, moduleB);
 
-        compound.putInt(redstoneKey, redstonePower);
+        output.putInt(redstoneKey, redstonePower);
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {

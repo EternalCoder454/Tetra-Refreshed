@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -311,29 +315,21 @@ public class FracturedBedrockTile extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (compound.contains(activityKey)) {
-            activity = compound.getIntOr(activityKey, 0);
-        }
-
-        if (compound.contains(stepKey)) {
-            step = compound.getIntOr(stepKey, 0);
-        }
-
-        if (compound.contains(luckKey)) {
-            luck = compound.getIntOr(luckKey, 0);
-        }
+        activity = input.getIntOr(activityKey, activity);
+        step = input.getIntOr(stepKey, step);
+        luck = input.getIntOr(luckKey, luck);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        compound.putInt(activityKey, activity);
-        compound.putInt(stepKey, step);
-        compound.putInt(luckKey, luck);
+        output.putInt(activityKey, activity);
+        output.putInt(stepKey, step);
+        output.putInt(luckKey, luck);
     }
 
     @Nullable
@@ -349,7 +345,7 @@ public class FracturedBedrockTile extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
-        this.loadWithComponents(packet.getTag(), lookupProvider);
+        this.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, packet.getTag()));
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {

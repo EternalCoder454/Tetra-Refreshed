@@ -1,5 +1,7 @@
 package se.mickelus.tetra.levelgen;
 
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.util.ProblemReporter;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -41,6 +43,7 @@ public class TransferUnitProcessor extends StructureProcessor {
             int cellState = 0;
 
             // randomize cell
+            TagValueOutput cellOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, world.registryAccess());
             if (random.nextFloat() < 0.1) {
                 int charge = random.nextInt(ThermalCellItem.maxCharge);
                 ItemStack itemStack = new ItemStack(ThermalCellItem.instance.get());
@@ -48,11 +51,12 @@ public class TransferUnitProcessor extends StructureProcessor {
 
                 cellState = charge > 0 ? 2 : 1;
 
-                TransferUnitBlockEntity.writeCell(newCompound, world.registryAccess(), itemStack);
+                TransferUnitBlockEntity.writeCell(cellOutput, itemStack);
             } else if (random.nextFloat() < 0.2) {
-                TransferUnitBlockEntity.writeCell(newCompound, world.registryAccess(), new ItemStack(ThermalCellItem.instance.get()));
+                TransferUnitBlockEntity.writeCell(cellOutput, new ItemStack(ThermalCellItem.instance.get()));
                 cellState = 1;
             }
+            newCompound.merge(cellOutput.buildResult());
 
             // randomize configuration & plate
             EnumTransferConfig[] configs = EnumTransferConfig.values();

@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.forged.transfer;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
@@ -37,10 +41,9 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
         cell = ItemStack.EMPTY;
     }
 
-    public static void writeCell(CompoundTag compound, HolderLookup.Provider registries, ItemStack cell) {
+    public static void writeCell(ValueOutput output, ItemStack cell) {
         if (!cell.isEmpty()) {
-            CompoundTag cellNBT = (CompoundTag) cell.save(registries, new CompoundTag());
-            compound.put("cell", cellNBT);
+            output.store("cell", ItemStack.CODEC, cell);
         }
     }
 
@@ -256,22 +259,17 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (compound.contains("cell")) {
-            ItemStack loadedCell = ItemStack.parseOptional(registries, compound.getCompoundOrEmpty("cell"));
-            cell = loadedCell.isEmpty() ? ItemStack.EMPTY : loadedCell;
-        } else {
-            cell = ItemStack.EMPTY;
-        }
+        cell = input.read("cell", ItemStack.CODEC).orElse(ItemStack.EMPTY);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        writeCell(compound, registries, cell);
+        writeCell(output, cell);
     }
 
     @Nullable
@@ -287,6 +285,6 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
-        loadWithComponents(packet.getTag(), lookupProvider);
+        loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, packet.getTag()));
     }
 }

@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.workbench;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -483,22 +487,19 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         if (pkt.getTag() != null) {
-            loadWithComponents(pkt.getTag(), lookupProvider);
+            loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        handler.deserializeNBT(registries, compound.getCompoundOrEmpty(inventoryKey));
+        input.readChild(inventoryKey, handler);
 
-        String schematicKey = compound.getStringOr(WorkbenchTile.schematicKey, "");
-        currentSchematic = SchematicRegistry.getSchematic(schematicKey);
+        currentSchematic = SchematicRegistry.getSchematic(input.getStringOr(WorkbenchTile.schematicKey, ""));
 
-        if (compound.contains(currentSlotKey)) {
-            currentSlot = compound.getStringOr(currentSlotKey, "");
-        }
+        currentSlot = input.getStringOr(currentSlotKey, currentSlot);
 
         interaction = ActionInteraction.create(this);
 
@@ -509,17 +510,17 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        compound.put(inventoryKey, handler.serializeNBT(registries));
+        output.putChild(inventoryKey, handler);
 
         if (currentSchematic != null) {
-            compound.putString(schematicKey, currentSchematic.getKey());
+            output.putString(schematicKey, currentSchematic.getKey());
         }
 
         if (currentSlot != null) {
-            compound.putString(currentSlotKey, currentSlot);
+            output.putString(currentSlotKey, currentSlot);
         }
     }
 

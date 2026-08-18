@@ -1,5 +1,7 @@
 package se.mickelus.tetra.levelgen;
 
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.util.ProblemReporter;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -50,7 +52,9 @@ public class ForgedHammerProcessor extends StructureProcessor {
                 ThermalCellItem.drainCharge(cell2, ThermalCellItem.maxCharge - charge2);
             }
 
-            HammerBaseBlockEntity.writeCells(newCompound, world.registryAccess(), cell1, cell2);
+            TagValueOutput cellOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, world.registryAccess());
+            HammerBaseBlockEntity.writeCells(cellOutput, cell1, cell2);
+            newCompound.merge(cellOutput.buildResult());
 
             HammerEffect module = HammerEffect.efficient;
             if (random.nextFloat() < 0.1) {
@@ -59,11 +63,13 @@ public class ForgedHammerProcessor extends StructureProcessor {
                 module = random.nextBoolean() ? HammerEffect.precise : HammerEffect.power;
             }
 
+            TagValueOutput moduleOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, world.registryAccess());
             if (random.nextBoolean()) {
-                HammerBaseBlockEntity.writeModules(newCompound, module, null);
+                HammerBaseBlockEntity.writeModules(moduleOutput, module, null);
             } else {
-                HammerBaseBlockEntity.writeModules(newCompound, null, module);
+                HammerBaseBlockEntity.writeModules(moduleOutput, null, module);
             }
+            newCompound.merge(moduleOutput.buildResult());
 
 
             return new StructureTemplate.StructureBlockInfo(blockInfo.pos(), blockInfo.state(), newCompound);

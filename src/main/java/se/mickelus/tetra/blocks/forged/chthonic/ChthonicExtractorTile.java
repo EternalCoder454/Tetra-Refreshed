@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -43,17 +45,15 @@ public class ChthonicExtractorTile extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (compound.contains(damageKey)) {
-            damage = compound.getIntOr(damageKey, 0);
-        }
+        damage = input.getIntOr(damageKey, damage);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
-        compound.putInt(damageKey, damage);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(damageKey, damage);
     }
 }

@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.forged.extractor;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -190,20 +194,16 @@ public class CoreExtractorBaseBlockEntity extends BlockEntity implements IHeatTr
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (compound.contains(chargeKey)) {
-            currentCharge = compound.getIntOr(chargeKey, 0);
-        } else {
-            currentCharge = 0;
-        }
+        currentCharge = input.getIntOr(chargeKey, 0);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
-        compound.putInt(chargeKey, currentCharge);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(chargeKey, currentCharge);
     }
 
     @Nullable
@@ -219,7 +219,7 @@ public class CoreExtractorBaseBlockEntity extends BlockEntity implements IHeatTr
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider lookupProvider) {
-        this.loadWithComponents(packet.getTag(), lookupProvider);
+        this.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, packet.getTag()));
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {

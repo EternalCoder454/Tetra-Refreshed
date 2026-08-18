@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.hammer;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -63,17 +65,17 @@ public class HammerHeadBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
-        this.jammed = compound.contains(jamKey) && compound.getBooleanOr(jamKey, false);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.jammed = input.getBooleanOr(jamKey, false);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
         if (isJammed()) {
-            compound.putBoolean(jamKey, true);
+            output.putBoolean(jamKey, true);
         }
     }
 }

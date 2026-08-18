@@ -1,5 +1,7 @@
 package se.mickelus.tetra.blocks.forged.chthonic;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -326,19 +328,19 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
 
-        damage = compound.getIntOr(damageKey, 0);
-        heat = compound.getIntOr(heatKey, 0);
+        damage = input.getIntOr(damageKey, 0);
+        heat = input.getIntOr(heatKey, 0);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
 
-        compound.putInt(damageKey, damage);
-        compound.putInt(heatKey, heat);
+        output.putInt(damageKey, damage);
+        output.putInt(heatKey, heat);
     }
 
     @Override

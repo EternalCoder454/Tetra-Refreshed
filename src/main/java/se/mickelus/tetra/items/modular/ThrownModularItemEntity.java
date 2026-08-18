@@ -1,5 +1,7 @@
 package se.mickelus.tetra.items.modular;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -443,16 +445,12 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains(stackKey)) {
-            thrownStack = ItemStackTagHelper.parseStack(registryAccess(), compound.getCompoundOrEmpty(stackKey));
-        } else {
-            thrownStack = ItemStack.EMPTY;
-        }
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        thrownStack = input.read(stackKey, ItemStack.CODEC).orElse(ItemStack.EMPTY);
 
-        dealtDamage = compound.getBooleanOr(dealtDamageKey, false);
-        preferredSlot = compound.contains(preferredSlotKey) ? compound.getIntOr(preferredSlotKey, 0) : -1;
+        dealtDamage = input.getBooleanOr(dealtDamageKey, false);
+        preferredSlot = input.getIntOr(preferredSlotKey, -1);
 
         setPickupItemStack(thrownStack);
         entityData.set(LOYALTY_LEVEL, getLoyaltyFromItem(thrownStack));
@@ -460,13 +458,13 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
         if (!thrownStack.isEmpty()) {
-            compound.put(stackKey, ItemStackTagHelper.saveStack(thrownStack, registryAccess()));
+            output.store(stackKey, ItemStack.CODEC, thrownStack);
         }
-        compound.putBoolean(dealtDamageKey, dealtDamage);
-        compound.putInt(preferredSlotKey, preferredSlot);
+        output.putBoolean(dealtDamageKey, dealtDamage);
+        output.putInt(preferredSlotKey, preferredSlot);
     }
 
     public void tickDespawn() {

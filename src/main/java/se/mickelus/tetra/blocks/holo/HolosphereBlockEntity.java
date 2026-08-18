@@ -1,5 +1,9 @@
 package se.mickelus.tetra.blocks.holo;
 
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -189,42 +193,32 @@ public class HolosphereBlockEntity extends BlockEntity {
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         if (pkt.getTag() != null) {
-            loadWithComponents(pkt.getTag(), lookupProvider);
+            loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, lookupProvider, pkt.getTag()));
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.loadAdditional(compound, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        setItemTag(compound.contains("item") ? compound.getCompoundOrEmpty("item") : new CompoundTag());
+        setItemTag(input.read("item", CompoundTag.CODEC).orElseGet(CompoundTag::new));
 
-        scanModeTimestamp = compound.getLongOr("timestamp", 0L);
+        scanModeTimestamp = input.getLongOr("timestamp", 0L);
 
-        scanResults = compound.getListOrEmpty("scan").stream()
-                .map(nbt -> ScanResult.codec.decode(NbtOps.INSTANCE, nbt))
-                .map(DataResult::result)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(Pair::getFirst)
+        scanResults = input.listOrEmpty("scan", ScanResult.codec).stream()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
-        super.saveAdditional(compound, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        compound.put("item", itemTag == null ? new CompoundTag() : itemTag.copy());
+        output.store("item", CompoundTag.CODEC, itemTag == null ? new CompoundTag() : itemTag.copy());
 
-        compound.putLong("timestamp", scanModeTimestamp);
+        output.putLong("timestamp", scanModeTimestamp);
 
-        ListTag list = scanResults.stream()
-                .map(scroll -> ScanResult.codec.encodeStart(NbtOps.INSTANCE, scroll))
-                .map(DataResult::result)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toCollection(ListTag::new));
-        compound.put("scan", list);
+        ValueOutput.TypedOutputList<ScanResult> list = output.list("scan", ScanResult.codec);
+        scanResults.forEach(list::add);
     }
 
     record ScanResult(int chunkX, int chunkZ, int height, float temperature, List<String> structures, long timestamp) {
