@@ -353,6 +353,17 @@ public interface IModularItem {
                 .anyMatch(module::equals);
     }
 
+    /**
+     * The major module in a slot of a stack, if the stack is a modular item at all and the module
+     * there takes improvements.
+     *
+     * Eleven stat getters opened by spelling this out in two lines of nested casts.
+     */
+    static Optional<ItemModuleMajor> getMajorModuleInSlot(ItemStack itemStack, String slot) {
+        return CastOptional.cast(itemStack.getItem(), IModularItem.class)
+                .flatMap(item -> CastOptional.cast(item.getModuleFromSlot(itemStack, slot), ItemModuleMajor.class));
+    }
+
     default ItemModule getModuleFromSlot(ItemStack itemStack, String slot) {
         return Optional.ofNullable(readTag(itemStack))
                 .map(tag -> tag.getStringOr(slot, ""))

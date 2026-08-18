@@ -36,8 +36,7 @@ public class StatGetterUnbreaking implements IStatGetter {
     public double getValue(Player player, ItemStack itemStack, String slot, String improvement) {
         double levelItem = levelGetter.getValue(player, itemStack);
 
-        return CastOptional.cast(itemStack.getItem(), IModularItem.class)
-                .flatMap(item -> CastOptional.cast(item.getModuleFromSlot(itemStack, slot), ItemModuleMajor.class))
+        return IModularItem.getMajorModuleInSlot(itemStack, slot)
                 .map(module -> module.getImprovement(itemStack, improvement))
                 .map(data -> data.effects.getLevel(ItemEffect.unbreaking))
                 .map(level -> 100d / (levelItem - level + 1) - 100d / (levelItem + 1))

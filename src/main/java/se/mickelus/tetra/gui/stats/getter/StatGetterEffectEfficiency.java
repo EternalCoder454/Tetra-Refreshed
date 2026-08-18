@@ -68,8 +68,7 @@ public class StatGetterEffectEfficiency implements IStatGetter {
 
     @Override
     public double getValue(Player player, ItemStack itemStack, String slot, String improvement) {
-        return base + CastOptional.cast(itemStack.getItem(), IModularItem.class)
-                .flatMap(item -> CastOptional.cast(item.getModuleFromSlot(itemStack, slot), ItemModuleMajor.class))
+        return base + IModularItem.getMajorModuleInSlot(itemStack, slot)
                 .map(module -> module.getImprovement(itemStack, improvement))
                 .map(improvementData -> improvementData.effects)
                 .map(effects -> effects.getEfficiency(effect) * multiplier)

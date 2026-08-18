@@ -96,8 +96,7 @@ public class StatGetterAttribute implements IStatGetter {
 
     @Override
     public double getValue(Player player, ItemStack itemStack, String slot, String improvement) {
-        return CastOptional.cast(itemStack.getItem(), IModularItem.class)
-                .flatMap(item -> CastOptional.cast(item.getModuleFromSlot(itemStack, slot), ItemModuleMajor.class))
+        return IModularItem.getMajorModuleInSlot(itemStack, slot)
                 .map(module -> module.getImprovement(itemStack, improvement))
                 .map(improvementData -> improvementData.attributes)
                 .map(map -> map.get(attribute))
