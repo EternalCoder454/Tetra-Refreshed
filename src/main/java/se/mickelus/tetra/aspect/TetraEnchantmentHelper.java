@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static se.mickelus.tetra.util.ItemStackTagHelper.*;
+import se.mickelus.tetra.util.NonNullLazy;
 
 public class TetraEnchantmentHelper {
     private static final Map<ItemAspect, EnchantmentRules> aspectMap = HashBiMap.create();
@@ -48,7 +49,7 @@ public class TetraEnchantmentHelper {
         aspectMap.put(ItemAspect.edgedWeapon, new EnchantmentRules(items(Items.DIAMOND_SWORD, Items.DIAMOND_AXE), "additions/edged_weapon", "exclusions/edged_weapon"));
         aspectMap.put(ItemAspect.bluntWeapon, new EnchantmentRules(items(Items.DIAMOND_AXE, Items.MACE), "additions/blunt_weapon", "exclusions/blunt_weapon"));
         aspectMap.put(ItemAspect.pointyWeapon, new EnchantmentRules(items(Items.TRIDENT), "additions/pointy_weapon", "exclusions/pointy_weapon"));
-        aspectMap.put(ItemAspect.throwable, new EnchantmentRules(List.of(), "additions/throwable", "exclusions/throwable"));
+        aspectMap.put(ItemAspect.throwable, new EnchantmentRules(List.<Item>of(), "additions/throwable", "exclusions/throwable"));
         aspectMap.put(ItemAspect.blockBreaker, new EnchantmentRules(items(Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE, Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE), "additions/block_breaker", "exclusions/block_breaker"));
         aspectMap.put(ItemAspect.fishingRod, new EnchantmentRules(items(Items.FISHING_ROD), "additions/fishing_rod", "exclusions/fishing_rod"));
         aspectMap.put(ItemAspect.breakable, new EnchantmentRules(items(Items.SHEARS), "additions/breakable", "exclusions/breakable"));
@@ -299,25 +300,31 @@ public class TetraEnchantmentHelper {
     }
 
     public static class EnchantmentRules {
-        List<ItemStack> supportedItems;
+        /**
+         * The stacks are built on first use rather than up front. Constructing an ItemStack reads the
+         * item's default components, and those are not bound until after mod construction, which is
+         * when init runs. Building them eagerly threw "Components not bound yet" and took the whole
+         * mod down before anything else could load.
+         */
+        NonNullLazy<List<ItemStack>> supportedItems;
         TagKey<Enchantment> exclusions;
         TagKey<Enchantment> additions;
 
-        public EnchantmentRules(List<ItemStack> supportedItems, String additions, String exclusions) {
-            this.supportedItems = supportedItems;
+        public EnchantmentRules(List<Item> supportedItems, String additions, String exclusions) {
+            this.supportedItems = NonNullLazy.of(() -> supportedItems.stream().map(ItemStack::new).toList());
             this.additions = RegistryHelper.tag(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, additions));
             this.exclusions = RegistryHelper.tag(Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, exclusions));
 
         }
 
         public boolean isApplicable(Holder<Enchantment> enchantment) {
-            boolean supported = supportedItems.stream().anyMatch(stack -> enchantment.value().isPrimaryItem(stack));
+            boolean supported = supportedItems.get().stream().anyMatch(stack -> enchantment.value().isPrimaryItem(stack));
             return (supported || enchantment.is(additions)) && !enchantment.is(exclusions);
         }
     }
 
-    private static List<ItemStack> items(Item... items) {
-        return Arrays.stream(items).map(ItemStack::new).toList();
+    private static List<Item> items(Item... items) {
+        return List.of(items);
     }
 
     public static Holder<Enchantment> getHolder(Enchantment enchantment) {

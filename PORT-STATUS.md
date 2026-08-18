@@ -375,6 +375,15 @@ file it had given up on, and it then reports errors that were always there. One 
 so a global rewrite of `.x` breaks correct code. `tools/port_lines.py` applies a regex only to
 the lines javac flagged, which is the right tool whenever a name is legal somewhere else.
 
+**Building an ItemStack during mod construction.** Item data components are bound after mods are
+constructed, so `new ItemStack(item)` in a constructor or in anything a mod constructor calls throws
+`NullPointerException: Components not bound yet`, which fails the whole mod before any other mod
+loads. This is the first runtime failure the port hit, in `TetraEnchantmentHelper.init`, which
+`TetraMod.<init>` calls directly and which built stacks for every enchantment aspect. It now holds
+the items and builds the stacks on first use. Anything reached from `FMLCommonSetupEvent` or later
+is safe, which is why `ScrollItem.commonInit` building fifteen of them is not a problem. When in
+doubt, build the stack lazily.
+
 **A for loop over paths with a space in them.** `for j in $(find "$HOME/.gradle/..." ...)` splits
 `C:\Users\Zachary Smith\...` on the space and searches two paths that do not exist, silently. That
 is how `FMLEnvironment` read as absent from every jar in the cache when it was sitting in the
