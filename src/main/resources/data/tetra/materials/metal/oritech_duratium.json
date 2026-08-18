@@ -1,0 +1,29 @@
+{
+    "key": "oritech_duratium",
+    "category": "metal",
+    "primary": 7.6,
+    "secondary": 2.8,
+    "tertiary": 3.8,
+    "durability": 2600,
+    "integrityCost": 2,
+    "integrityGain": 8,
+    "magicCapacity": 88,
+    "toolLevel": "minecraft:netherite",
+    "toolEfficiency": 9.5,
+    "tints": {
+        "glyph": "6e5d8b",
+        "texture": "816ea3"
+    },
+    "textures": [
+        "heavy",
+        "metal"
+    ],
+    "material": {
+        "items": [
+            "oritech:duratium_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:iron"
+    }
+}

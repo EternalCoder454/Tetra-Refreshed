@@ -1,0 +1,29 @@
+{
+    "key": "oritech_fluxite",
+    "category": "gem",
+    "primary": 5.2,
+    "secondary": 2.8,
+    "tertiary": 0,
+    "durability": 900,
+    "integrityCost": 2,
+    "integrityGain": 2,
+    "magicCapacity": 140,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 7.5,
+    "tints": {
+        "glyph": "742d91",
+        "texture": "8935ab"
+    },
+    "textures": [
+        "shiny",
+        "crude"
+    ],
+    "material": {
+        "items": [
+            "oritech:fluxite"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:stone"
+    }
+}

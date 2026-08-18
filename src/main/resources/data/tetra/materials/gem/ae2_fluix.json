@@ -1,0 +1,29 @@
+{
+    "key": "ae2_fluix",
+    "category": "gem",
+    "primary": 5.4,
+    "secondary": 2.8,
+    "tertiary": 0,
+    "durability": 950,
+    "integrityCost": 2,
+    "integrityGain": 2,
+    "magicCapacity": 155,
+    "toolLevel": "minecraft:diamond",
+    "toolEfficiency": 7.5,
+    "tints": {
+        "glyph": "31264c",
+        "texture": "3a2d5a"
+    },
+    "textures": [
+        "shiny",
+        "crude"
+    ],
+    "material": {
+        "items": [
+            "ae2:fluix_crystal"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:stone"
+    }
+}

@@ -16,6 +16,31 @@ known issues at the bottom before reporting.
 
 Requires **Mutil Refreshed 7.0.0-pre.0** or later.
 
+### Materials from other mods
+
+**37 new materials**, so tools can be built from what the rest of the pack already produces. Each is
+one data file. No schematic changed, because schematics name a material directory and pick up
+whatever is in it.
+
+* **Regions Unexplored, 23 woods.** Alpha, baobab, blackwood, brimwood, cobalt, cypress, dead,
+  eucalyptus, joshua, kapok, larch, magnolia, maple, palm, pine, redwood, socotra, willow, wisteria
+  and the four bioshrooms. They share oak's stats deliberately, since those woods are not
+  mechanically different from each other, and differ by colour, which is what does distinguish them.
+  The 16 painted planks are left out as dye variants of one wood rather than woods of their own.
+* **Applied Energistics 2, 4 materials.** Certus quartz and its charged form, fluix, and sky stone.
+  The crystals carry far more magic capacity than a vanilla gem of the same durability, which is the
+  thing that characterises them.
+* **Oritech, 10 materials.** Steel, nickel, electrum, platinum, biosteel, energite, adamant,
+  duratium, prometheum and fluxite. Their tiers follow Oritech's own recipes rather than a guess:
+  steel is iron and coal, adamant is nickel and diamond, duratium is platinum and netherite, and
+  prometheum comes out of the atomic forge, so it sits at the end.
+
+Every tint is the average of that mod's own texture, calibrated against the ratio Tetra's ten
+vanilla woods already use, rather than a colour picked by eye.
+
+**None of this has been crafted.** The files load and parse, and the materials appear where they
+should, but no tool has been built from one.
+
 ### The port
 
 1941 compile errors down to zero, then nine further failures that only appeared on launch. The

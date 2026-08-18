@@ -12,7 +12,7 @@ and claims neither.
 Make Tetra cheap to extend. Two things cost far more than they should today:
 
 * **A material with a new look needs artwork for every module.** That is why 270 module textures
-  ship for 70 materials.
+  ship for 107 materials.
 * **Compatibility with another mod's tools is written by hand, every time.** That makes compat a
   permanent backlog rather than something that works by default.
 
@@ -47,14 +47,18 @@ greyscale and has no palette, so it stays on its own artwork, which is the fallb
 **Checked by eye and correct.** The recoloured hammer heads read as normal tools, confirmed in game
 on 2026-08-18. The mechanism is proven, not just stitching without error.
 
-**The mechanism is done. The migration is one percent done.** Two materials of seventy carry a
-palette, and two module textures of two hundred and seventy are greyscale. None of the promised
-saving exists until that changes.
+**The mechanism is done. The migration is one percent done.** Two materials of a hundred and seven
+carry a palette, and two module textures of two hundred and seventy are greyscale. None of the
+promised saving exists until that changes.
 
 **Known constraint.** The atlas builds every texture and material combination, so palettes want
-scoping to one material category per greyscale texture. All 70 materials against all 270 textures
-would be about nineteen thousand sprites, which is not viable. Worst case per category is fabric at
-sixteen.
+scoping to one material category per greyscale texture. All 107 materials against all 270 textures
+would be about twenty nine thousand sprites, which is not viable. Worst case per category is wood at
+thirty three.
+
+This constraint is on palettes alone. A material that reuses an existing texture class costs one
+json file and no sprites at all, which is how the 37 modded materials were added without touching
+the atlas.
 
 ## In flight, generated materials
 

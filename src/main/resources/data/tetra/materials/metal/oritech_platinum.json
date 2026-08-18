@@ -1,0 +1,30 @@
+{
+    "key": "oritech_platinum",
+    "category": "metal",
+    "primary": 4.4,
+    "secondary": 4.4,
+    "tertiary": 2.2,
+    "durability": 220,
+    "integrityCost": 2,
+    "integrityGain": 5,
+    "magicCapacity": 120,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 9,
+    "tints": {
+        "glyph": "6da9a1",
+        "texture": "80c7be"
+    },
+    "textures": [
+        "shiny",
+        "metal",
+        "default"
+    ],
+    "material": {
+        "items": [
+            "oritech:platinum_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:gold"
+    }
+}

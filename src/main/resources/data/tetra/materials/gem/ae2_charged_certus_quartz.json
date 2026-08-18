@@ -1,0 +1,29 @@
+{
+    "key": "ae2_charged_certus_quartz",
+    "category": "gem",
+    "primary": 4.6,
+    "secondary": 2.6,
+    "tertiary": 0,
+    "durability": 620,
+    "integrityCost": 2,
+    "integrityGain": 2,
+    "magicCapacity": 165,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 7,
+    "tints": {
+        "glyph": "7fabcf",
+        "texture": "96c9f4"
+    },
+    "textures": [
+        "shiny",
+        "crude"
+    ],
+    "material": {
+        "items": [
+            "ae2:charged_certus_quartz_crystal"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:stone"
+    }
+}

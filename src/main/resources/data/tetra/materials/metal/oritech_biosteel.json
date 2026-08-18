@@ -1,0 +1,29 @@
+{
+    "key": "oritech_biosteel",
+    "category": "metal",
+    "primary": 5.2,
+    "secondary": 3.4,
+    "tertiary": 3.4,
+    "durability": 520,
+    "integrityCost": 2,
+    "integrityGain": 5,
+    "magicCapacity": 96,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 6,
+    "tints": {
+        "glyph": "538758",
+        "texture": "619f68"
+    },
+    "textures": [
+        "metal",
+        "default"
+    ],
+    "material": {
+        "items": [
+            "oritech:biosteel_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:gold"
+    }
+}

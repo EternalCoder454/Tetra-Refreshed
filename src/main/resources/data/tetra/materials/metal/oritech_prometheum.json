@@ -1,0 +1,30 @@
+{
+    "key": "oritech_prometheum",
+    "category": "metal",
+    "primary": 8.2,
+    "secondary": 2.9,
+    "tertiary": 3.6,
+    "durability": 3200,
+    "integrityCost": 2,
+    "integrityGain": 8,
+    "magicCapacity": 160,
+    "toolLevel": "minecraft:netherite",
+    "toolEfficiency": 10,
+    "tints": {
+        "glyph": "749488",
+        "texture": "89aea0"
+    },
+    "textures": [
+        "shiny",
+        "heavy",
+        "metal"
+    ],
+    "material": {
+        "items": [
+            "oritech:prometheum_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:diamond"
+    }
+}

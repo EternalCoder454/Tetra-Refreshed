@@ -1,0 +1,33 @@
+{
+    "key": "oritech_electrum",
+    "category": "metal",
+    "primary": 3.6,
+    "secondary": 4.5,
+    "tertiary": 1.4,
+    "durability": 90,
+    "integrityCost": 2,
+    "integrityGain": 4,
+    "magicCapacity": 140,
+    "toolLevel": "minecraft:gold",
+    "toolEfficiency": 11,
+    "tints": {
+        "glyph": "ac8450",
+        "texture": "ca9c5e"
+    },
+    "textures": [
+        "shiny",
+        "metal",
+        "default"
+    ],
+    "material": {
+        "items": [
+            "oritech:electrum_ingot"
+        ]
+    },
+    "effects": {
+        "stabilizing": 10
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:gold"
+    }
+}

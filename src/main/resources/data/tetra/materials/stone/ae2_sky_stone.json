@@ -1,0 +1,30 @@
+{
+    "key": "ae2_sky_stone",
+    "category": "stone",
+    "primary": 5.5,
+    "secondary": 5.0,
+    "tertiary": 0,
+    "durability": 420,
+    "integrityCost": 3,
+    "integrityGain": 1,
+    "magicCapacity": 84,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 6,
+    "tints": {
+        "glyph": "1b1c1c",
+        "texture": "1f2221"
+    },
+    "textures": [
+        "grainy",
+        "crude",
+        "default"
+    ],
+    "material": {
+        "items": [
+            "ae2:sky_stone_block"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:iron"
+    }
+}

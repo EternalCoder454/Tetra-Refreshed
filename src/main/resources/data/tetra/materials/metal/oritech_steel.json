@@ -1,0 +1,29 @@
+{
+    "key": "oritech_steel",
+    "category": "metal",
+    "primary": 5.5,
+    "secondary": 3.6,
+    "tertiary": 3.2,
+    "durability": 380,
+    "integrityCost": 2,
+    "integrityGain": 5,
+    "magicCapacity": 70,
+    "toolLevel": "minecraft:iron",
+    "toolEfficiency": 6.5,
+    "tints": {
+        "glyph": "6b6c73",
+        "texture": "7e7f87"
+    },
+    "textures": [
+        "metal",
+        "default"
+    ],
+    "material": {
+        "items": [
+            "oritech:steel_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:gold"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "key": "ru_redwood",
+    "category": "wood",
+    "primary": 3,
+    "secondary": 1.7,
+    "tertiary": 6,
+    "durability": 59,
+    "integrityCost": 1,
+    "integrityGain": 4,
+    "magicCapacity": 90,
+    "toolLevel": "minecraft:wood",
+    "toolEfficiency": 2,
+    "tints": {
+        "glyph": "893f2b",
+        "texture": "a14a33"
+    },
+    "textures": [
+        "crude",
+        "wooden"
+    ],
+    "material": {
+        "items": [
+            "regions_unexplored:redwood_planks"
+        ]
+    },
+    "requiredTools": {
+        "axe_dig": "minecraft:wood"
+    }
+}

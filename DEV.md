@@ -152,8 +152,22 @@ A material is one file under `data/tetra/materials/<category>/<name>.json`:
 classes, and the first match wins, falling back to the module's first available class. So a material
 that resembles something already drawn costs exactly this one file.
 
-A material that needs a look nothing else has needs artwork for every module, which is why 268
+A material that needs a look nothing else has needs artwork for every module, which is why 270
 module textures ship. The palette below is the way out of that.
+
+**A new file is enough. Nothing has to be wired to it.** Schematics name a material directory rather
+than a list of files, `tetra:metal/` and `tetra:wood/` and so on, and `SchematicRegistry` expands any
+reference ending in a slash across everything in that directory. So a file dropped into
+`materials/metal` is offered by all 48 schematics that ask for metal, with no schematic edit.
+
+**The tint is a colour multiply at draw time, not a generated sprite**, so tints are free no matter
+how many materials carry them. Only `palette` costs atlas space. A tint may name an `ItemColors`
+entry or give raw hex, and raw hex is the right choice for a material Tetra does not know about.
+
+Deriving a tint from the mod's own texture beats picking one by eye. Averaging the ten vanilla plank
+textures against the tints Tetra declares for them gives a median ratio of about 1.1 per channel, and
+Tetra's glyph tint sits at about 0.85 of its texture tint, so a modded material lands in the same
+relationship to its art as a built in one.
 
 ### Adding a material with a palette
 
@@ -226,7 +240,7 @@ neither is unaffected. The test pack ships EMI and not JEI.
 
 **Tetra's crafting is not a set of recipes**, which is why only materials are exported. A
 schematic's outcome is a function of the target item, the slot and the materials, so exporting
-schematics as recipes would be a product of 343 schematics, 78 modules and 70 materials. The
+schematics as recipes would be a product of 343 schematics, 78 modules and 107 materials. The
 material list is both tractable and the question players actually ask, and the material items are
 registered as recipe inputs so that asking what an iron ingot is for finds the page.
 
