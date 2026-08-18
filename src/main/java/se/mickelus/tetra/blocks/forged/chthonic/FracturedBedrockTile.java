@@ -279,7 +279,7 @@ public class FracturedBedrockTile extends BlockEntity {
         if (mob.type.canSummon()
 //                && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementType(mob.type), world, pos, mob.type)
                 && serverWorld.noCollision(mob.type.getSpawnAABB(spawnPos.x, spawnPos.y, spawnPos.z))
-                && SpawnPlacements.checkSpawnRules(mob.type, serverWorld, MobSpawnType.SPAWNER, pos, serverWorld.getRandom())) {
+                && SpawnPlacements.checkSpawnRules(mob.type, serverWorld, EntitySpawnReason.SPAWNER, pos, serverWorld.getRandom())) {
 
             Entity entity;
             try {
@@ -293,13 +293,13 @@ public class FracturedBedrockTile extends BlockEntity {
                 return;
             }
 
-            entity.moveTo(spawnPos);
+            entity.snapTo(spawnPos);
             // todo 1.20 verify: hammering an extractor into bedrock spawns mobs (good frequency, correct types, respecting mods)
             CastOptional.cast(entity, Mob.class)
-                    .filter(e -> e.checkSpawnRules(serverWorld, MobSpawnType.SPAWNER))
+                    .filter(e -> e.checkSpawnRules(serverWorld, EntitySpawnReason.SPAWNER))
                     .filter(e -> e.checkSpawnObstruction(serverWorld))
                     .ifPresent(e -> {
-                        EventHooks.finalizeMobSpawn(e, serverWorld, serverWorld.getCurrentDifficultyAt(e.blockPosition()), MobSpawnType.SPAWNER, null);
+                        EventHooks.finalizeMobSpawn(e, serverWorld, serverWorld.getCurrentDifficultyAt(e.blockPosition()), EntitySpawnReason.SPAWNER, null);
                         serverWorld.addFreshEntityWithPassengers(e);
 
                         // makes the mob angry at a nearby player

@@ -234,7 +234,7 @@ public abstract class ItemModuleMajor extends ItemModule {
         TetraEnchantmentHelper.ensureMappings(itemStack);
         CompoundTag mappings = getTagElement(itemStack, "EnchantmentMapping");
         if (mappings != null) {
-            return mappings.getAllKeys().stream()
+            return mappings.keySet().stream()
                     .filter(key -> getSlot().equals(mappings.get(key).getAsString()))
                     .collect(Collectors.toSet());
         }
@@ -251,7 +251,7 @@ public abstract class ItemModuleMajor extends ItemModule {
 
         if (mappings != null) {
             return itemStack.getTagEnchantments().entrySet().stream()
-                    .map(entry -> Pair.of(entry.getKey().unwrapKey().orElseThrow().location().toString(), entry.getIntValue()))
+                    .map(entry -> Pair.of(entry.getKey().unwrapKey().orElseThrow().identifier().toString(), entry.getIntValue()))
                     .filter(entry -> getSlot().equals(mappings.getStringOr(entry.getLeft(), "")))
                     .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
         }

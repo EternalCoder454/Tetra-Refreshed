@@ -65,7 +65,7 @@ public class LightningStrikeOutcome implements CraftingEffectOutcome {
 
     private static void spawnLightningBolt(ServerLevel serverLevel, BlockPos pos, ServerPlayer causingPlayer) {
         LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(serverLevel);
-        lightning.moveTo(Vec3.atBottomCenterOf(pos));
+        lightning.snapTo(Vec3.atBottomCenterOf(pos));
         lightning.setCause(causingPlayer);
         serverLevel.addFreshEntity(lightning);
     }

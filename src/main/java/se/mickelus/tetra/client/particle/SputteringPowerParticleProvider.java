@@ -1,5 +1,6 @@
 package se.mickelus.tetra.client.particle;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -14,7 +15,7 @@ public record SputteringPowerParticleProvider(SpriteSet spriteSet) implements Pa
 
     @Override
     public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double entityId, double unused1,
-            double unused2) {
+            double unused2, RandomSource random) {
         Entity entity = level.getEntity((int) entityId);
 
         Supplier<Vec3> supplier = () -> null;

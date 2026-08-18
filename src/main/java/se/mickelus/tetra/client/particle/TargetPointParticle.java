@@ -1,9 +1,8 @@
 package se.mickelus.tetra.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.world.phys.Vec2;
 import org.joml.Vector3f;
 
@@ -11,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TargetPointParticle extends TextureSheetParticle {
+public class TargetPointParticle extends SingleQuadParticle {
     final SpriteSet sprites;
     double tarX;
     double tarY;
@@ -22,7 +21,7 @@ public class TargetPointParticle extends TextureSheetParticle {
 
     TargetPointParticle(ClientLevel level, double x, double y, double z, double tarX, double tarY, double tarZ, float friction, float gravity,
             int delay, SpriteSet spriteSet) {
-        super(level, x, y, z);
+        super(level, x, y, z, spriteSet.first());
         this.gravity = gravity;
         this.friction = friction;
         this.sprites = spriteSet;
@@ -131,12 +130,12 @@ public class TargetPointParticle extends TextureSheetParticle {
         return ratio;
     }
 
-    public int getLightColor(float p_234080_) {
-        return 240; // super.getLightColor(p_234080_);
+    protected int getLightCoords(float p_234080_) {
+        return 240; // super.getLightCoords(p_234080_);
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    protected Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 }

@@ -1,5 +1,6 @@
 package se.mickelus.tetra.blocks.geode.particle;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -34,7 +35,7 @@ public class SparkleParticle extends SimpleAnimatedParticle {
             this.sprites = spriteSet;
         }
 
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double dx, double dy, double dz, RandomSource random) {
             return new SparkleParticle(level, x, y, z, dx, dy, dz, this.sprites);
         }
     }

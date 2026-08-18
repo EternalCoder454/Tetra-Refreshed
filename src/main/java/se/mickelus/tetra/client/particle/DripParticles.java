@@ -1,5 +1,6 @@
 package se.mickelus.tetra.client.particle;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
 import net.minecraft.client.particle.Particle;
@@ -28,7 +29,7 @@ public class DripParticles {
         }
 
         public Particle createParticle(SimpleParticleType option, ClientLevel level, double x, double y, double z, double dx, double dy,
-                double dz) {
+                double dz, RandomSource random) {
             FallAndLandParticle particle = new FallAndLandParticle(level, x, y, z, Fluids.EMPTY, landingBlood.get(), this.sprites);
             particle.setParticleSpeed(dx, dy, dz);
             particle.setColor(0.72f, 0.14f, 0.14f);
@@ -45,7 +46,7 @@ public class DripParticles {
         }
 
         public Particle createParticle(SimpleParticleType option, ClientLevel level, double x, double y, double z, double dx, double dy,
-                double dz) {
+                double dz, RandomSource random) {
             DripLandParticle particle = new DripLandParticle(level, x, y, z, Fluids.EMPTY, this.sprites);
             particle.setColor(0.72f, 0.14f, 0.14f);
             return particle;
@@ -61,7 +62,7 @@ public class DripParticles {
         }
 
         public Particle createParticle(SimpleParticleType option, ClientLevel level, double x, double y, double z, double dx, double dy,
-                double dz) {
+                double dz, RandomSource random) {
             FallAndLandParticle particle = new FallAndLandParticle(level, x, y, z, Fluids.EMPTY, landingSlime.get(), this.sprites);
             particle.setParticleSpeed(dx, dy, dz);
             particle.setColor(0.42f, 0.65f, 0.31f);
@@ -78,7 +79,7 @@ public class DripParticles {
         }
 
         public Particle createParticle(SimpleParticleType option, ClientLevel level, double x, double y, double z, double dx, double dy,
-                double dz) {
+                double dz, RandomSource random) {
             DripLandParticle particle = new DripLandParticle(level, x, y, z, Fluids.EMPTY, this.sprites);
             particle.setColor(0.42f, 0.65f, 0.31f);
             return particle;

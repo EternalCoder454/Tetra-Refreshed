@@ -40,7 +40,7 @@ public final class RegistryHelper {
         return lookup(registryKey).listElements()
                 .filter(holder -> holder.value() == value || holder.value().equals(value))
                 .findFirst()
-                .map(holder -> holder.key().location());
+                .map(holder -> holder.key().identifier());
     }
 
     public static <T> Collection<T> values(Registry<T> registry) {
@@ -80,6 +80,6 @@ public final class RegistryHelper {
     }
 
     private static <T> HolderLookup.RegistryLookup<T> lookup(ResourceKey<? extends Registry<T>> registryKey) {
-        return Objects.requireNonNull(CommonHooks.resolveLookup(registryKey), "Registry lookup unavailable: " + registryKey.location());
+        return Objects.requireNonNull(CommonHooks.resolveLookup(registryKey), "Registry lookup unavailable: " + registryKey.identifier());
     }
 }

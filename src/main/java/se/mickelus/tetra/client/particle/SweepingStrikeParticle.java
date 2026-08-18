@@ -1,50 +1,21 @@
 package se.mickelus.tetra.client.particle;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import net.minecraft.util.RandomSource;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.function.Consumer;
 
-public class SweepingStrikeParticle extends TextureSheetParticle {
-    @OnlyIn(Dist.CLIENT)
-    ParticleRenderType renderType = new ParticleRenderType() {
-        @Override
-        public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
-            RenderSystem.disableCull(); // needs custom render type for this
-            RenderSystem.disableBlend();
-            RenderSystem.depthMask(true);
-            RenderSystem.setShader(GameRenderer::getParticleShader);
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
-
-        @Override
-        public String toString() {
-            return "PARTICLE_SHEET_LIT";
-        }
-
-        @Override
-        public boolean isTranslucent() {
-            return false;
-        }
-    };
-
+public class SweepingStrikeParticle extends SingleQuadParticle {
     private static final Vector3f ROTATION_VECTOR = new Vector3f(0.5F, 0.5F, 0.5F).normalize();
-    private static final Vector3f TRANSFORM_VECTOR = new Vector3f(-1.0F, -1.0F, 0.0F);
     private final boolean reverse;
     private final SpriteSet sprites;
 
@@ -52,7 +23,7 @@ public class SweepingStrikeParticle extends TextureSheetParticle {
     private final float yaw;
 
     protected SweepingStrikeParticle(ClientLevel level, double x, double y, double z, SpriteSet spriteSet, int lifetime, boolean reverse, float pitch, float yaw) {
-        super(level, x, y, z, 0, 0, 0);
+        super(level, x, y, z, 0, 0, 0, spriteSet.first());
 
         float shade = 0.6f + random.nextFloat() * 0.4f;
         this.rCol = shade;
@@ -72,54 +43,19 @@ public class SweepingStrikeParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return renderType;
+    protected Layer getLayer() {
+        // the old anonymous render type disabled blending and wrote depth against the particle
+        // atlas, which is what Layer.OPAQUE is. Culling stayed on, as it did before.
+        return Layer.OPAQUE;
     }
 
     @Override
-    public void render(VertexConsumer consumer, Camera camera, float partialTicks) {
-        this.renderRotatedParticle(consumer, camera, partialTicks, quaternion -> {
-            quaternion.mul(Axis.YP.rotation(-yaw));
-            quaternion.mul(Axis.XP.rotation(pitch + Mth.PI / 3f));
-        });
-    }
+    public void extract(QuadParticleRenderState renderState, Camera camera, float partialTicks) {
+        Quaternionf rotation = new Quaternionf().setAngleAxis(0.0F, ROTATION_VECTOR.x(), ROTATION_VECTOR.y(), ROTATION_VECTOR.z());
+        rotation.mul(Axis.YP.rotation(-yaw));
+        rotation.mul(Axis.XP.rotation(pitch + Mth.PI / 3f));
 
-    private void renderRotatedParticle(VertexConsumer consumer, Camera camera, float partialTicks, Consumer<Quaternionf> transformApplier) {
-        Vec3 vec3 = camera.getPosition();
-        float x = (float) (this.x - vec3.x());
-        float y = (float) (this.y - vec3.y());
-        float z = (float) (this.z - vec3.z());
-        Quaternionf quaternion = new Quaternionf().setAngleAxis(0.0F, ROTATION_VECTOR.x(), ROTATION_VECTOR.y(), ROTATION_VECTOR.z());
-        ;
-        transformApplier.accept(quaternion);
-        quaternion.transform(TRANSFORM_VECTOR);
-        Vector3f[] avector3f = new Vector3f[] {
-                new Vector3f(-1.0F, -1.0F, 0.0F),
-                new Vector3f(-1.0F, 1.0F, 0.0F),
-                new Vector3f(1.0F, 1.0F, 0.0F),
-                new Vector3f(1.0F, -1.0F, 0.0F)
-        };
-        float size = this.getQuadSize(partialTicks);
-
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            quaternion.transform(vector3f);
-            vector3f.mul(size);
-            vector3f.add(x, y, z);
-        }
-
-        int light = this.getLightColor(partialTicks);
-        this.makeCornerVertex(consumer, avector3f[0], this.getU1(), this.getV1(), light);
-        this.makeCornerVertex(consumer, avector3f[1], this.getU1(), this.getV0(), light);
-        this.makeCornerVertex(consumer, avector3f[2], this.getU0(), this.getV0(), light);
-        this.makeCornerVertex(consumer, avector3f[3], this.getU0(), this.getV1(), light);
-    }
-
-    private void makeCornerVertex(VertexConsumer consumer, Vector3f pos, float u, float v, int light) {
-        consumer.addVertex(pos.x(), pos.y(), pos.z())
-                .setUv(u, v)
-                .setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-                .setLight(light);
+        extractRotatedQuad(renderState, camera, rotation, partialTicks);
     }
 
     @Override
@@ -153,7 +89,7 @@ public class SweepingStrikeParticle extends TextureSheetParticle {
             this.sprites = spriteSet;
         }
 
-        public Particle createParticle(SweepingStrikeParticleOption option, ClientLevel level, double x, double y, double z, double dx, double dy, double dz) {
+        public Particle createParticle(SweepingStrikeParticleOption option, ClientLevel level, double x, double y, double z, double dx, double dy, double dz, RandomSource random) {
             return new SweepingStrikeParticle(level, x, y, z, this.sprites, option.duration(), option.reverse(), option.pitch(), option.yaw());
         }
     }

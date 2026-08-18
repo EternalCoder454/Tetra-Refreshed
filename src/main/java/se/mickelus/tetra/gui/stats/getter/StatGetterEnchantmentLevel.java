@@ -24,7 +24,7 @@ public class StatGetterEnchantmentLevel implements IStatGetter {
 
     public StatGetterEnchantmentLevel(ResourceKey<Enchantment> enchantment, double multiplier, double base) {
         this.enchantment = enchantment;
-        this.enchantmentKey = enchantment.location().toString();
+        this.enchantmentKey = enchantment.identifier().toString();
         this.multiplier = multiplier;
         this.base = base;
     }

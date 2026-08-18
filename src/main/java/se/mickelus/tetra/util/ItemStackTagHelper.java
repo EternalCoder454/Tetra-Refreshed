@@ -194,7 +194,7 @@ public final class ItemStackTagHelper {
             this.compoundDest = compoundDest;
             this.listSource = null;
             this.listDest = null;
-            this.keys = compoundSource.getAllKeys().iterator();
+            this.keys = compoundSource.keySet().iterator();
         }
 
         private Frame(ListTag listSource, ListTag listDest) {

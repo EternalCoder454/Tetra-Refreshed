@@ -30,10 +30,10 @@ public class JankEffect {
         items.forEach(item -> {
             level.sendParticles(ParticleTypes.REVERSE_PORTAL, item.getX() + item.getBbWidth() / 2, item.getY() + item.getBbHeight() / 2,
                     item.getZ() + item.getBbWidth() / 2, 1, 0, 0, 0, 0);
-            item.moveTo(entity.getPosition(0));
+            item.snapTo(entity.getPosition(0));
             item.setPickUpDelay(0);
         });
 
-        level.getEntities(EntityType.EXPERIENCE_ORB, new AABB(target).inflate(effectLevel * 0.5), Entity::isAlive).forEach(orb -> orb.moveTo(entity.getPosition(0)));
+        level.getEntities(EntityType.EXPERIENCE_ORB, new AABB(target).inflate(effectLevel * 0.5), Entity::isAlive).forEach(orb -> orb.snapTo(entity.getPosition(0)));
     }
 }

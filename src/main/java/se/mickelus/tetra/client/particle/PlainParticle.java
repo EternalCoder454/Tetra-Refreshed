@@ -1,5 +1,6 @@
 package se.mickelus.tetra.client.particle;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -35,7 +36,7 @@ public class PlainParticle extends SimpleAnimatedParticle {
         }
 
         public Particle createParticle(PlainParticleOption option, ClientLevel level, double x, double y, double z, double dx, double dy,
-                double dz) {
+                double dz, RandomSource random) {
             return new PlainParticle(level, x, y, z, dx, dy, dz, option, this.sprites);
         }
     }

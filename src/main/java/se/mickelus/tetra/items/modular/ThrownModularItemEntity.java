@@ -359,7 +359,7 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
             BlockPos blockpos = target.blockPosition();
             if (level().canSeeSky(blockpos)) {
                 LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(this.level());
-                lightning.moveTo(Vec3.atBottomCenterOf(blockpos));
+                lightning.snapTo(Vec3.atBottomCenterOf(blockpos));
                 lightning.setCause(shooter instanceof ServerPlayer ? (ServerPlayer) shooter : null);
                 this.level().addFreshEntity(lightning);
                 soundevent = SoundEvents.TRIDENT_THUNDER.value();

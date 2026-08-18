@@ -2,7 +2,7 @@ package se.mickelus.tetra.aspect;
 
 import com.google.common.collect.HashBiMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -86,7 +86,7 @@ public class TetraEnchantmentHelper {
         }
 
         CompoundTag mappings = getTagElement(itemStack, "EnchantmentMapping");
-        if (mappings == null || mappings.getAllKeys().size() < itemStack.getTagEnchantments().size()) {
+        if (mappings == null || mappings.keySet().size() < itemStack.getTagEnchantments().size()) {
             mapEnchantments(itemStack);
         }
     }
@@ -194,7 +194,7 @@ public class TetraEnchantmentHelper {
                                         capacity.merge(slot, cost, Integer::sum);
                                     });
                         });
-                if (mappings.getAllKeys().isEmpty()) {
+                if (mappings.keySet().isEmpty()) {
                     tag.remove("EnchantmentMapping");
                 } else {
                     tag.put("EnchantmentMapping", mappings);
@@ -246,7 +246,7 @@ public class TetraEnchantmentHelper {
         if (map == null) {
             return;
         }
-        Set<String> matchingEnchantments = map.getAllKeys().stream()
+        Set<String> matchingEnchantments = map.keySet().stream()
                 .filter(ench -> slot.equals(map.getStringOr(ench, "")))
                 .collect(Collectors.toSet());
 
