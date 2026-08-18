@@ -305,8 +305,8 @@ public interface IModularItem {
             for (int i = 0; i < majorModuleKeys.length; i++) {
                 String moduleName = tag.getStringOr(majorModuleKeys[i], "");
                 ItemModule module = ItemUpgradeRegistry.instance.getModule(moduleName);
-                if (module instanceof ItemModuleMajor) {
-                    modules[i] = (ItemModuleMajor) module;
+                if (module instanceof ItemModuleMajor itemModuleMajor) {
+                    modules[i] = itemModuleMajor;
                 }
             }
         }

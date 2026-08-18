@@ -59,8 +59,8 @@ public class RevengeTracker {
             if (enemy != null) {
                 addEnemy(entity, enemy);
 
-                if (entity instanceof ServerPlayer) {
-                    TetraMod.packetHandler.sendTo(new AddRevengePacket(enemy), (ServerPlayer) entity);
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    TetraMod.packetHandler.sendTo(new AddRevengePacket(enemy), serverPlayer);
                 } else {
                     logger.warn("Unable to sync revenge state, server entity of type player is of other heritage. This should not happen");
                 }

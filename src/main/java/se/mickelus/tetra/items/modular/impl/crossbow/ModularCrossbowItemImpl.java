@@ -367,8 +367,8 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
                 world.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1, 1);
 
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.SHOT_CROSSBOW.trigger((ServerPlayer) player, advancementCopy);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.SHOT_CROSSBOW.trigger(serverPlayer, advancementCopy);
 
                     player.awardStat(Stats.ITEM_USED.get(this));
                 }

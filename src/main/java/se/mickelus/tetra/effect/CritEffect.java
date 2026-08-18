@@ -51,8 +51,8 @@ public class CritEffect {
                 CastOptional.cast(breakingPlayer, ServerPlayer.class)
                         .ifPresent(serverPlayer -> EffectHelper.sendEventToPlayer(serverPlayer, 2001, pos, Block.getId(blockState)));
 
-                if (world instanceof ServerLevel) {
-                    ((ServerLevel) world).sendParticles(ParticleTypes.ENCHANTED_HIT,
+                if (world instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.ENCHANTED_HIT,
                             pos.getX() + 0.5, // world.rand.nextGaussian(),
                             pos.getY() + 0.5, // world.rand.nextGaussian(),
                             pos.getZ() + 0.5, // world.rand.nextGaussian(),

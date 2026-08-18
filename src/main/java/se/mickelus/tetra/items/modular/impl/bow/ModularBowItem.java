@@ -191,8 +191,8 @@ public class ModularBowItem extends ModularItem {
     }
 
     protected void fireArrow(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (entity instanceof Player playerValue) {
+            Player player = playerValue;
             ItemStack ammoStack = player.getProjectile(vanillaBow.get());
 
             boolean playerInfinite = isInfinite(player, itemStack, ammoStack);

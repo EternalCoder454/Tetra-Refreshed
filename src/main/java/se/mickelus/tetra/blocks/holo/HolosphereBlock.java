@@ -69,8 +69,8 @@ public class HolosphereBlock extends TetraWaterloggedBlock implements EntityBloc
                     level.getBlockEntity(pos, HolosphereBlockEntity.type.get())
                             .ifPresent(blockEntity -> blockEntity.setItemTag(getTag(itemstack)));
                     placedBlockState.getBlock().setPlacedBy(level, pos, placedBlockState, player, itemstack);
-                    if (player instanceof ServerPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, pos, itemstack);
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, itemstack);
                     }
                 }
 

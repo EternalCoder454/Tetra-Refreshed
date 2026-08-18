@@ -321,8 +321,8 @@ public class HammerBaseBlockEntity extends BlockEntity {
      * Utility for spawning particles on the server
      */
     private void spawnParticle(ParticleOptions particle, Vec3 pos, int count, float speed) {
-        if (level instanceof ServerLevel) {
-            ((ServerLevel) level).sendParticles(particle, pos.x, pos.y, pos.z, count, 0, 0, 0, speed);
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(particle, pos.x, pos.y, pos.z, count, 0, 0, 0, speed);
         }
     }
 

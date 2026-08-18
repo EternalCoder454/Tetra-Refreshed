@@ -200,8 +200,8 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
     }
 
     private void runDrainedEffects() {
-        if (level instanceof ServerLevel) {
-            ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE,
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.SMOKE,
                     worldPosition.getX() + 0.5, worldPosition.getY() + 0.7, worldPosition.getZ() + 0.5,
                     10, 0, 0, 0, 0.02f);
             level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,
@@ -210,8 +210,8 @@ public class TransferUnitBlockEntity extends BlockEntity implements IHeatTransfe
     }
 
     private void runFilledEffects() {
-        if (level instanceof ServerLevel) {
-            ((ServerLevel) level).sendParticles(ParticleTypes.FLAME,
+        if (level instanceof ServerLevel serverLevelValue) {
+            serverLevelValue.sendParticles(ParticleTypes.FLAME,
                     worldPosition.getX() + 0.5, worldPosition.getY() + 0.7, worldPosition.getZ() + 0.5,
                     5, 0, 0, 0, 0.02f);
             level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS,

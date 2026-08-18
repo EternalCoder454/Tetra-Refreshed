@@ -73,8 +73,8 @@ public abstract class ItemModuleMajor extends ItemModule {
                     addImprovement(itemStack, settleImprovement, settleLevel == -1 ? 1 : settleLevel + 1);
                     tag.remove(settleProgressKey);
 
-                    if (entity instanceof ServerPlayer) {
-                        TetraMod.packetHandler.sendTo(new SettlePacket(itemStack, getSlot()), (ServerPlayer) entity);
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        TetraMod.packetHandler.sendTo(new SettlePacket(itemStack, getSlot()), serverPlayer);
                         IModularItem.updateIdentifier(tag);
                     }
                 }

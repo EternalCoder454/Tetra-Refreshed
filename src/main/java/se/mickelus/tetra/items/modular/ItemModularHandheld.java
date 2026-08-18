@@ -746,8 +746,8 @@ public class ItemModularHandheld extends ModularItem {
      */
     @Override
     public boolean releaseUsing(ItemStack itemStack, Level world, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof Player) {
-            Player player = (Player) entityLiving;
+        if (entityLiving instanceof Player playerValue) {
+            Player player = playerValue;
             int ticksUsed = this.getUseDuration(itemStack) - timeLeft;
 
             double cooldownBase = getCooldownBase(itemStack);
@@ -795,7 +795,7 @@ public class ItemModularHandheld extends ModularItem {
 
     @OnlyIn(Dist.CLIENT)
     public void triggerChargedAbility(ItemStack itemStack, Level world, LivingEntity entity, int ticksUsed) {
-        if (entity instanceof Player) {
+        if (entity instanceof Player playerValue) {
             HitResult rayTrace = Minecraft.getInstance().hitResult;
 
             LivingEntity target = Optional.ofNullable(rayTrace)
@@ -817,7 +817,7 @@ public class ItemModularHandheld extends ModularItem {
 
             TetraMod.packetHandler.sendToServer(new ChargedAbilityPacket(target, targetPos, hitVec, activeHand, ticksUsed));
 
-            handleChargedAbility((Player) entity, activeHand, target, targetPos, hitVec, ticksUsed);
+            handleChargedAbility(playerValue, activeHand, target, targetPos, hitVec, ticksUsed);
         }
     }
 

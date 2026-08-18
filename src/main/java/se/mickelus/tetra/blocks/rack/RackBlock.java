@@ -253,7 +253,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
      * @param providerStack
      */
     private void spawnConsumeParticle(Level world, BlockPos pos, BlockState blockState, Container inventory, ItemStack providerStack) {
-        if (world instanceof ServerLevel) {
+        if (world instanceof ServerLevel serverLevel) {
             Direction facing = blockState.getValue(RackBlock.facingProp);
             Vec3 particlePos = Vec3.atLowerCornerOf(pos).add(0.5f, 0.75f, 0.5f).add(Vec3.atLowerCornerOf(facing.getUnitVec3i()).scale(-0.3));
 
@@ -267,7 +267,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
                 particlePos = particlePos.add(Vec3.atLowerCornerOf(facing.getCounterClockWise().getUnitVec3i()).scale(0.25));
             }
 
-            ((ServerLevel) world).sendParticles(new DustParticleOptions(ARGB.color(0, 168, 168), 1f), particlePos.x(), particlePos.y(), particlePos.z(), 2, 0, 0, 0, 0f);
+            serverLevel.sendParticles(new DustParticleOptions(ARGB.color(0, 168, 168), 1f), particlePos.x(), particlePos.y(), particlePos.z(), 2, 0, 0, 0, 0f);
         }
     }
 

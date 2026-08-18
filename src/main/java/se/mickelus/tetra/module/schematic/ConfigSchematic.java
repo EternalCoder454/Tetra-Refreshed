@@ -331,25 +331,25 @@ public class ConfigSchematic extends BaseSchematic {
     }
 
     private void triggerAdvancement(OutcomeDefinition outcome, Player player, ItemStack itemStack, ItemStack upgradedStack, String slot) {
-        if (player instanceof ServerPlayer) {
+        if (player instanceof ServerPlayer serverPlayer) {
 
             if (outcome.moduleKey != null) {
                 if (outcome.requiredTools.getValues().isEmpty()) {
-                    ModuleCraftCriterion.trigger((ServerPlayer) player, itemStack, upgradedStack, getKey(), slot, outcome.moduleKey,
+                    ModuleCraftCriterion.trigger(serverPlayer, itemStack, upgradedStack, getKey(), slot, outcome.moduleKey,
                             outcome.moduleVariant, null, -1);
                 } else {
                     outcome.requiredTools.getLevelMap().forEach((tool, toolLevel) ->
-                            ModuleCraftCriterion.trigger((ServerPlayer) player, itemStack, upgradedStack, getKey(), slot, outcome.moduleKey,
+                            ModuleCraftCriterion.trigger(serverPlayer, itemStack, upgradedStack, getKey(), slot, outcome.moduleKey,
                                     outcome.moduleVariant, tool, toolLevel));
                 }
             }
 
             outcome.improvements.forEach((improvement, level) -> {
                 if (outcome.requiredTools.getValues().isEmpty()) {
-                    ImprovementCraftCriterion.trigger((ServerPlayer) player, itemStack, upgradedStack, getKey(), slot, improvement, level, null, -1);
+                    ImprovementCraftCriterion.trigger(serverPlayer, itemStack, upgradedStack, getKey(), slot, improvement, level, null, -1);
                 } else {
                     outcome.requiredTools.getLevelMap().forEach((tool, toolLevel) ->
-                            ImprovementCraftCriterion.trigger((ServerPlayer) player, itemStack, upgradedStack, getKey(), slot, improvement, level,
+                            ImprovementCraftCriterion.trigger(serverPlayer, itemStack, upgradedStack, getKey(), slot, improvement, level,
                                     tool, toolLevel));
                 }
             });

@@ -157,8 +157,8 @@ public class SchematicRegistry {
         if (definition.applicableMaterials == null) {
             definition.applicableMaterials = Arrays.stream(definition.outcomes)
                     .flatMap(outcome -> {
-                        if (outcome instanceof MaterialOutcomeDefinition) {
-                            return Arrays.stream(((MaterialOutcomeDefinition) outcome).materials)
+                        if (outcome instanceof MaterialOutcomeDefinition materialOutcomeDefinition) {
+                            return Arrays.stream(materialOutcomeDefinition.materials)
                                     .map(Identifier::getPath)
                                     .map(path -> {
                                         if (path.endsWith("/")) {

@@ -207,8 +207,8 @@ public class ToolbeltHelper {
         QuickslotInventory inventory = new QuickslotInventory(toolbeltStack, player.registryAccess());
         List<Collection<ItemEffect>> effects = inventory.getSlotEffects();
 
-        if (traceResult instanceof BlockHitResult) {
-            BlockHitResult trace = (BlockHitResult) traceResult;
+        if (traceResult instanceof BlockHitResult blockHitResult) {
+            BlockHitResult trace = blockHitResult;
             Vec3 hitVector = trace.getLocation();
             BlockPos blockPos = trace.getBlockPos();
 
