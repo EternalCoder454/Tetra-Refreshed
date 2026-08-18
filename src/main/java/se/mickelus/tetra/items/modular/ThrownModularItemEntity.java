@@ -383,8 +383,8 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
             setPosRaw(hitPos.x(), hitPos.y(), hitPos.z());
             setDeltaMovement(level().getEntities(shooter, new AABB(target.blockPosition()).inflate(8d), entity ->
                             !hitEntities.contains(entity.getId())
-                                    && entity instanceof LivingEntity
-                                    && !(level() instanceof ServerLevel invulnerabilityLevel && entity.isInvulnerableTo(invulnerabilityLevel, damagesource))
+                                    && entity instanceof LivingEntity livingEntity
+                                    && !(level() instanceof ServerLevel invulnerabilityLevel && livingEntity.isInvulnerableTo(invulnerabilityLevel, damagesource))
                                     && (shooter == null || !entity.isAlliedTo(shooter)))
                     .stream()
                     .map(entity -> entity.position().add(0, entity.getBbHeight() * 0.8, 0))

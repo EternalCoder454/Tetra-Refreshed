@@ -31,7 +31,7 @@ public class DripParticles {
 
         public Particle createParticle(SimpleParticleType option, ClientLevel level, double x, double y, double z, double dx, double dy,
                 double dz, RandomSource random) {
-            FallAndLandParticle particle = new FallAndLandParticle(level, x, y, z, Fluids.EMPTY, landingBlood.get(), this.sprites);
+            FallAndLandParticle particle = new FallAndLandParticle(level, x, y, z, Fluids.EMPTY, landingBlood.get(), this.sprites.get(random));
             particle.setParticleSpeed(dx, dy, dz);
             particle.setColor(0.72f, 0.14f, 0.14f);
             return particle;

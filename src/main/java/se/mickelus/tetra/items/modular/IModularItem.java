@@ -280,7 +280,7 @@ public interface IModularItem {
 
         if (stackTag != null) {
             return Stream.concat(Arrays.stream(getMajorModuleKeys(stack)), Arrays.stream(getMinorModuleKeys(stack)))
-                    .map(stackTag::getString)
+                    .map(key -> stackTag.getStringOr(key, ""))
                     .map(ItemUpgradeRegistry.instance::getModule)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
