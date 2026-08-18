@@ -208,6 +208,11 @@ Things that will bite somebody later if nobody writes them down.
   returning null on a miss is their own code rather than a codec.
 * **Upstream issues are now in scope.** Rule 5 held them until the port was done. It is done. See
   <https://github.com/mickelus/tetra/issues>.
+* **`tetra:draw_damage` does not exist.** Two improvement files reference it as an attribute,
+  `shared/quality` and `shared/destabilized/ravenous`, and nothing has ever registered it, in any
+  commit. So those improvements silently contribute nothing on that line. It is upstream's own
+  dangling reference rather than something the port broke, which is why it is here rather than
+  fixed. Either register it or drop the references.
 * **Mutil has no developer documentation.** It is the shared library and the generic half of the api
   work belongs in it, so it will need a `DEV.md` of its own.
 
