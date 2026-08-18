@@ -3,7 +3,12 @@
 Self contained. A session with no prior context can pick this up from here.
 
 Port of Tetra from 1.21.1 NeoForge to Minecraft 26.1.2 NeoForge, Java 25.
-**1941 errors down to 0. It compiles and the jar builds. It has never been launched.**
+**It compiles, loads, generates a world and renders. Play testing has barely started.**
+
+The mod loads beside 150 others in the test pack, a world creates and runs, the item models draw,
+the workbench opens and a dedicated server starts clean. What has not happened is playing it: no
+crafting flow, no ability, no perk and no block interaction has been exercised beyond opening a
+screen. Section 12 is what to check.
 
 ## 1. Where things are
 
@@ -32,6 +37,16 @@ Both parsers read from there, so nothing depends on a temp folder. `port-check.s
 measurement if a parse error is present, because a parse error aborts analysis and collapses
 the count into something that reads like near success. Run it before believing any number.
 `port-show.py` prints every error with its source line, optionally filtered by a path fragment.
+
+```bash
+bash tools/run.sh          # build, deploy to the test pack, launch, say whether it loaded
+./gradlew.bat runServer    # dedicated server, no gui, exercises data loading on its own
+./gradlew.bat runClient -PquickPlay=<world>
+```
+
+`run.sh` is the honest check. A compiling jar said nothing about whether the mod loads, and every
+failure after the first zero errors surfaced only by launching. It kills the stale javaw that holds
+the jar open, because a crashed instance keeps a lock and the copy silently fails otherwise.
 
 `portedit.py` applies literal replacements to a source file without disturbing its line endings,
 and fails loudly if a search string does not match exactly once. Every Java file here is CRLF, so a
@@ -331,6 +346,43 @@ it names a model type rather than being one. The block models under `models/item
 geometry and display transforms.
 
 
+**Anything that builds an ItemStack while data or registration is running.** Item data components
+bind at one point and rebind on every datapack reload, and constructing a stack outside that window
+throws `NullPointerException: Components not bound yet`, which fails the whole mod. This caught the
+enchantment aspects during mod construction, the crossbow dummy and the vanilla bow during item
+registration, the scroll's creative stacks on FMLCommonSetupEvent, and the material and replacement
+deserializers during a datapack reload. Deferring the build is not always enough: SchematicRegistry
+forced the material's lazy build from inside the same reload, so it asks for items rather than
+stacks now. Hold the item, build the stack when something renders or uses it.
+
+**A Properties cannot be shared between two blocks or items.** It carries the registry id now and
+setId mutates it, so a shared constant gives every block the last id written. ForgedBlockCommon and
+the multiblock builder both did this. DeferredRegister.Blocks and .Items build one per entry, which
+is why every constructor takes its Properties rather than making its own.
+
+**@OnlyIn does not strip anything from mod classes.** Naming a client type in a common class leaves
+a reference in its bytecode, and the class then fails to load on a dedicated server and takes
+everything on it down. The holosphere and scroll screens, both menu factories, the input handlers
+and mutil's PacketHandler all did this. Move the client code to its own class, or widen the
+parameter if the body never needed the client type, as LungeEffect did.
+
+**A tint written without an alpha channel reads as transparent.** Tetra has always taken an alpha of
+zero to mean opaque, and the quad transformer that did the fix was one of the classes the item model
+rebuild deleted. Every module whose tint omits the alpha byte then draws nothing. The symptom was an
+obsidian hammer showing its heads and not its handle, because the two modules written as ffffffff
+were the only ones coming through.
+
+**A display transform's translation is in sixteenths.** Vanilla scales it by 0.0625 when reading a
+model. Tetra reads its own, and passing the raw value through put a held item metres from the hand.
+
+**An optional dependency has to be guarded at runtime.** curios is compileOnly and optional, and the
+pack does not ship it, so touching CuriosApi unconditionally crashed on the first player tick. Put
+the api behind a nested class so resolving the guard does not load it.
+
+**The published curios jar is built for 1.21.1** and refuses to load on 26.1.2, which stops
+runClient and runServer before they start. It is dropped from the dev runtime only.
+
+
 ## 8. Traps already hit, do not repeat
 
 **Greedy regex on nested parens.** This has now bitten twice, in both directions. A pattern
@@ -434,29 +486,23 @@ content or assets.
 
 ## 11. Next session, start here
 
-The compiler has nothing left to say. Everything below is about launching it.
+The compiler, the loader and the renderer are all happy. What is left is playing it.
 
-1. Confirm the baseline before changing anything: `bash tools/port-compile.sh` then
-   `bash tools/port-check.sh` should report 0, and `./gradlew.bat build` should succeed.
-2. `python tools/check-at.py` and, from `Projects\Minecraft`,
-   `python tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"`. Both are clean now, so
-   any output is something you introduced.
-3. Deploy Tetra and Mutil Refreshed together into the test pack and launch. Mutil has never been
-   exercised by a real consumer, so that launch tests both at once. Remove the stale jars first.
-4. Read `debug.log` before playing. A mixin that fails to apply, a model type that fails to
-   resolve and a capability that fails to register all say so there and nowhere else.
-5. Then check the item model work by looking at things, in this order, because it is the largest
-   piece and the least verifiable without running:
-   * A modular item in the inventory renders as a stack of module layers rather than a missing
-     model. If it is missing, the item model json under `assets/tetra/items` is not resolving.
-   * Module tints, emissive modules and per perspective modules each look right. Those are the
-     three pieces of per layer state that moved onto `LayerRenderState`.
-   * A modular item held in hand, on the ground, in an item frame and on a head, which is what
-     the transform variants select between.
-   * A modular shield, which goes through the special renderer rather than the layer path, and
-     its blocking and throwing models, which go through the conditional property.
-   * A scroll of each material, and a charged and uncharged thermal cell.
-6. Then the behaviour in section 7. Every entry there is a decision the port made that a compiler
-   cannot check, and each names what to look at.
-7. Villager trades are the one feature known to be missing outright. Section 7 has the format and
-   the commit the old table lives in.
+1. `bash tools/run.sh` and confirm it reaches the menu. Then read `debug.log` rather than trusting
+   the launch, and compare against the known remainder in section 12.
+2. Craft something. The workbench opens and modular items render, but no crafting flow, ability,
+   perk or block interaction has been exercised. Every one of those is untested.
+3. Section 7 lists the behaviour that changed on the way here. Each entry is a decision the port
+   made that a compiler cannot check, and villager trades are missing outright.
+4. `./gradlew.bat runServer` for anything server shaped. It starts clean and is far faster to read
+   than the pack.
+
+## 12. Known remaining
+
+* `tetra:item/module/sword/blade/stonecutter/held` is a zero byte file, and has been since the
+  upstream commit that moved module textures. Rule 5, upstream issues after the port.
+* Villager trades are gone and need readding as data. Section 7.
+* The interactive block overlay does not draw. Section 7.
+* Stored inventories from before this port do not load. Section 7.
+* TetraBlockStateProvider writes `models/item` but not `items`, so the 38 generated item model
+  entries beside them are written by hand and a runData would not recreate them.
