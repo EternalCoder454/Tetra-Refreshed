@@ -883,6 +883,7 @@
   "block.tetra.fractured_bedrock": "Fractured Bedrock",
   "block.tetra.depleted_bedrock": "Fractured Bedrock (depleted)",
   "block.tetra.chthonic_extractor": "Chthonic Extractor",
+  "block.tetra.chthonic_extractor_used": "Chthonic Extractor",
   "block.tetra.chthonic_extractor.description": "Hammer into bedrock to extract minerals from below",
   "block.tetra.chthonic_extractor.description_extended": " * Subsequently hammering extractors into the same fracture increases the yield\n * Slightly increased yield in biomes inhabited by husks, strays or witches, such as cold, desert or swamp biomes",
   "block.tetra.multi_schematic.piece": "Piece §8[§7%s§8, §7%s§8]",

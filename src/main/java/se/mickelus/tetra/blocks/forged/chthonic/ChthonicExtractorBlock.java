@@ -112,12 +112,14 @@ public class ChthonicExtractorBlock extends TetraBlock implements IInteractiveBl
     }
 
     public static DeferredHolder<Item, BlockItem> registerItems(DeferredRegister.Items registry) {
+        // These build their own block items rather than going through TetraRegistries.registerBlockItem,
+        // so they have to ask for the block name prefix themselves. Without it both read item.tetra.x.
         registry.registerItem(usedIdentifier, properties -> {
-            usedItem = new TooltipBlockItem(instance, properties.durability(maxDamage));
+            usedItem = new TooltipBlockItem(instance, properties.useBlockDescriptionPrefix().durability(maxDamage));
             return (BlockItem) usedItem;
         });
         return registry.registerItem(identifier, properties -> {
-            item = new TooltipBlockItem(instance, properties.stacksTo(64));
+            item = new TooltipBlockItem(instance, properties.useBlockDescriptionPrefix().stacksTo(64));
             return (BlockItem) item;
         });
     }

@@ -9,7 +9,7 @@
         "description": {
             "translate": "tetra.advancements.spelunking.root.description"
         },
-        "background": "minecraft:textures/block/black_concrete_powder.png",
+        "background": "minecraft:block/black_concrete_powder",
         "announce_to_chat": false
     },
     "criteria": {

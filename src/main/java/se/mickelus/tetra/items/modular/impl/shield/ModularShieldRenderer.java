@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
@@ -94,9 +93,10 @@ public class ModularShieldRenderer implements SpecialModelRenderer<ItemStack> {
                         return;
                     }
 
-                    // The module textures sit on the block atlas, which a SpriteId names alongside
-                    // the sprite. Material lost its atlas half and is only the sprite now.
-                    SpriteId spriteId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, modelData.getTexture());
+                    // Shield module textures are item/ paths, so they stitch onto the item atlas
+                    // rather than the block one. A SpriteId names the atlas alongside the sprite,
+                    // because Material lost its atlas half and is only the sprite now.
+                    SpriteId spriteId = new SpriteId(TextureAtlas.LOCATION_ITEMS, modelData.getTexture());
 
                     float r = modelData.getTint().getRedFloat();
                     float g = modelData.getTint().getGreenFloat();

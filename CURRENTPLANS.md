@@ -44,8 +44,8 @@ an image library, which was necessary because the artwork is four bit indexed PN
 Copper and iron carry palettes and the metal hammer variants offer greyscale. Netherite offers
 greyscale and has no palette, so it stays on its own artwork, which is the fallback working.
 
-**Not yet checked by eye.** The atlas stitches with no missing texture reported and the sprite names
-line up exactly, but nobody has looked at a copper hammer head to see whether it reads well.
+**Checked by eye and correct.** The recoloured hammer heads read as normal tools, confirmed in game
+on 2026-08-18. The mechanism is proven, not just stitching without error.
 
 **The mechanism is done. The migration is one percent done.** Two materials of seventy carry a
 palette, and two module textures of two hundred and seventy are greyscale. None of the promised

@@ -52,13 +52,20 @@ detail is in `PORT-STATUS.md`. The parts worth knowing as a player:
   files.
 * **Curios was touched without a guard**, which crashed on the first player tick on any pack without
   it.
+* **Shield modules drew the wrong texture.** 26.1 splits the item textures onto their own atlas, and
+  the shield renderer was still asking the block atlas for them. Every other renderer in the mod
+  draws block textures, so the shield was the only one affected.
+* **The chthonic extractor showed `item.tetra.chthonic_extractor`.** It builds its own block items
+  rather than going through the shared helper, so it never asked for the block name prefix.
+* **The advancement tabs had no background.** A background is named as a plain texture id now and
+  the game appends `textures/` and `.png` itself, so the old full paths resolved to nothing.
 
 ### Added
 
 * **Palette foundation.** A material may carry a colour palette, and a module may offer greyscale
   artwork. Where both exist the layer uses a sprite the atlas recoloured for that material, so a
-  material can define its own look without artwork. Nothing uses it yet, and every existing material
-  is untouched. `DEV.md` explains the intent.
+  material can define its own look without artwork. Copper and iron hammer heads use it and render
+  correctly. Every other material is untouched. `DEV.md` explains the intent.
 * **`DEV.md`**, a developer guide, and **`CURRENTPLANS.md`**, where the project goes after the port.
 
 ### Known issues
