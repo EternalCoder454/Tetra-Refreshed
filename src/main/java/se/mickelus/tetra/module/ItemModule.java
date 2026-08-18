@@ -1,5 +1,8 @@
 package se.mickelus.tetra.module;
 
+import net.minecraft.resources.Identifier;
+import se.mickelus.tetra.data.DataManager;
+import javax.annotation.Nullable;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.util.Mth;
@@ -33,6 +36,21 @@ public abstract class ItemModule implements IToolProvider {
     protected final String variantTagKey;
     protected VariantData[] variantData = new VariantData[0];
     protected TweakData[] tweaks = new TweakData[0];
+
+    /**
+     * Load this module's tweaks from the store, leaving them empty if the key names nothing.
+     *
+     * A module with a tweak key whose data failed to parse has no tweaks rather than null ones,
+     * which is the distinction the four subclasses each spelled out for themselves.
+     */
+    protected void loadTweaks(@Nullable Identifier tweakKey) {
+        if (tweakKey == null) {
+            return;
+        }
+
+        TweakData[] loaded = DataManager.instance.tweakData.getData(tweakKey);
+        tweaks = loaded != null ? loaded : new TweakData[0];
+    }
     protected Priority renderLayer = Priority.BASE;
     protected Priority namePriority = Priority.BASE;
     protected Priority prefixPriority = Priority.BASE;

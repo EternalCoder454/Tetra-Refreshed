@@ -31,14 +31,7 @@ public class MultiSlotModule extends ItemModule {
 
         variantData = data.variants;
 
-        if (data.tweakKey != null) {
-            TweakData[] tweaks = DataManager.instance.tweakData.getData(data.tweakKey);
-            if (tweaks != null) {
-                this.tweaks = tweaks;
-            } else {
-                this.tweaks = new TweakData[0];
-            }
-        }
+        loadTweaks(data.tweakKey);
     }
 
     @Override
