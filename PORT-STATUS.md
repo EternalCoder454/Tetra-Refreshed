@@ -488,8 +488,10 @@ content or assets.
 
 The compiler, the loader and the renderer are all happy. What is left is playing it.
 
-1. `bash tools/run.sh` and confirm it reaches the menu. Then read `debug.log` rather than trusting
-   the launch, and compare against the known remainder in section 12.
+1. `python tools/boot-gate.py` first. It boots the dedicated server, loads the world and fails
+   on anything of ours that was dropped, which is the check that used to be done by reading a log
+   by hand. It passes clean as of the last commit. Then `bash tools/run.sh` for the client half,
+   which is the only place texture and atlas failures appear.
 2. Craft something. The workbench opens and modular items render, but no crafting flow, ability,
    perk or block interaction has been exercised. Every one of those is untested.
 3. Section 7 lists the behaviour that changed on the way here. Each entry is a decision the port
