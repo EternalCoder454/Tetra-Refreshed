@@ -1,0 +1,31 @@
+{
+    "key": "immersiveores_vulpus",
+    "category": "metal",
+    "primary": 13,
+    "secondary": 2.9,
+    "tertiary": 3.6,
+    "durability": 3093,
+    "integrityCost": 2,
+    "integrityGain": 8,
+    "magicCapacity": 390,
+    "toolLevel": "minecraft:netherite",
+    "toolEfficiency": 40,
+    "tints": {
+        "glyph": "89494e",
+        "texture": "a1565c"
+    },
+    "textures": [
+        "shiny",
+        "heavy",
+        "metal"
+    ],
+    "material": {
+        "items": [
+            "immersiveores:vulpus_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:netherite"
+    },
+    "palette": "tetra:colormap/material/immersiveores_vulpus"
+}

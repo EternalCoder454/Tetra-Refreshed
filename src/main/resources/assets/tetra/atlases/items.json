@@ -10,6 +10,9 @@
             "permutations": {
                 "copper": "tetra:colormap/material/copper",
                 "gold": "tetra:colormap/material/gold",
+                "immersiveores_enderium": "tetra:colormap/material/immersiveores_enderium",
+                "immersiveores_vibranium": "tetra:colormap/material/immersiveores_vibranium",
+                "immersiveores_vulpus": "tetra:colormap/material/immersiveores_vulpus",
                 "iron": "tetra:colormap/material/iron",
                 "netherite": "tetra:colormap/material/netherite",
                 "oritech_adamant": "tetra:colormap/material/oritech_adamant",

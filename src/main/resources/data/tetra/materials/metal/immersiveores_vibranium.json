@@ -1,0 +1,31 @@
+{
+    "key": "immersiveores_vibranium",
+    "category": "metal",
+    "primary": 9,
+    "secondary": 2.9,
+    "tertiary": 3.6,
+    "durability": 2562,
+    "integrityCost": 2,
+    "integrityGain": 8,
+    "magicCapacity": 330,
+    "toolLevel": "minecraft:netherite",
+    "toolEfficiency": 30,
+    "tints": {
+        "glyph": "939cab",
+        "texture": "adb7c9"
+    },
+    "textures": [
+        "shiny",
+        "heavy",
+        "metal"
+    ],
+    "material": {
+        "items": [
+            "immersiveores:vibranium_ingot"
+        ]
+    },
+    "requiredTools": {
+        "hammer_dig": "minecraft:netherite"
+    },
+    "palette": "tetra:colormap/material/immersiveores_vibranium"
+}
