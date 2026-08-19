@@ -497,10 +497,28 @@ The compiler, the loader and the renderer are all happy. What is left is playing
 4. `./gradlew.bat runServer` for anything server shaped. It starts clean and is far faster to read
    than the pack.
 
+## 11a. Four attribute names resolved to nothing
+
+`AttributesDeserializer` warns when a key names no registered attribute, and the launch log carried
+30 of them. Each was a real modifier being discarded in silence before that warning existed.
+
+| key in data | count | now maps to | why |
+|---|---|---|---|
+| `**tetra:draw_damage` | 14 | `tetra:draw_strength` | a name never registered, in this mod's own quality and ravenous improvements |
+| `generic.movement_speed` | 10 | `minecraft:movement_speed` | the generic prefix went in 1.21, and this one was missing from the map |
+| `art_of_forging:beheading` | 4 | nothing, it is data | an ItemEffect sitting in an attributes block. Fixed in Secrets of Forging |
+| `tetra.draw_speed` | 2 | `tetra:draw_speed` | written with a dot, which parses as a path in the minecraft namespace |
+
+`draw_damage` is worth a note. It appears beside `generic.attack_damage` and `tetra:ability_damage`
+as the ranged third of a damage triple, and `draw_strength` is the attribute `ModularBowItem` reads
+for bow damage. Nothing in the java has ever named `draw_damage`, so quality and ravenous have never
+raised a bow in this mod's history.
+
+The zero byte `stonecutter/held.png` is deleted. Nothing in data, models or java referenced it, and
+the atlas scanned the directory and failed on it every load.
+
 ## 12. Known remaining
 
-* `tetra:item/module/sword/blade/stonecutter/held` is a zero byte file, and has been since the
-  upstream commit that moved module textures. Rule 5, upstream issues after the port.
 * Villager trades are gone and need readding as data. Section 7.
 * The interactive block overlay does not draw. Section 7.
 * Stored inventories from before this port do not load. Section 7.

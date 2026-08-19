@@ -27,21 +27,30 @@ public class AttributesDeserializer implements JsonDeserializer<Multimap<Attribu
     // legacyAttributeIds: Forge-namespaced 1.20 attribute IDs that we translate into 1.21 vanilla IDs
     // at JSON parse time. Keep the map in sync with upstream 1.20 — JSON authored against 1.20 still
     // uses these forge: keys, and rewriting to vanilla namespaces would diverge from upstream.
-    private static final Map<String, Identifier> legacyAttributeIds = Map.of(
+    private static final Map<String, Identifier> legacyAttributeIds = Map.ofEntries(
             // 26.1 dropped the player prefix these carried in 1.21.1. Mapping to the old names
             // parsed fine and then resolved to nothing, so every reach modifier in the mod was
             // being discarded. The warning below is what surfaced it.
-            "forge:reach_distance", Identifier.withDefaultNamespace("block_interaction_range"),
-            "forge:block_reach", Identifier.withDefaultNamespace("block_interaction_range"),
-            "forge:attack_range", Identifier.withDefaultNamespace("entity_interaction_range"),
-            "forge:entity_reach", Identifier.withDefaultNamespace("entity_interaction_range"),
-            // The generic prefix went in 1.21. These four parse as a valid identifier and simply
+            Map.entry("forge:reach_distance", Identifier.withDefaultNamespace("block_interaction_range")),
+            Map.entry("forge:block_reach", Identifier.withDefaultNamespace("block_interaction_range")),
+            Map.entry("forge:attack_range", Identifier.withDefaultNamespace("entity_interaction_range")),
+            Map.entry("forge:entity_reach", Identifier.withDefaultNamespace("entity_interaction_range")),
+            // The generic prefix went in 1.21. These five parse as a valid identifier and simply
             // resolve to nothing, and getAttribute drops a modifier it cannot resolve without
             // saying so, which left every module contributing no damage, speed, armor or toughness.
-            "generic.attack_damage", Identifier.withDefaultNamespace("attack_damage"),
-            "generic.attack_speed", Identifier.withDefaultNamespace("attack_speed"),
-            "generic.armor", Identifier.withDefaultNamespace("armor"),
-            "generic.armor_toughness", Identifier.withDefaultNamespace("armor_toughness"));
+            Map.entry("generic.attack_damage", Identifier.withDefaultNamespace("attack_damage")),
+            Map.entry("generic.attack_speed", Identifier.withDefaultNamespace("attack_speed")),
+            Map.entry("generic.armor", Identifier.withDefaultNamespace("armor")),
+            Map.entry("generic.armor_toughness", Identifier.withDefaultNamespace("armor_toughness")),
+            Map.entry("generic.movement_speed", Identifier.withDefaultNamespace("movement_speed")),
+            // Two of Tetra's own. draw_speed is written with a dot in one addon file, which parses
+            // as a path in the minecraft namespace and resolves to nothing.
+            Map.entry("tetra.draw_speed", Identifier.fromNamespaceAndPath("tetra", "draw_speed")),
+            // draw_damage is a name Tetra never registered, and it sits in this mod's own quality
+            // and ravenous improvements as the ranged third of a damage triple, beside
+            // attack_damage and ability_damage. draw_strength is the one ModularBowItem reads for
+            // bow damage, so that is where it points. Until now neither improvement raised a bow.
+            Map.entry("tetra:draw_damage", Identifier.fromNamespaceAndPath("tetra", "draw_strength")));
 
     private static AttributeModifier.Operation getOperation(String key) {
         if (key.startsWith("**")) {
