@@ -488,6 +488,10 @@ content or assets.
 
 The compiler, the loader and the renderer are all happy. What is left is playing it.
 
+`.github/workflows/boot-gate.yml` runs the same gate on every push to this branch, so the list
+below is what to do locally rather than what nobody is watching. It builds all five repositories,
+EMI Refreshed included, and keeps the server log as an artifact when it fails.
+
 1. `python tools/boot-gate.py` first. It boots the dedicated server, loads the world and fails
    on anything of ours that was dropped, which is the check that used to be done by reading a log
    by hand. It passes clean as of the last commit. Then `bash tools/run.sh` for the client half,

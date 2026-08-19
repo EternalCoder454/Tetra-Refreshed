@@ -1,0 +1,219 @@
+# Build the whole mod family and fail on anything it drops on load.
+#
+# No publishing. Nothing here touches CurseForge or Modrinth, and nothing here makes a release.
+# It answers one question, which is whether the thing still loads and still carries its data.
+#
+# Two jobs on purpose. The checks job needs no game and finishes in under a minute, so a broken json
+# is reported almost immediately. The gate job builds five repositories and boots a server, which is
+# worth waiting for but not worth waiting for in order to learn that a file has a trailing comma.
+name: boot gate
+
+on:
+  push:
+    branches: [26.1.2]
+  pull_request:
+    branches: [26.1.2]
+  workflow_dispatch:
+
+# A second push should cancel the first. The gate takes long enough that queued duplicates pile up.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # EMI Refreshed derives its version from `git rev-parse --short HEAD`, so this has to be the exact
+  # commit rather than a branch. The tip of the branch would build 1.1.24-<other hash> and Tetra's
+  # emi_version pin would not resolve against it.
+  EMI_COMMIT: 351ba8a447489e42001f4cff3ec8b0e962f3bd2d
+
+jobs:
+  checks:
+    name: json and checkers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: Tetra-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Mutil-Refreshed
+          ref: 26.1.2
+          path: Mutil-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Secrets-Of-Forging-Revelations-Refreshed
+          ref: 26.1.2
+          path: Secrets-Of-Forging-Revelations-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Art-of-Forging-Refreshed
+          # This one is on master while the other three are on 26.1.2.
+          ref: master
+          path: Art-of-Forging-Refreshed
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: every json and mcmeta parses
+        run: |
+          python - <<'PY'
+          import glob, json, sys
+          bad = []
+          n = 0
+          for pattern in ("*/src/main/resources/**/*.json", "*/src/main/resources/**/*.mcmeta"):
+              for f in glob.glob(pattern, recursive=True):
+                  n += 1
+                  try:
+                      json.load(open(f, encoding="utf-8"))
+                  except ValueError as e:
+                      bad.append((f, e))
+          print("validated %d files" % n)
+          for f, e in bad:
+              print("  BAD %s: %s" % (f, e))
+          sys.exit(1 if bad else 0)
+          PY
+
+      # There is deliberately no writing rules step. check-writing-rules.py lives in the shared
+      # Minecraft/tools directory, which is not version controlled and is not part of any
+      # repository, so a runner cannot obtain it. A step guarded on the file existing would skip in
+      # silence and report green, which is worse than not having the check at all. Versioning that
+      # directory, or vendoring the one script, would let this come back.
+
+      - name: repository checkers
+        working-directory: Tetra-Refreshed
+        # Reported but not fatal, and that is not laziness. These resolve against the vanilla
+        # NeoForm jar while the game runs the NeoForge patched one, so methods NeoForge adds by
+        # patch read as missing. check-data-fields also reports every custom loot condition and
+        # function as unrecognised. On mature code a report is a question. The gate job is the part
+        # that fails a build.
+        continue-on-error: true
+        run: |
+          for c in tools/check-*.py; do
+            echo "--- $c"
+            python "$c" || true
+          done
+
+  gate:
+    name: build and boot
+    runs-on: ubuntu-latest
+    # 5 repositories, a Minecraft decompile and a server boot. The default 360 is generous, this is
+    # a ceiling that still catches a genuine hang.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: Tetra-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Mutil-Refreshed
+          ref: 26.1.2
+          path: Mutil-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Secrets-Of-Forging-Revelations-Refreshed
+          ref: 26.1.2
+          path: Secrets-Of-Forging-Revelations-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/Art-of-Forging-Refreshed
+          ref: master
+          path: Art-of-Forging-Refreshed
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/emi-refreshed
+          ref: ${{ env.EMI_COMMIT }}
+          path: emi-refreshed
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # EMI Refreshed is a fork built locally and published nowhere, so it has to be built here.
+      # It is pinned, so the cache key is exact and a hit means it never has to be built again.
+      - name: cache the local maven repository
+        id: m2
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/dev/emi
+          key: emi-refreshed-${{ env.EMI_COMMIT }}
+
+      - name: build EMI Refreshed
+        if: steps.m2.outputs.cache-hit != 'true'
+        working-directory: emi-refreshed
+        run: |
+          chmod +x gradlew
+          ./gradlew publishToMavenLocal --no-daemon --console=plain
+
+      # Tetra compiles against mutil and EMI, the two addons compile against Tetra, and Tetra then
+      # bundles the addons by jarJar. So Tetra is built twice, and the second build is the one whose
+      # jar the gate boots. This is the order BUILDING.md documents for doing it by hand.
+      - name: mutil to mavenLocal
+        working-directory: Mutil-Refreshed
+        run: chmod +x gradlew && ./gradlew publishToMavenLocal --no-daemon --console=plain
+
+      - name: tetra to mavenLocal
+        working-directory: Tetra-Refreshed
+        run: chmod +x gradlew && ./gradlew build publishToMavenLocal --no-daemon --console=plain
+
+      - name: secrets of forging to mavenLocal
+        working-directory: Secrets-Of-Forging-Revelations-Refreshed
+        run: chmod +x gradlew && ./gradlew build publishToMavenLocal --no-daemon --console=plain
+
+      - name: art of forging to mavenLocal
+        working-directory: Art-of-Forging-Refreshed
+        run: chmod +x gradlew && ./gradlew build publishToMavenLocal --no-daemon --console=plain
+
+      - name: rebuild tetra so the jar carries both addons
+        working-directory: Tetra-Refreshed
+        run: ./gradlew build --no-daemon --console=plain
+
+      - name: confirm both addons are actually bundled
+        working-directory: Tetra-Refreshed
+        # A jarJar that silently resolved nothing produces a jar that loads and does half of what it
+        # should, which is precisely the class of failure this whole workflow exists to catch.
+        run: |
+          python - <<'PY'
+          import glob, sys, zipfile
+          jars = [j for j in glob.glob("build/libs/*.jar") if "sources" not in j]
+          if not jars:
+              print("no jar was built")
+              sys.exit(1)
+          names = zipfile.ZipFile(jars[0]).namelist()
+          bundled = [n for n in names if n.startswith("META-INF/jarjar/") and n.endswith(".jar")]
+          print("jar: %s" % jars[0])
+          for b in bundled:
+              print("  bundled %s" % b)
+          missing = [m for m in ("art_of_forging", "secrets_of_forging_revelations")
+                     if not any(m in b for b in bundled)]
+          if missing:
+              print("NOT BUNDLED: %s" % ", ".join(missing))
+              sys.exit(1)
+          PY
+
+      - name: boot gate
+        working-directory: Tetra-Refreshed
+        run: python tools/boot-gate.py --no-build --keep-log
+
+      - name: keep the server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log
+          path: Tetra-Refreshed/build/boot-gate/server.log
+          if-no-files-found: warn
+          retention-days: 14

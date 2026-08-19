@@ -40,8 +40,12 @@ LOG_DIR = os.path.join(ROOT, "build", "boot-gate")
 LOG_PATH = os.path.join(LOG_DIR, "server.log")
 
 # Long temp paths break the gradle daemon, which is rule 2 in BUILDING.md and cost a whole session
-# to rediscover. Set it here so the gate does not depend on the caller having done so.
+# to rediscover. Set it here so the gate does not depend on the caller having done so. It is a
+# windows problem only, and forcing a path like this on a linux runner would just be wrong.
 GRADLE_TMP = r"C:\gtmp"
+
+IS_WINDOWS = os.name == "nt"
+GRADLEW = os.path.join(ROOT, "gradlew.bat" if IS_WINDOWS else "gradlew")
 
 # The mods this repository is responsible for. A failure naming one of these fails the gate. A
 # failure naming somebody else's mod is reported and ignored, because we cannot fix it and a gate
@@ -136,15 +140,33 @@ def run(cmd, **kw):
 
 def env_with_tmp():
     env = dict(os.environ)
-    env["TMP"] = GRADLE_TMP
-    env["TEMP"] = GRADLE_TMP
+    if IS_WINDOWS:
+        env["TMP"] = GRADLE_TMP
+        env["TEMP"] = GRADLE_TMP
     return env
+
+
+def ensure_eula():
+    """A dedicated server refuses to start without this, and a fresh checkout has no run directory.
+
+    Belongs to the gate rather than to whatever calls it. Running the server is what needs the file,
+    so anything that runs the server should not have to remember. Mojang's EULA is accepted here on
+    behalf of whoever is running the gate, which is the same acceptance the local run directory has
+    carried since the first server boot in this project.
+    """
+    eula = os.path.join(ROOT, "run", "eula.txt")
+    if os.path.exists(eula):
+        return
+    os.makedirs(os.path.dirname(eula), exist_ok=True)
+    with open(eula, "w", encoding="utf-8") as f:
+        f.write("eula=true\n")
+    print("wrote %s" % eula)
 
 
 def build():
     """The addons reach the server through the jar's jarJar, so a stale jar tests stale data."""
     print("building, so the jar carries the current addons")
-    r = run([os.path.join(ROOT, "gradlew.bat"), "build", "--console=plain"],
+    r = run([GRADLEW, "build", "--console=plain"],
             env=env_with_tmp(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     text = r.stdout.decode("utf-8", "replace")
     if "BUILD SUCCESSFUL" not in text:
@@ -165,20 +187,35 @@ def kill_server():
     gradle daemons do not name this project at all, so they are never in scope, and a daemon killed
     mid build is how the loopback failure in BUILDING.md section 9 looks from the outside.
     """
-    subprocess.run([
-        "powershell", "-NoProfile", "-Command",
-        "Get-CimInstance Win32_Process -Filter \"Name='java.exe'\" | "
-        "Where-Object { $_.CommandLine -like '*fml.*' -and "
-        "$_.CommandLine -like '*' + $env:SC_ROOT + '*' } | "
-        "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }",
-    ], env=dict(os.environ, SC_ROOT=ROOT),
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if IS_WINDOWS:
+        subprocess.run([
+            "powershell", "-NoProfile", "-Command",
+            "Get-CimInstance Win32_Process -Filter \"Name='java.exe'\" | "
+            "Where-Object { $_.CommandLine -like '*fml.*' -and "
+            "$_.CommandLine -like '*' + $env:SC_ROOT + '*' } | "
+            "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }",
+        ], env=dict(os.environ, SC_ROOT=ROOT),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    else:
+        # Same two conditions as the windows branch, fml properties and this project's path. Done by
+        # listing and filtering rather than by one pkill pattern, because a single pattern would
+        # have to assume which of the two comes first on the command line, and that is not promised.
+        try:
+            listing = subprocess.run(["pgrep", "-a", "java"], stdout=subprocess.PIPE).stdout
+        except FileNotFoundError:
+            return
+        for entry in listing.decode("utf-8", "replace").splitlines():
+            pid, _, cmdline = entry.partition(" ")
+            if "fml." in cmdline and ROOT in cmdline:
+                subprocess.run(["kill", "-9", pid],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(1)
 
 
 def boot(timeout):
     """{@return the captured log, once the server reaches the world or gives up}"""
     os.makedirs(LOG_DIR, exist_ok=True)
+    ensure_eula()
     # A survivor from a previous run holds the log files, so clear before starting rather than only
     # after finishing. Tidying up after yourself is not enough when the previous run was killed.
     kill_server()
@@ -186,7 +223,7 @@ def boot(timeout):
 
     with open(LOG_PATH, "wb") as sink:
         proc = subprocess.Popen(
-            [os.path.join(ROOT, "gradlew.bat"), "runServer", "--console=plain"],
+            [GRADLEW, "runServer", "--console=plain"],
             cwd=ROOT, env=env_with_tmp(), stdout=sink, stderr=subprocess.STDOUT,
         )
 
@@ -310,8 +347,8 @@ def main():
     ap.add_argument("--timeout", type=int, default=240, help="seconds to wait for the world")
     args = ap.parse_args()
 
-    if not os.path.exists(os.path.join(ROOT, "gradlew.bat")):
-        print("no gradle wrapper at %s" % ROOT)
+    if not os.path.exists(GRADLEW):
+        print("no gradle wrapper at %s" % GRADLEW)
         return 2
 
     if not args.no_build and not build():
