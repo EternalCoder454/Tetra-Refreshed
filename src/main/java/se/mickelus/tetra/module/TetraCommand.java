@@ -31,6 +31,8 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.ItemAbility;
 import se.mickelus.tetra.aspect.TetraEnchantmentHelper;
 import se.mickelus.tetra.blocks.IToolProviderBlock;
+import se.mickelus.tetra.blocks.forged.hammer.HammerBaseBlockEntity;
+import se.mickelus.tetra.blocks.forged.hammer.HammerHeadBlockEntity;
 import se.mickelus.tetra.blocks.workbench.AbstractWorkbenchBlock;
 import se.mickelus.tetra.properties.PropertyHelper;
 import se.mickelus.tetra.items.modular.IModularItem;
@@ -152,6 +154,35 @@ public class TetraCommand {
             lines.add(Component.literal("  §7no tool providing blocks within two out and four up§r"));
         }
 
+        // A provider can be present, accepted and still offer nothing, and the reason is usually in a
+        // block that is not itself a provider. The forge hammer's base is the case that matters: it
+        // holds the fuel and the modules, the head asks it whether it is functional, and the head is
+        // the only one of the two that appears above.
+        for (BlockPos scanned : AbstractWorkbenchBlock.toolProviderSearchArea(pos).map(BlockPos::immutable).toList()) {
+            if (level.getBlockEntity(scanned) instanceof HammerBaseBlockEntity base) {
+                lines.add(Component.literal("§eForge hammer base§r at "
+                        + scanned.getX() + " " + scanned.getY() + " " + scanned.getZ()));
+                for (int i = 0; i < 2; i++) {
+                    int fuel = base.getCellFuel(i);
+                    lines.add(Component.literal("  cell " + i + " "
+                            + (!base.hasCellInSlot(i) ? "§cempty§r"
+                            : fuel > 0 ? "§a" + fuel + " charge§r" : "§cflat§r")));
+                }
+                lines.add(Component.literal("  module A " + (base.getEffect(true) != null
+                        ? "§a" + base.getEffect(true).name() + "§r" : "§cempty§r")));
+                lines.add(Component.literal("  module B " + (base.getEffect(false) != null
+                        ? "§a" + base.getEffect(false).name() + "§r" : "§cempty§r")));
+                lines.add(Component.literal("  fuelled " + yesNo(base.isFueled())
+                        + ", functional " + yesNo(base.isFunctional())));
+            }
+
+            if (level.getBlockEntity(scanned) instanceof HammerHeadBlockEntity head) {
+                lines.add(Component.literal("§eForge hammer head§r at "
+                        + scanned.getX() + " " + scanned.getY() + " " + scanned.getZ()
+                        + ", jammed " + yesNo(head.isJammed())));
+            }
+        }
+
         Map<ItemAbility, Integer> combined = workbench.getToolLevels(level, pos, state);
         lines.add(Component.literal("§eFrom blocks§r " + (combined.isEmpty() ? "§7nothing§r" : "")));
         combined.forEach((tool, lvl) -> lines.add(Component.literal("  " + tool.name() + " §e" + lvl + "§r")));
@@ -162,6 +193,10 @@ public class TetraCommand {
 
         lines.forEach(line -> context.getSource().sendSuccess(() -> line, false));
         return 1;
+    }
+
+    private static String yesNo(boolean value) {
+        return value ? "§ayes§r" : "§cno§r";
     }
 
     private static int runHone(CommandContext<CommandSourceStack> context, int progress) throws CommandSyntaxException {
