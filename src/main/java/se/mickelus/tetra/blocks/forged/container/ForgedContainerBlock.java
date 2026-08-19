@@ -48,6 +48,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Predicates.equalTo;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.RenderShape;
 
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -261,5 +262,21 @@ public class ForgedContainerBlock extends TetraWaterloggedBlock implements IInte
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
         return new ForgedContainerBlockEntity(p_153215_, p_153216_);
+    }
+
+    /**
+     * The block entity renderer draws this, so nothing may be baked into the chunk mesh.
+     *
+     * This returned ENTITYBLOCK_ANIMATED before the port. That constant is gone in 26.1.2, the enum
+     * is INVISIBLE and MODEL now, and the override was dropped rather than mapped. Without it the
+     * block falls back to MODEL, so the static cube and the renderer's cube both draw in the same
+     * place and the faces flicker against each other.
+     *
+     * INVISIBLE rather than a model with no elements, which is how vanilla does chests, because the
+     * item model here inherits from the block model. Emptying that would take the held item with it.
+     */
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.INVISIBLE;
     }
 }

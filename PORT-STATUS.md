@@ -537,6 +537,20 @@ raised a bow in this mod's history.
 The zero byte `stonecutter/held.png` is deleted. Nothing in data, models or java referenced it, and
 the atlas scanned the directory and failed on it every load.
 
+**Five block entity blocks were drawing twice.** Every block whose renderer draws it returned
+`RenderShape.ENTITYBLOCK_ANIMATED` before the port, which kept the chunk mesher from baking a static
+model. That constant does not exist in 26.1.2, where the enum is `INVISIBLE` and `MODEL`, so the
+override was dropped rather than mapped and the blocks fell back to `MODEL`. The static cube and the
+renderer's cube then drew in the same place, and the faces flickered against each other. The forge
+hammer was the loudest, being two blocks doing it at once.
+
+`INVISIBLE` restores it. Not a particle only model, which is how vanilla does chests, because the
+item models here inherit from the block models and emptying those would take the held items with
+them.
+
+Affected: `HammerBaseBlock`, `HammerHeadBlock`, `ForgedContainerBlock`, `CoreExtractorPistonBlock`,
+`ScrollBlock`.
+
 ## 12. Known remaining
 
 * Villager trades are gone and need readding as data. Section 7.

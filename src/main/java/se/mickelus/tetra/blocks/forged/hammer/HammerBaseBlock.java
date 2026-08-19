@@ -54,6 +54,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import static net.minecraft.world.level.material.Fluids.WATER;
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.RenderShape;
 
 @ParametersAreNonnullByDefault
 public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, EntityBlock, BlockTooltip {
@@ -329,5 +330,21 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
         return getTicker(entityType, HammerBaseBlockEntity.type.get(), (lvl, pos, blockState, tile) -> tile.tick(lvl, pos, blockState));
+    }
+
+    /**
+     * The block entity renderer draws this, so nothing may be baked into the chunk mesh.
+     *
+     * This returned ENTITYBLOCK_ANIMATED before the port. That constant is gone in 26.1.2, the enum
+     * is INVISIBLE and MODEL now, and the override was dropped rather than mapped. Without it the
+     * block falls back to MODEL, so the static cube and the renderer's cube both draw in the same
+     * place and the faces flicker against each other.
+     *
+     * INVISIBLE rather than a model with no elements, which is how vanilla does chests, because the
+     * item model here inherits from the block model. Emptying that would take the held item with it.
+     */
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.INVISIBLE;
     }
 }
