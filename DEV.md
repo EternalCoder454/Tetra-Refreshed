@@ -158,6 +158,20 @@ there allocates a pipeline, a spliterator and a lambda each time. The duplicatio
 
 ## The data formats
 
+## Commands
+
+`/tetra` needs gamemaster permission. `module`, `improvement`, `hone` and `enchantment` act on the
+held item.
+
+`/tetra tools` is the diagnostic one. Look at a workbench and run it, and it reports every block
+within two out and four up that implements `IToolProviderBlock`, whether that block agreed to lend
+its tools to this workbench, and what each one offers. Then the totals, from blocks alone and again
+with the player's own tools.
+
+It exists because a provider that is present but declining looks exactly like one that is absent.
+A forge hammer that is unfuelled, missing one of its two modules, or one block out of position
+offers nothing at all rather than offering a lower level, and nothing in the interface says which.
+
 Tetra is data driven across these datapack directories under `data/tetra`:
 
 | Directory | What lives there |

@@ -14,6 +14,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +23,16 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.neoforged.neoforge.common.ItemAbility;
 import se.mickelus.tetra.aspect.TetraEnchantmentHelper;
+import se.mickelus.tetra.blocks.IToolProviderBlock;
+import se.mickelus.tetra.blocks.workbench.AbstractWorkbenchBlock;
+import se.mickelus.tetra.properties.PropertyHelper;
 import se.mickelus.tetra.items.modular.IModularItem;
 import se.mickelus.tetra.module.data.ImprovementData;
 
@@ -79,7 +89,79 @@ public class TetraCommand {
                                                 .executes(ctx -> runAddEnchantment(ctx, getString(ctx, "slot"), ResourceArgument.getEnchantment(ctx, "enchantment"), getInteger(ctx, "level"))))))));
 
 
+        command.then(Commands.literal("tools").executes(TetraCommand::runTools));
+
         dispatcher.register(command);
+    }
+
+    /**
+     * Report what a workbench can actually reach, and why anything nearby is not counting.
+     *
+     * The question this answers is "the multiblock is built, so why is the tool not offered". A
+     * provider that is present but declining, because it is unfuelled or a block out of place, looks
+     * exactly like one that is absent. This separates the two.
+     */
+    private static int runTools(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        Level level = player.level();
+
+        HitResult hit = player.pick(6, 0, false);
+        if (hit.getType() != HitResult.Type.BLOCK) {
+            context.getSource().sendFailure(Component.literal("Look at a workbench and run this again"));
+            return 0;
+        }
+
+        BlockPos pos = ((BlockHitResult) hit).getBlockPos();
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof AbstractWorkbenchBlock workbench)) {
+            context.getSource().sendFailure(Component.literal("That is not a workbench, it is "
+                    + BuiltInRegistries.BLOCK.getKey(state.getBlock())));
+            return 0;
+        }
+
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal("§eWorkbench§r " + BuiltInRegistries.BLOCK.getKey(state.getBlock())
+                + " at " + pos.getX() + " " + pos.getY() + " " + pos.getZ()));
+
+        // Every provider in the volume, not only the ones that agreed to help, because a provider
+        // that declines is the thing worth seeing.
+        int found = 0;
+        for (BlockPos scanned : AbstractWorkbenchBlock.toolProviderSearchArea(pos).map(BlockPos::immutable).toList()) {
+            BlockState scannedState = level.getBlockState(scanned);
+            if (!(scannedState.getBlock() instanceof IToolProviderBlock provider)) {
+                continue;
+            }
+
+            found++;
+            boolean accepted = provider.canProvideTools(level, scanned, pos);
+            Map<ItemAbility, Integer> levels = provider.getToolLevels(level, scanned, scannedState);
+
+            lines.add(Component.literal((accepted ? "  §a+§r " : "  §c-§r ")
+                    + BuiltInRegistries.BLOCK.getKey(scannedState.getBlock())
+                    + " at " + scanned.getX() + " " + scanned.getY() + " " + scanned.getZ()
+                    + (accepted ? "" : " §7(out of position for this workbench)§r")));
+
+            if (levels.isEmpty()) {
+                lines.add(Component.literal("      §7offers nothing, so it is present but not working§r"));
+            } else {
+                levels.forEach((tool, lvl) -> lines.add(Component.literal("      " + tool.name() + " §e" + lvl + "§r")));
+            }
+        }
+
+        if (found == 0) {
+            lines.add(Component.literal("  §7no tool providing blocks within two out and four up§r"));
+        }
+
+        Map<ItemAbility, Integer> combined = workbench.getToolLevels(level, pos, state);
+        lines.add(Component.literal("§eFrom blocks§r " + (combined.isEmpty() ? "§7nothing§r" : "")));
+        combined.forEach((tool, lvl) -> lines.add(Component.literal("  " + tool.name() + " §e" + lvl + "§r")));
+
+        Map<ItemAbility, Integer> everything = PropertyHelper.getCombinedToolLevels(player, level, pos, state);
+        lines.add(Component.literal("§eWith the player's own tools§r " + (everything.isEmpty() ? "§7nothing§r" : "")));
+        everything.forEach((tool, lvl) -> lines.add(Component.literal("  " + tool.name() + " §e" + lvl + "§r")));
+
+        lines.forEach(line -> context.getSource().sendSuccess(() -> line, false));
+        return 1;
     }
 
     private static int runHone(CommandContext<CommandSourceStack> context, int progress) throws CommandSyntaxException {

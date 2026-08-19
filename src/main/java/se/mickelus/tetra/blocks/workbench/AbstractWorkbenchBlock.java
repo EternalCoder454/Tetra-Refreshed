@@ -87,8 +87,18 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
      * @param pos
      * @return
      */
+    /**
+     * Where a workbench looks for blocks that lend it tools. Two out and four up.
+     *
+     * Exposed so that `/tetra tools` reports on the same volume this searches. A second copy of the
+     * offsets would answer a different question the first time either moved.
+     */
+    public static Stream<BlockPos> toolProviderSearchArea(BlockPos pos) {
+        return BlockPos.betweenClosedStream(pos.offset(-2, 0, -2), pos.offset(2, 4, 2));
+    }
+
     protected Stream<Pair<BlockPos, BlockState>> getToolProviderBlockStream(Level world, BlockPos pos) {
-        return BlockPos.betweenClosedStream(pos.offset(-2, 0, -2), pos.offset(2, 4, 2))
+        return toolProviderSearchArea(pos)
                 .map(offsetPos -> new Pair<>(offsetPos, world.getBlockState(offsetPos)))
                 .filter(pair -> pair.getSecond().getBlock() instanceof IToolProviderBlock)
                 .filter(pair -> ((IToolProviderBlock) pair.getSecond().getBlock()).canProvideTools(world, pair.getFirst(), pos));
