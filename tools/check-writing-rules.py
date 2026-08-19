@@ -20,6 +20,12 @@ is not version controlled. They are byte identical. If a rule changes, change it
 import pathlib
 import sys
 
+# A violating line can hold characters the console cannot encode, an arrow or a box drawing rune,
+# and printing one used to end the run with a UnicodeEncodeError that named the checker rather than
+# the document. Reporting a violation must never be able to fail.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(errors="replace")
+
 # The rules. Adding an entry here is what adding a rule means.
 BANNED = {
     "em dash": "—",

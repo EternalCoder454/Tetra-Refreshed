@@ -92,6 +92,16 @@ jobs:
           done
           exit $fail
 
+      - name: readme style
+        # One shape for every mod's README, so a reader arriving at the second one does not have to
+        # learn it again. The checker states the style as well as enforcing it, run it with --style.
+        run: |
+          fail=0
+          for repo in Tetra-Refreshed Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
+            python Tetra-Refreshed/tools/check-readme-style.py "$repo/README.md" || fail=1
+          done
+          exit $fail
+
       - name: repository checkers
         working-directory: Tetra-Refreshed
         # Reported but not fatal, and that is not laziness. These resolve against the vanilla
