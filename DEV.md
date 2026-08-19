@@ -173,6 +173,42 @@ Tetra is data driven across these datapack directories under `data/tetra`:
 Client side data lives under `assets/tetra`: `stat_bars`, `stat_indicators`, `stat_sorters`,
 `holosphere_entries` and `tool_actions`.
 
+### Better Combat
+
+Better Combat reads `data/<namespace>/weapon_attributes/<item path>.json`, where the file path is
+the item id, and the smallest useful file names a preset it already ships:
+
+```json
+{ "parent": "bettercombat:sword" }
+```
+
+That is the whole integration. Nothing sits between the two mods, there is no mixin, and an item
+with no file is left exactly as it was, which is why vanilla bows still behave normally and why
+Tetra's bow and crossbow are deliberately left out.
+
+| item | preset | why |
+|---|---|---|
+| `tetra:modular_sword` | `bettercombat:sword` | one handed, three attacks |
+| `tetra:modular_single` | `bettercombat:axe` | one handed with shorter reach, a hatchet or a pick |
+| `tetra:modular_double` | `bettercombat:double_axe` | two handed, the two headed tools |
+| `tetra:modular_polearm` | `bettercombat:pike` | Secrets of Forging ships this preset itself |
+
+The shield and toolbelt are not weapons, the holosphere is a menu and the artifact is a curio, so
+none of them get a file.
+
+**One pattern per item, not per build.** A sword is a sword whether its blade is a machete or a
+rapier, and this cannot tell them apart. Tetratic Combat could: it read the modules off the stack
+and resolved a pattern per build, and its `data/tetratic/configs/tetra.json` is a map from module
+variant to preset that is worth reading if this is ever taken further. It stops at 1.18, and its
+approach needs a mixin into Better Combat, because the only registration Better Combat offers is one
+pattern per item id rather than per stack.
+
+**Both addons already ship presets for builds nothing can select yet.** Secrets of Forging has
+`longsword` and `one_hand_katana`, Art of Forging has `crucible` and `rending_scissor`, all
+under `data/bettercombat/weapon_attributes`, all written for a katana blade or a crucible blade
+rather than for the item as a whole. They are inert until something resolves per build, and they are
+the reason to do that properly rather than approximate it.
+
 ### When two materials claim the same item
 
 A material may name items or claim a tag, and the two overlap on purpose. Oak claims
