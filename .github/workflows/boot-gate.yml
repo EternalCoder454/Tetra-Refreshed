@@ -193,16 +193,20 @@ jobs:
             exit 1
           fi
 
-      # Tetra compiles against mutil and EMI, the two addons compile against Tetra, and Tetra then
-      # bundles the addons by jarJar. So Tetra is built twice, and the second build is the one whose
-      # jar the gate boots. This is the order BUILDING.md documents for doing it by hand.
+      # The dependency graph here is a cycle. Tetra bundles the two addons by jarJar, and the two
+      # addons compile against Tetra. A developer's machine never notices, because mavenLocal was
+      # seeded years ago, but a clean runner has nothing and something has to give first.
+      #
+      # Tetra gives first. jarJar is the only part of its build that wants the addons, so the first
+      # pass runs without it and publishes something the addons can compile against. The second
+      # pass, after they exist, is the one that bundles them and the one the gate boots.
       - name: mutil to mavenLocal
         working-directory: Mutil-Refreshed
         run: chmod +x gradlew && ./gradlew publishToMavenLocal --no-daemon --console=plain
 
-      - name: tetra to mavenLocal
+      - name: tetra to mavenLocal, without bundling
         working-directory: Tetra-Refreshed
-        run: chmod +x gradlew && ./gradlew build publishToMavenLocal --no-daemon --console=plain
+        run: chmod +x gradlew && ./gradlew publishToMavenLocal -x jarJar --no-daemon --console=plain
 
       - name: secrets of forging to mavenLocal
         working-directory: Secrets-Of-Forging-Revelations-Refreshed

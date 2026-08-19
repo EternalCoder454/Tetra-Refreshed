@@ -130,7 +130,7 @@ dependencies {
     //   cd "../Secrets-Of-Forging-Revelations" && ./gradlew.bat publishToMavenLocal
     // The range is what jarJar resolves against when several mods embed the same dependency, and
     // prefer names the one that ships if nothing else asks for a newer build.
-    jarJar(implementation("net.acetheeldritchking.secrets_of_forging_revelations:secrets_of_forging_revelations")) {
+    jarJar("net.acetheeldritchking.secrets_of_forging_revelations:secrets_of_forging_revelations") {
         version {
             strictly "[${sofr_version},)"
             prefer "${sofr_version}"
@@ -139,7 +139,7 @@ dependencies {
 
     // Art of Forging, bundled the same way and for the same reason. Publish it to mavenLocal
     // before building here, or this embeds whatever build was published last.
-    jarJar(implementation("net.acetheeldritchking.art_of_forging:art_of_forging")) {
+    jarJar("net.acetheeldritchking.art_of_forging:art_of_forging") {
         version {
             strictly "[${aof_version},)"
             prefer "${aof_version}"
