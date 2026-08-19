@@ -362,4 +362,4 @@ rebuilt. If the build stops resolving it, republish and update that property.
 4. Never mix a port and a bug fix in one commit. A port that also changes behaviour cannot be
    reviewed against upstream, which is the whole value of staying a fork.
 5. Upstream issues get fixed after the port, not during.
-6. No em dash and no double hyphen in prose, in any document here. Semicolons are fine, sparingly.
+6. Writing rules: run `python tools/check-writing-rules.py --rules`. Nothing else states them.

@@ -481,8 +481,8 @@ content or assets.
    reviewed against upstream, which is the whole value of staying a fork.
 5. Upstream issues get fixed after the port, not during.
    See <https://github.com/mickelus/tetra/issues>.
-6. Writing rules apply to every document here. No em dash, no double hyphen in prose.
-   Semicolons are allowed, sparingly. Check with `python tools/check-writing-rules.py <file>`.
+6. Writing rules apply to every document here. `python tools/check-writing-rules.py --rules`
+   states them and nothing else does.
 
 ## 11. Next session, start here
 
