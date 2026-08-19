@@ -284,18 +284,40 @@ public interface IModularItem {
         return ArrayUtils.contains(getRequiredModules(itemStack), moduleSlot);
     }
 
+    /**
+     * Every module on the item, majors first, then minors, skipping slots that hold nothing.
+     *
+     * Written as a loop because the stream it replaced built two array streams, a concat, three
+     * pipeline stages, a lambda capturing the tag and a method reference, and threw all of it away
+     * to produce one list. Twenty of the call sites immediately stream the result again, so none of
+     * that intermediate machinery ever earned its keep. Same modules, same order, one allocation.
+     */
     default Collection<ItemModule> getAllModules(ItemStack stack) {
         CompoundTag stackTag = readTag(stack);
 
-        if (stackTag != null) {
-            return Stream.concat(Arrays.stream(getMajorModuleKeys(stack)), Arrays.stream(getMinorModuleKeys(stack)))
-                    .map(key -> stackTag.getStringOr(key, ""))
-                    .map(ItemUpgradeRegistry.instance::getModule)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+        if (stackTag == null) {
+            return Collections.emptyList();
         }
 
-        return Collections.emptyList();
+        String[] majorKeys = getMajorModuleKeys(stack);
+        String[] minorKeys = getMinorModuleKeys(stack);
+        List<ItemModule> modules = new ArrayList<>(majorKeys.length + minorKeys.length);
+
+        for (String key : majorKeys) {
+            ItemModule module = ItemUpgradeRegistry.instance.getModule(stackTag.getStringOr(key, ""));
+            if (module != null) {
+                modules.add(module);
+            }
+        }
+
+        for (String key : minorKeys) {
+            ItemModule module = ItemUpgradeRegistry.instance.getModule(stackTag.getStringOr(key, ""));
+            if (module != null) {
+                modules.add(module);
+            }
+        }
+
+        return modules;
     }
 
     default ItemModuleMajor[] getMajorModules(ItemStack itemStack) {
