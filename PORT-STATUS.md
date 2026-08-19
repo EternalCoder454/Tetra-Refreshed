@@ -254,13 +254,22 @@ The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends
 with scroll data components, so their `gives` needs the component patch spelled out rather than just
 an item id.
 
-**The interactive block overlay does not draw.** `RenderHighlightEvent.Block` became
-`ExtractBlockOutlineRenderStateEvent`, which is an extract phase event carrying no way to draw, and
-a `GuiGraphicsExtractor` is built over a `GuiRenderState` the gui renderer later draws in screen
-space, so the constructor taking a world pose stack and buffer source is gone. The overlay still
-tracks what is being looked at, and `gui.update` still runs, but the interaction hints on block
-faces render nothing. Putting them back means giving mutil's `GuiElement` tree a world space draw
-path, which is a redesign of mutil's gui layer rather than a signature change.
+**The interactive block overlay draws again.** It was written off during the port as needing a
+redesign of mutil's gui layer, and that was wrong on the important point. NeoForge ships
+`ExtractBlockOutlineRenderStateEvent.addCustomRenderer`, and a `CustomBlockOutlineRenderer` is
+handed a `PoseStack` and a `MultiBufferSource.BufferSource`, which are exactly the two things
+`RenderHighlightEvent.Block` used to carry. The draw phase was never missing, only the place to
+register for it.
+
+What the gui layer needed was smaller than a redesign. `GuiElement` grew a `drawWorld` recursion
+beside `draw`, using the same attachment offsets so an element sits where it would on screen, and
+only the two leaves this overlay reaches had to implement it: `GuiTexture` emits a quad through
+`RenderTypes.entityTranslucent`, and `GuiString` uses `Font.drawInBatch`, with `GuiStringOutline`
+using `drawInBatch8xOutline` rather than drawing itself nine times on a block face. `GuiRootHud`
+keeps one copy of the face transform and both paths call it.
+
+Not play tested. It compiles, the server boots clean, and whether the hints sit correctly on the
+face is a thing only a person looking at a crate can say.
 
 **Stored inventories do not carry over.** The item capability is a `ResourceHandler<ItemResource>`
 now and nothing adapts an `IItemHandler` to it, so the workbench, the rack and the forged container
@@ -526,7 +535,6 @@ the atlas scanned the directory and failed on it every load.
 ## 12. Known remaining
 
 * Villager trades are gone and need readding as data. Section 7.
-* The interactive block overlay does not draw. Section 7.
 * Stored inventories from before this port do not load. Section 7.
 * TetraBlockStateProvider writes `models/item` but not `items`, so the 38 generated item model
   entries beside them are written by hand and a runData would not recreate them.

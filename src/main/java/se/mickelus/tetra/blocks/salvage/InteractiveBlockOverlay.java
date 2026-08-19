@@ -34,15 +34,12 @@ public class InteractiveBlockOverlay {
     }
 
     /**
-     * The overlay's state still tracks what is being looked at, but it does not draw.
+     * Track what is being looked at, then hand NeoForge something that draws it on the face.
      *
-     * RenderHighlightEvent.Block became ExtractBlockOutlineRenderStateEvent, which is an extract
-     * phase event, and the draw it used to do is gone with it. A GuiGraphicsExtractor is built over
-     * a GuiRenderState now, which the gui renderer later draws in screen space, so there is no
-     * longer a constructor that takes a world pose stack and buffer source. Drawing mutil's gui
-     * element tree onto a block face again means giving those elements a world space draw path,
-     * which is a redesign of mutil's gui layer rather than a signature change, so it is left out
-     * of the port. The interaction hints on block faces do not render.
+     * The draw used to happen here, because RenderHighlightEvent.Block carried the world pose stack
+     * and buffer source. Its replacement is an extract phase event and carries neither, which is
+     * why this stopped drawing during the port. addCustomRenderer is the way back: NeoForge calls
+     * the renderer during the draw phase and passes exactly the two things that went missing.
      */
     @SubscribeEvent
     public void renderOverlay(ExtractBlockOutlineRenderStateEvent event) {
@@ -57,8 +54,13 @@ public class InteractiveBlockOverlay {
         BlockState blockState = event.getBlockState();
         VoxelShape shape = blockState.getShape(world, blockPos, event.getCollisionContext());
 
-        if (!shape.isEmpty()
-                && (isDirty || !blockState.equals(previousState) || !blockPos.equals(previousPos) || !face.equals(previousFace))) {
+        // A block with no shape has no face to draw on, and asking for its bounds would give the
+        // empty box rather than nothing.
+        if (shape.isEmpty()) {
+            return;
+        }
+
+        if (isDirty || !blockState.equals(previousState) || !blockPos.equals(previousPos) || !face.equals(previousFace)) {
             gui.update(world, blockPos, blockState, face, mc.player,
                     blockPos.equals(previousPos) && face.equals(previousFace));
 
@@ -68,5 +70,15 @@ public class InteractiveBlockOverlay {
 
             isDirty = false;
         }
+
+        // Registered every frame the outline is drawn, which is how the event is meant to be used.
+        // The state above is what decides the contents, this only draws whatever that decided.
+        event.addCustomRenderer((outlineState, bufferSource, pose, translucent, levelState) -> {
+            gui.drawWorld(pose, bufferSource, event.getCamera().position(), rayTrace, shape);
+            // false, because the vanilla outline should still draw underneath. Returning true would
+            // replace it, and the hints are meant to sit on top of the outline rather than instead
+            // of it.
+            return false;
+        });
     }
 }
