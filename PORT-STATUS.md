@@ -268,8 +268,13 @@ only the two leaves this overlay reaches had to implement it: `GuiTexture` emits
 using `drawInBatch8xOutline` rather than drawing itself nine times on a block face. `GuiRootHud`
 keeps one copy of the face transform and both paths call it.
 
-Not play tested. It compiles, the server boots clean, and whether the hints sit correctly on the
-face is a thing only a person looking at a crate can say.
+Play tested and correct, with one change made after looking at it. The hints waited 500ms and 650ms
+before fading in, which upstream does so they do not flash while the crosshair sweeps across blocks.
+That reason is a good one and the stagger keeps it, but half a second reads as lag rather than as
+restraint, so the two delays are 150ms and 200ms now. They are named constants in
+`InteractiveOutlineGui`, and the tool icon reads the second one rather than carrying its own copy.
+
+That is a deliberate divergence from upstream Tetra, and the only one in the overlay.
 
 **Stored inventories do not carry over.** The item capability is a `ResourceHandler<ItemResource>`
 now and nothing adapts an `IItemHandler` to it, so the workbench, the rack and the forged container

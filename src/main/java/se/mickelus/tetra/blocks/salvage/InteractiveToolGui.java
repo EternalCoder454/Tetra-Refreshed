@@ -35,7 +35,7 @@ public class InteractiveToolGui extends GuiElement {
 
         show = new KeyframeAnimation(100, this)
                 .applyTo(new Applier.Opacity(0, 1))
-                .withDelay(650);
+                .withDelay(InteractiveOutlineGui.farCornerDelay);
         hide = new KeyframeAnimation(100, this)
                 .applyTo(new Applier.Opacity(1, 0));
 

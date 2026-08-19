@@ -15,6 +15,20 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class InteractiveOutlineGui extends GuiElement {
     private static final Identifier texture = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/block-interaction.png");
 
+    /**
+     * How long the hints wait before fading in, staggered so the near corners lead.
+     *
+     * Upstream waits 500 and 650, which stops the hints flashing while the crosshair sweeps across
+     * blocks. That reason is a good one and these keep it, but half a second reads as lag rather
+     * than as restraint, so they are shorter. This is a deliberate divergence from upstream Tetra
+     * and the only one in this file.
+     *
+     * InteractiveToolGui reads the second of these, because the tool icon arrives with the far
+     * corners rather than on a delay of its own.
+     */
+    public static final int nearCornerDelay = 150;
+    public static final int farCornerDelay = 200;
+
     private final BlockInteraction blockInteraction;
 
     private final GuiTexture topLeft;
@@ -39,7 +53,7 @@ public class InteractiveOutlineGui extends GuiElement {
                 .applyTo(new Applier.Opacity(0, 1),
                         new Applier.TranslateX(0, -2),
                         new Applier.TranslateY(0, -2))
-                .withDelay(500)
+                .withDelay(nearCornerDelay)
                 .start();
 
         topRight = new GuiTexture(2, -2, 4, 4, 3, 0, texture);
@@ -49,7 +63,7 @@ public class InteractiveOutlineGui extends GuiElement {
                 .applyTo(new Applier.Opacity(0, 1),
                         new Applier.TranslateX(0, 2),
                         new Applier.TranslateY(0, -2))
-                .withDelay(650)
+                .withDelay(farCornerDelay)
                 .start();
 
         bottomLeft = new GuiTexture(-2, 2, 4, 4, 3, 0, texture);
@@ -59,7 +73,7 @@ public class InteractiveOutlineGui extends GuiElement {
                 .applyTo(new Applier.Opacity(0, 1),
                         new Applier.TranslateX(0, -2),
                         new Applier.TranslateY(0, 2))
-                .withDelay(500)
+                .withDelay(nearCornerDelay)
                 .start();
 
         bottomRight = new GuiTexture(2, 2, 4, 4, 0, 0, texture);
@@ -69,7 +83,7 @@ public class InteractiveOutlineGui extends GuiElement {
                 .applyTo(new Applier.Opacity(0, 1),
                         new Applier.TranslateX(0, 2),
                         new Applier.TranslateY(0, 2))
-                .withDelay(650)
+                .withDelay(farCornerDelay)
                 .onStop(complete -> {
                     if (tool != null) tool.updateFadeTime();
                 })
