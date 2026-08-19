@@ -68,11 +68,34 @@ public class ConfigSchematic extends BaseSchematic {
         return null;
     }
 
+    /**
+     * The outcome for a stack put in a material slot, when more than one material accepts it.
+     *
+     * <p>A material may name items or claim a tag, and the two overlap on purpose. Oak claims
+     * {@code minecraft:planks} so any plank can be used, and every wood that has a material of its
+     * own also names its own planks. Wool does the same across its colours. Thirty two plank items
+     * and fifteen wool items are matched by two materials each in a pack of any size.
+     *
+     * <p>This used to take the last match, and the matches arrive in whatever order the material
+     * store iterates, which is a hash map. So an oak plank reliably gave oak stats only because
+     * nothing else claimed it, while a maple plank could give maple or oak depending on where the
+     * two landed in the map. That is not a thing a player can see or reason about.
+     *
+     * <p>A material naming an item beats one that only matched a tag the item happens to be in.
+     * Naming an item is the more specific claim, so the wood a plank actually is wins over the
+     * fallback, and a plank no material names still falls back to oak the way it always did.
+     * Within either group the last still wins, which is what lets an addon override.
+     */
     private Optional<OutcomeDefinition> getOutcomeFromMaterial(ItemStack materialStack, int slot) {
-        return Arrays.stream(definition.outcomes)
+        List<OutcomeDefinition> matches = Arrays.stream(definition.outcomes)
                 .filter(outcome -> outcome.materialSlot == slot)
                 .filter(outcome -> outcome.material.getPredicate() != null && outcome.material.getPredicate().matches(materialStack))
-                .reduce((a, b) -> b); // returns the last element, there's no findLast :c
+                .toList();
+
+        return matches.stream()
+                .filter(outcome -> !outcome.material.isTagged())
+                .reduce((a, b) -> b) // returns the last element, there's no findLast :c
+                .or(() -> matches.stream().reduce((a, b) -> b));
     }
 
     @Override

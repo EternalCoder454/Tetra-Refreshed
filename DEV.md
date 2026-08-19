@@ -173,6 +173,20 @@ Tetra is data driven across these datapack directories under `data/tetra`:
 Client side data lives under `assets/tetra`: `stat_bars`, `stat_indicators`, `stat_sorters`,
 `holosphere_entries` and `tool_actions`.
 
+### When two materials claim the same item
+
+A material may name items or claim a tag, and the two overlap on purpose. Oak claims
+`minecraft:planks` so that any plank can be used, and every wood with a material of its own also
+names its own planks. Wool does the same across fifteen colours. In this pack that is thirty two
+plank items and fifteen wool items matched by two materials each.
+
+**The one that names the item wins.** Naming an item is the more specific claim, so a maple plank
+gives maple, and a plank no material names still falls back to oak. Within either group the last
+match still wins, which is what lets an addon override.
+
+This used to be whichever match came last out of the material store, which is a hash map, so the
+answer was arbitrary rather than chosen. Adding twenty three woods turned a quirk into a coin flip.
+
 ### Adding a material
 
 A material is one file under `data/tetra/materials/<category>/<name>.json`:
