@@ -50,8 +50,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: EternalCoder454/Art-of-Forging-Refreshed
-          # This one is on master while the other three are on 26.1.2.
-          ref: master
+          ref: 26.1.2
           path: Art-of-Forging-Refreshed
 
       - uses: actions/checkout@v4
@@ -147,7 +146,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: EternalCoder454/Art-of-Forging-Refreshed
-          ref: master
+          ref: 26.1.2
           path: Art-of-Forging-Refreshed
 
       - uses: actions/checkout@v4
