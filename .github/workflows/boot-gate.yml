@@ -77,11 +77,22 @@ jobs:
           sys.exit(1 if bad else 0)
           PY
 
-      # There is deliberately no writing rules step. check-writing-rules.py lives in the shared
-      # Minecraft/tools directory, which is not version controlled and is not part of any
-      # repository, so a runner cannot obtain it. A step guarded on the file existing would skip in
-      # silence and report green, which is worse than not having the check at all. Versioning that
-      # directory, or vendoring the one script, would let this come back.
+      # The checker is vendored into this repository, because the shared copy it came from lives
+      # in an unversioned directory a runner cannot reach.
+      - name: writing rules, this repository
+        working-directory: Tetra-Refreshed
+        run: python tools/check-writing-rules.py $(git ls-files '*.md')
+
+      - name: writing rules, the other three
+        # Reported rather than enforced. Secrets of Forging's README carries a semicolon in a
+        # sentence Ace wrote himself, and failing this repository's build over another author's
+        # prose is not a decision a workflow should be making on its own.
+        continue-on-error: true
+        run: |
+          for repo in Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
+            echo "--- $repo"
+            ( cd "$repo" && python ../Tetra-Refreshed/tools/check-writing-rules.py $(git ls-files '*.md') ) || true
+          done
 
       - name: repository checkers
         working-directory: Tetra-Refreshed
