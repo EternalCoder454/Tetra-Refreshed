@@ -46,6 +46,25 @@ def read_colour_table():
     return table
 
 
+def resolve_tint(data, colours, key):
+    """{@return the texture tint of a material, whether it names a colour or gives hex}
+
+    A tint may name an entry in ItemColors or write the hex itself, and the game reads both. The
+    tool used to take only the first, which meant it refused every material added since the two it
+    was written for.
+    """
+    tint = (data.get("tints") or {}).get("texture")
+    if tint is None:
+        raise SystemExit("material %s has no texture tint to build a palette from" % key)
+    if tint in colours:
+        return colours[tint]
+    try:
+        return int(str(tint).lstrip("#"), 16)
+    except ValueError:
+        raise SystemExit("material %s has a texture tint that is neither a known colour nor hex (%r)"
+                         % (key, tint))
+
+
 def material_file(key):
     for base, _, files in os.walk(DATA + "/materials"):
         if key + ".json" in files:
@@ -107,16 +126,35 @@ def write_greyscale(source, target):
 
 
 def write_atlas(textures, materials):
+    """Add or replace one source, keeping any others.
+
+    A greyscale texture is offered to one category of material, so the atlas holds one source per
+    group rather than one source overall. This used to rewrite the file with a single source, which
+    meant running it for metals threw away whatever had been built for woods.
+
+    A source is identified by the textures it covers, so re running the same group updates it in
+    place rather than adding a duplicate.
+    """
     path = os.path.join(ASSETS, "atlases/items.json")
     os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    existing = []
+    if os.path.isfile(path):
+        existing = json.load(io.open(path, encoding="utf-8")).get("sources", [])
+
     source = {
         "type": "minecraft:paletted_permutations",
         "textures": sorted("tetra:" + t for t in textures),
         "palette_key": "tetra:colormap/palette_key",
         "permutations": {key: "tetra:colormap/material/" + key for key in sorted(materials)},
     }
+
+    kept = [s for s in existing if s.get("textures") != source["textures"]]
+    kept.append(source)
+    kept.sort(key=lambda s: s.get("textures", []))
+
     io.open(path, "w", encoding="utf-8", newline="\n").write(
-        json.dumps({"sources": [source]}, indent=4) + "\n")
+        json.dumps({"sources": kept}, indent=4) + "\n")
     return path
 
 
@@ -133,14 +171,13 @@ def main():
     for key in args.materials:
         path = material_file(key)
         data = json.load(io.open(path, encoding="utf-8"))
-        tint = (data.get("tints") or {}).get("texture")
-        if tint not in colours:
-            raise SystemExit("material %s has no known texture tint (%r)" % (key, tint))
-        written.append(write_material_palette(key, colours[tint]))
+        written.append(write_material_palette(key, resolve_tint(data, colours, key)))
 
         # Point the material at its palette. Materials without one are untouched.
         data["palette"] = "tetra:colormap/material/" + key
-        io.open(path, "w", encoding="utf-8", newline="\n").write(json.dumps(data, indent=4) + "\n")
+        # material files are CRLF in this repo, and this tool writing LF is what made the
+        # two it had already been run against the only ones out of step with the rest
+        io.open(path, "w", encoding="utf-8", newline="\r\n").write(json.dumps(data, indent=4) + "\n")
 
     targets = []
     for pair in args.greyscale:

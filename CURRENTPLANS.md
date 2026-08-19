@@ -47,9 +47,30 @@ greyscale and has no palette, so it stays on its own artwork, which is the fallb
 **Checked by eye and correct.** The recoloured hammer heads read as normal tools, confirmed in game
 on 2026-08-18. The mechanism is proven, not just stitching without error.
 
-**The mechanism is done. The migration is one percent done.** Two materials of a hundred and seven
-carry a palette, and two module textures of two hundred and seventy are greyscale. None of the
-promised saving exists until that changes.
+**The mechanism is done. Every metal carries a palette. No module but one offers greyscale yet.**
+Thirteen materials of a hundred and thirty have a palette, which is every metal in this pack, and
+two module textures of two hundred and seventy are greyscale, both of them the basic hammer's.
+
+The tool could not have done this before. It took a tint only when it named an entry in
+`ItemColors` and refused raw hex, which is what every material added since is written with, so it
+accepted eleven of the forty six metals and woods and rejected the rest. It also rewrote the atlas
+with a single source, so building a second group threw away the first. Both are fixed, and the atlas
+holds one source per group now, which is what scoping to a category actually requires.
+
+**What is left is offering greyscale from more modules, and it is measured rather than guessed.**
+Twenty module locations serve `tetra:metal/` with a metal texture. Giving each a greyscale twin
+costs 260 sprites against the 26 the atlas builds today, and would put every metal in the pack on
+proper shading rather than a flat tint, across twenty four module families.
+
+**Look at a copper, iron or netherite hammer before doing the other twenty.** They are the only
+module offering greyscale and nobody has yet seen one in game. The greyscale artwork is quantised
+from the existing variant, so the risk is banding, and it is the kind of thing that is obvious on
+sight and invisible in a diff. One family is proof, twenty is commitment.
+
+**The hammer is not the pattern to copy.** Its three metal variants name single materials and differ
+in balance, netherite mining at diamond where copper and iron mine at gold, so they cannot be
+collapsed into one. Every other module offering metal serves `tetra:metal/` as a whole, which is
+why the remaining work is adding a texture rather than restructuring variants.
 
 **Known constraint.** The atlas builds every texture and material combination, so palettes want
 scoping to one material category per greyscale texture. All 107 materials against all 270 textures

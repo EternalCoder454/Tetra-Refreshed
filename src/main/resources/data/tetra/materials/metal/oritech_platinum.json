@@ -26,5 +26,6 @@
     },
     "requiredTools": {
         "hammer_dig": "minecraft:gold"
-    }
+    },
+    "palette": "tetra:colormap/material/oritech_platinum"
 }

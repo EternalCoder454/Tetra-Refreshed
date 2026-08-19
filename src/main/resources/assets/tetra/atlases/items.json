@@ -9,7 +9,18 @@
             "palette_key": "tetra:colormap/palette_key",
             "permutations": {
                 "copper": "tetra:colormap/material/copper",
-                "iron": "tetra:colormap/material/iron"
+                "gold": "tetra:colormap/material/gold",
+                "iron": "tetra:colormap/material/iron",
+                "netherite": "tetra:colormap/material/netherite",
+                "oritech_adamant": "tetra:colormap/material/oritech_adamant",
+                "oritech_biosteel": "tetra:colormap/material/oritech_biosteel",
+                "oritech_duratium": "tetra:colormap/material/oritech_duratium",
+                "oritech_electrum": "tetra:colormap/material/oritech_electrum",
+                "oritech_energite": "tetra:colormap/material/oritech_energite",
+                "oritech_nickel": "tetra:colormap/material/oritech_nickel",
+                "oritech_platinum": "tetra:colormap/material/oritech_platinum",
+                "oritech_prometheum": "tetra:colormap/material/oritech_prometheum",
+                "oritech_steel": "tetra:colormap/material/oritech_steel"
             }
         }
     ]

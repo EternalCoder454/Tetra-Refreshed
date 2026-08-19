@@ -26,5 +26,6 @@
     },
     "requiredTools": {
         "hammer_dig": "minecraft:diamond"
-    }
+    },
+    "palette": "tetra:colormap/material/oritech_prometheum"
 }

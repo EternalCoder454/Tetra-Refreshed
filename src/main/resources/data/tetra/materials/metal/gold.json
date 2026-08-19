@@ -20,12 +20,15 @@
         "default"
     ],
     "material": {
-        "items": [ "minecraft:gold_ingot" ]
+        "items": [
+            "minecraft:gold_ingot"
+        ]
     },
     "effects": {
         "stabilizing": 15
     },
     "requiredTools": {
         "hammer_dig": "minecraft:wood"
-    }
+    },
+    "palette": "tetra:colormap/material/gold"
 }

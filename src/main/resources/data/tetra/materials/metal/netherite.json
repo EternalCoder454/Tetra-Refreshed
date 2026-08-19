@@ -19,9 +19,12 @@
         "metal"
     ],
     "material": {
-        "items": [ "minecraft:netherite_ingot" ]
+        "items": [
+            "minecraft:netherite_ingot"
+        ]
     },
     "requiredTools": {
         "hammer_dig": "minecraft:iron"
-    }
+    },
+    "palette": "tetra:colormap/material/netherite"
 }
