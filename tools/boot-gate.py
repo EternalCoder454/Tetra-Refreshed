@@ -351,6 +351,12 @@ def main():
         print("no gradle wrapper at %s" % GRADLEW)
         return 2
 
+    # A fresh clone on linux can arrive without the execute bit, and the resulting PermissionError
+    # names python rather than the wrapper, which reads like the gate itself is broken.
+    if not IS_WINDOWS and not os.access(GRADLEW, os.X_OK):
+        os.chmod(GRADLEW, 0o755)
+        print("made %s executable" % os.path.basename(GRADLEW))
+
     if not args.no_build and not build():
         return 1
 
