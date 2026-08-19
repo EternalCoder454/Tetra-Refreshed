@@ -362,4 +362,4 @@ rebuilt. If the build stops resolving it, republish and update that property.
 4. Never mix a port and a bug fix in one commit. A port that also changes behaviour cannot be
    reviewed against upstream, which is the whole value of staying a fork.
 5. Upstream issues get fixed after the port, not during.
-6. Writing rules: run `python tools/check-writing-rules.py --rules`. Nothing else states them.
+6. Writing rules: run `check-writing-rules.py --rules` from [mc-tools](https://github.com/EternalCoder454/mc-tools), checked out at `Minecraft/tools`. Nothing else states them.

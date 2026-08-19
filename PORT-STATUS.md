@@ -481,7 +481,7 @@ content or assets.
    reviewed against upstream, which is the whole value of staying a fork.
 5. Upstream issues get fixed after the port, not during.
    See <https://github.com/mickelus/tetra/issues>.
-6. Writing rules apply to every document here. `python tools/check-writing-rules.py --rules`
+6. Writing rules apply to every document here. `check-writing-rules.py --rules` from [mc-tools](https://github.com/EternalCoder454/mc-tools)
    states them and nothing else does.
 
 ## 11. Next session, start here

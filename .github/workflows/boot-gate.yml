@@ -54,6 +54,11 @@ jobs:
           ref: master
           path: Art-of-Forging-Refreshed
 
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/mc-tools
+          path: mc-tools
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -88,7 +93,7 @@ jobs:
           fail=0
           for repo in Tetra-Refreshed Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
             echo "--- $repo"
-            ( cd "$repo" && python ../Tetra-Refreshed/tools/check-writing-rules.py $(git ls-files '*.md') ) || fail=1
+            ( cd "$repo" && python ../mc-tools/check-writing-rules.py $(git ls-files '*.md') ) || fail=1
           done
           exit $fail
 
@@ -98,7 +103,7 @@ jobs:
         run: |
           fail=0
           for repo in Tetra-Refreshed Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
-            python Tetra-Refreshed/tools/check-readme-style.py "$repo/README.md" || fail=1
+            python mc-tools/check-readme-style.py "$repo/README.md" || fail=1
           done
           exit $fail
 
@@ -152,6 +157,11 @@ jobs:
           path: emi-refreshed
           # Full history. Not sufficient on its own, see core.abbrev in the build step below.
           fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          repository: EternalCoder454/mc-tools
+          path: mc-tools
 
       - uses: actions/setup-java@v4
         with:
