@@ -71,20 +71,34 @@ It reads the components rather than the `ToolMaterial` that usually writes them,
 `ToolMaterial` is applied to an item's properties and not kept. Reading the result also covers tools
 assembled some other way, which is most of the interesting cases.
 
-**State: written, compiles, never successfully run, and taken back out of the branch.** It briefly
-landed in commit ffbfb19 by accident, wired into DataManager, which would have run it unverified in
-any build from that commit. The reverting commit says where the source is parked. Bring it back by
-restoring three things: the generator class, the `OutcomeMaterial.of` factory, and the event hook in
-`DataManager`.
+**State: settled, and the answer is that this design cannot work. The source is deleted.**
 
-**Two questions to settle before it can be called done:**
+Question two was the decisive one and the answer is no. `ImprovementStore.processData` expands
+material improvements while the store parses, and `SchematicRegistry` expands material outcomes from
+a listener on the schematic store, which also runs during the reload. Both read materials during the
+reload. The generator injects after it, on the components bound event, because every stat it reads
+is a component and components are unbound for the whole of a reload. Nothing that consumes materials
+would ever see a generated one.
 
-1. Does `DefaultDataComponentsBoundEvent` fire after the material store has parsed? If it fires
-   before, the generator sees an empty map and claims items an authored material should have.
-2. Does anything that depends on materials, `improvementData` in particular, ever see materials
-   injected after the reload rather than during it?
+There is a second fault the questions did not anticipate. Every consumer finds materials by path
+prefix over a category directory, `tetra:metal/` and the eleven others, which is 430 references
+across the three projects. The generator keyed its output `tetra:generated/<namespace>/<path>`, and
+nothing asks for `tetra:generated/`. So even with the timing fixed, a generated material would be
+unreachable by every schematic and every improvement in the game.
 
-If either answer is bad, reverting is the honest outcome. Nothing else references it.
+**What a working version needs.** Keying is one line: put them under the category they claim, so
+`metal/generated_<namespace>_<path>` rather than `generated/...`. Timing is the real cost. The only
+point where components are bound and materials have not yet been consumed does not exist inside one
+reload, so a working version has to inject on the event and then re-expand what depends on
+materials, re-parsing `improvementData` from its raw data and re-firing the schematic listener. That
+is a second full pass over 212 improvements and 547 schematics on every world load, on top of a
+datapack load already near seven seconds.
+
+That is a real feature with a real cost, and it wants deciding on its own rather than being carried
+as a parked file that reads like unfinished work. The goal it serves, compatibility that does not
+need a material written by hand for every modded tool, is still worth having. The approach has to
+change: generation belongs where the data is read, not injected after everything has finished
+reading it.
 
 **What already went wrong twice**, worth knowing before picking it up: the generator first ran
 inside `processData`, during the datapack reload. Every stat it reads is a component, and components
