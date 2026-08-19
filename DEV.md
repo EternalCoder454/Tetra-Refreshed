@@ -38,6 +38,7 @@ python tools/check-data-fields.py                        # every data key is rea
 python tools/check-material-tints.py                     # every tint still matches the item it is made from
 python tools/check-bundle-collisions.py                  # no two bundled jars claim the same path
 python tools/check-bus-registrations.py                   # every bus registration names a class with a listener
+python tools/check-model-types.py                         # every module model declares a type Tetra can read
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -48,6 +49,12 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-model-types.py` matters because a model type outside the registry throws out of gson while a
+module or improvement is being read, and the message names the type and nothing else, not the file.
+Art of Forging shipped six such types across twelve files, and each one was a value that belonged in
+a different field: a filter name or a model name sitting in `type`. Until mutil started dropping
+files one at a time, any one of them emptied the whole store.
 
 `check-bus-registrations.py` matters because Forge accepted `EVENT_BUS.register` for a class with no
 `@SubscribeEvent` on it and quietly did nothing, while NeoForge throws during mod construction and
