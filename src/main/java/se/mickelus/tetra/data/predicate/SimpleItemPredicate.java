@@ -20,6 +20,25 @@ public class SimpleItemPredicate implements TetraItemPredicate {
     @Nullable
     private final TagKey<Item> tag;
 
+    /**
+     * Set when items were named and none of them exist.
+     *
+     * <p>Without this the predicate matched every item in the game. An empty item set means "do not
+     * filter by item" and a null tag means "do not filter by tag", so a predicate that had been
+     * asked for specific items, and resolved none of them, was left filtering by nothing at all and
+     * said yes to everything.
+     *
+     * <p>That is not a hypothetical. Art of Forging names three materials from mods that need not be
+     * installed. With none of them present, one was a fibre with 6.5 hardness, one was a metal with
+     * 8.5 hardness and a netherite tool level, and both accepted any item that could be put in a
+     * slot. A holosphere made a claw. Wood wrapped a handle. Hammer tiers came out of nowhere.
+     *
+     * <p>Naming an item from a mod that might not be installed is a normal thing for an addon to do,
+     * and the right outcome is that the material is simply unobtainable, the way an effect nothing
+     * registers contributes nothing.
+     */
+    private final boolean unobtainable;
+
     public SimpleItemPredicate(Collection<Identifier> itemIds, @Nullable Identifier tagId) {
         this.items = new HashSet<>();
         itemIds.stream()
@@ -27,11 +46,12 @@ public class SimpleItemPredicate implements TetraItemPredicate {
                 .filter(item -> item != null)
                 .forEach(items::add);
         this.tag = tagId != null ? ItemTags.create(tagId) : null;
+        this.unobtainable = !itemIds.isEmpty() && items.isEmpty();
     }
 
     @Override
     public boolean matches(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
+        if (itemStack.isEmpty() || unobtainable) {
             return false;
         }
 

@@ -39,6 +39,7 @@ python tools/check-material-tints.py                     # every tint still matc
 python tools/check-bundle-collisions.py                  # no two bundled jars claim the same path
 python tools/check-bus-registrations.py                   # every bus registration names a class with a listener
 python tools/check-model-types.py                         # every module model declares a type Tetra can read
+python tools/check-material-items.py                      # every material names an item some installed mod has
 python ../../tools/check-mixin-targets.py "Mickelus Mods/Tetra Refreshed"
 python ../../tools/check-writing-rules.py <file>         # prose rules for the docs here
 ```
@@ -49,6 +50,15 @@ something that reads like near success. Run it before believing any number.
 `check-at.py` matters because a stale access transformer entry is ignored rather than failing the
 build, so the widening silently never happens and surfaces much later as a private access error
 somewhere unrelated.
+
+`check-material-items.py` matters because of what an unresolvable item used to do.
+`SimpleItemPredicate` drops item ids it cannot resolve, and a predicate left with no items and no
+tag filters by nothing, so it said yes to every item in the game. Art of Forging names three
+materials from mods that need not be installed, and with none present one was a fibre with 6.5
+hardness and one a metal with 8.5 hardness and a netherite tool level, both accepting anything that
+fit in a slot. A holosphere made a claw, wood wrapped a handle, and hammer tiers came from nowhere.
+The predicate matches nothing in that state now, so these are inert, and the checker reports them
+because inert and mistyped look identical from the outside.
 
 `check-model-types.py` matters because a model type outside the registry throws out of gson while a
 module or improvement is being read, and the message names the type and nothing else, not the file.
