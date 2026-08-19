@@ -123,4 +123,4 @@ over your contributions. If you do not agree with that, do not contribute.
 | [DEV.md](DEV.md) | building, running, and the data formats |
 | [PORT-STATUS.md](PORT-STATUS.md) | the port handover, what changed in behaviour on the way to 26.1.2, and what is knowingly still missing |
 | [CURRENTPLANS.md](CURRENTPLANS.md) | where the project is going after the port |
-| [PLAYTESTING.md](PLAYTESTING.md) | what to check before calling a build good |
+| [PLAYTESTING.md](PLAYTESTING.md) | a checklist for testing a build |
