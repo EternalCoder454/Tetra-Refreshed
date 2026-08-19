@@ -7,9 +7,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.mutil.gui.ToggleableSlot;
 import se.mickelus.tetra.TetraMod;
@@ -32,7 +29,7 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
         this.tile = tile;
 
         // material inventory
-        var handler = tile.getItemHandler(null);
+        var handler = tile.getResourceHandler(null);
         if (handler != null) {
             compartmentSlots = new ToggleableSlot[ForgedContainerBlockEntity.compartmentCount][];
             for (int i = 0; i < compartmentSlots.length; i++) {
@@ -41,7 +38,7 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
                 for (int j = 0; j < 6; j++) {
                     for (int k = 0; k < 9; k++) {
                         int index = j * 9 + k;
-                        compartmentSlots[i][index] = new ToggleableSlot(handler, index + offset, k * 17 + 12, j * 17);
+                        compartmentSlots[i][index] = new ToggleableSlot(handler, tile.getIndexModifier(null), index + offset, k * 17 + 12, j * 17);
                         compartmentSlots[i][index].toggle(i == 0);
                         addSlot(compartmentSlots[i][index]);
                     }
@@ -49,18 +46,16 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
             }
         }
 
-        IItemHandler playerInventoryHandler = new InvWrapper(playerInventory);
-
         // player inventory
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                addSlot(new SlotItemHandler(playerInventoryHandler, i * 9 + j + 9, j * 17 + 12, i * 17 + 116));
+                addSlot(new Slot(playerInventory, i * 9 + j + 9, j * 17 + 12, i * 17 + 116));
             }
         }
 
         // player toolbar
         for (int i = 0; i < 9; i++) {
-            addSlot(new SlotItemHandler(playerInventoryHandler, i, i * 17 + 12, 171));
+            addSlot(new Slot(playerInventory, i, i * 17 + 12, 171));
         }
     }
 
@@ -77,8 +72,8 @@ public class ForgedContainerMenu extends AbstractContainerMenu {
     }
 
     private int getSlots() {
-        IItemHandler handler = tile.getItemHandler(null);
-        return handler != null ? handler.getSlots() : 0;
+        var handler = tile.getResourceHandler(null);
+        return handler != null ? handler.size() : 0;
     }
 
     /**

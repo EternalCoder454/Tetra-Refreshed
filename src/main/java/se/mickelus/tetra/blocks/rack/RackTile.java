@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.blocks.ItemHandlerBlockEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import se.mickelus.tetra.blocks.ResourceItemHandler;
+import se.mickelus.mutil.util.ResourceHandlers;
 
 @ParametersAreNonnullByDefault
 public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
@@ -38,15 +38,9 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     };
-    private final IItemHandler handler = new ResourceItemHandler(inventory);
 
     public RackTile(BlockPos p_155268_, BlockState p_155269_) {
         super(type, p_155268_, p_155269_);
-    }
-
-    @Override
-    public IItemHandler getItemHandler(@Nullable Direction side) {
-        return handler;
     }
 
     @Override
@@ -54,15 +48,21 @@ public class RackTile extends BlockEntity implements ItemHandlerBlockEntity {
         return inventory;
     }
 
+    @Override
+    public IndexModifier<ItemResource> getIndexModifier(@Nullable Direction side) {
+        return inventory::set;
+    }
+
     public void slotInteract(int slot, Player playerEntity, InteractionHand hand) {
-        ItemStack slotStack = handler.getStackInSlot(slot);
+        ItemStack slotStack = ResourceHandlers.stackIn(inventory, slot);
         ItemStack heldStack = playerEntity.getItemInHand(hand);
         if (slotStack.isEmpty()) {
-            ItemStack remainder = handler.insertItem(slot, heldStack.copy(), false);
+            ItemStack remainder = ResourceHandlers.insert(inventory, slot, heldStack.copy());
             playerEntity.setItemInHand(hand, remainder);
             playerEntity.playSound(SoundEvents.WOOD_PLACE, 0.5f, 0.7f);
         } else {
-            ItemStack extractedStack = handler.extractItem(slot, handler.getSlotLimit(slot), false);
+            ItemStack extractedStack = ResourceHandlers.extract(inventory, slot,
+                    inventory.getCapacityAsInt(slot, inventory.getResource(slot)));
             if (playerEntity.getInventory().add(extractedStack)) {
                 playerEntity.playSound(SoundEvents.ITEM_PICKUP, 0.5f, 1);
             } else {

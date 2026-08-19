@@ -27,6 +27,7 @@ import se.mickelus.tetra.items.modular.impl.shield.ModularShieldItem;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
+import se.mickelus.mutil.util.ResourceHandlers;
 
 @ParametersAreNonnullByDefault
 @OnlyIn(Dist.CLIENT)
@@ -51,14 +52,14 @@ public class RackTESR implements BlockEntityRenderer<RackTile, RackTESR.State> {
         state.slots.clear();
         state.facing = tile.getBlockState().getValue(RackBlock.facingProp);
 
-        var handler = tile.getItemHandler(null);
+        var handler = tile.getResourceHandler(null);
         if (handler == null) {
             return;
         }
 
         int renderId = (int) tile.getBlockPos().asLong();
-        for (int i = 0; i < handler.getSlots(); i++) {
-            ItemStack itemStack = handler.getStackInSlot(i);
+        for (int i = 0; i < handler.size(); i++) {
+            ItemStack itemStack = ResourceHandlers.stackIn(handler, i);
             if (itemStack.isEmpty()) {
                 continue;
             }

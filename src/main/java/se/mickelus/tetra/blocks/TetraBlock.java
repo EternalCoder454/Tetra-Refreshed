@@ -13,6 +13,7 @@ import se.mickelus.mutil.util.TileEntityOptional;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import se.mickelus.mutil.util.ResourceHandlers;
 
 @ParametersAreNonnullByDefault
 public class TetraBlock extends Block implements InitializableBlock {
@@ -28,10 +29,10 @@ public class TetraBlock extends Block implements InitializableBlock {
      */
     public static void dropBlockInventory(Block thisBlock, Level world, BlockPos pos) {
         TileEntityOptional.from(world, pos, ItemHandlerBlockEntity.class)
-                .map(te -> te.getItemHandler(null))
+                .map(te -> te.getResourceHandler(null))
                 .ifPresent(cap -> {
-                    for (int i = 0; i < cap.getSlots(); i++) {
-                        ItemStack itemStack = cap.getStackInSlot(i);
+                    for (int i = 0; i < cap.size(); i++) {
+                        ItemStack itemStack = ResourceHandlers.stackIn(cap, i);
                         if (!itemStack.isEmpty()) {
                             Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
                         }

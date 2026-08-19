@@ -106,12 +106,12 @@ public class ForgedContainerScreen extends AbstractContainerScreen<ForgedContain
         super.containerTick();
 
         int size = ForgedContainerBlockEntity.compartmentSize;
-        var itemHandler = tileEntity.getItemHandler(null);
+        var itemHandler = tileEntity.getResourceHandler(null);
         if (itemHandler != null) {
             for (int i = 0; i < ForgedContainerBlockEntity.compartmentCount; i++) {
                 boolean hasContent = false;
                 for (int j = 0; j < size; j++) {
-                    if (!itemHandler.getStackInSlot(i * size + j).isEmpty()) {
+                    if (!itemHandler.getResource(i * size + j).isEmpty()) {
                         hasContent = true;
                         break;
                     }

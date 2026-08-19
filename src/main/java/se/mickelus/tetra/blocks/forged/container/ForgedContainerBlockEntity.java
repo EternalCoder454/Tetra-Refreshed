@@ -34,8 +34,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.IndexModifier;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
@@ -51,7 +51,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
-import se.mickelus.tetra.blocks.ResourceItemHandler;
 
 @ParametersAreNonnullByDefault
 public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvider, ItemHandlerBlockEntity {
@@ -73,7 +72,6 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
             setChanged();
         }
     };
-    private final IItemHandler handler = new ResourceItemHandler(inventory);
     public long openTime = -1;
     private int lidIntegrity = 0;
 
@@ -118,15 +116,15 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
     }
 
     @Override
-    public IItemHandler getItemHandler(@Nullable Direction side) {
-        ForgedContainerBlockEntity delegate = getOrDelegate();
-        return delegate != null ? delegate.handler : null;
-    }
-
-    @Override
     public ResourceHandler<ItemResource> getResourceHandler(@Nullable Direction side) {
         ForgedContainerBlockEntity delegate = getOrDelegate();
         return delegate != null ? delegate.inventory : null;
+    }
+
+    @Override
+    public IndexModifier<ItemResource> getIndexModifier(@Nullable Direction side) {
+        ForgedContainerBlockEntity delegate = getOrDelegate();
+        return delegate != null ? delegate.inventory::set : null;
     }
 
     public void open(@Nullable Player player) {
@@ -165,7 +163,8 @@ public class ForgedContainerBlockEntity extends BlockEntity implements MenuProvi
                     .withLuck(player.getLuck());
         }
 
-        lootTable.fill(new ItemHandlerWrapper(handler), builder.create(LootContextParamSets.CHEST), getBlockState().getSeed(getBlockPos()));
+        lootTable.fill(new ItemHandlerWrapper(inventory, inventory::set),
+                builder.create(LootContextParamSets.CHEST), getBlockState().getSeed(getBlockPos()));
     }
 
     private void causeOpeningEffects(ServerLevel worldServer) {

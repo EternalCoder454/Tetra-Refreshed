@@ -7,8 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import se.mickelus.mutil.gui.ToggleableSlot;
 import se.mickelus.tetra.module.schematic.UpgradeSchematic;
 
@@ -36,35 +35,35 @@ public class WorkbenchContainer extends AbstractContainerMenu {
         this.workbench = workbench;
 
         // material inventory
-        var handler = workbench.getItemHandler(null);
+        var handler = workbench.getResourceHandler(null);
         if (handler != null) {
-            addSlot(new SlotItemHandler(handler, 0, 152, 58));
+            addSlot(new ResourceHandlerSlot(handler, workbench.getIndexModifier(null), 0, 152, 58));
 
             materialSlots = new ToggleableSlot[3];
             for (int i = 0; i < materialSlots.length; i++) {
-                materialSlots[i] = new ToggleableSlot(handler, i + 1, getMaterialSlotX(i, materialSlots.length), getMaterialSlotY());
+                materialSlots[i] = new ToggleableSlot(handler, workbench.getIndexModifier(null), i + 1,
+                        getMaterialSlotX(i, materialSlots.length), getMaterialSlotY());
                 addSlot(materialSlots[i]);
             }
         }
 
-        IItemHandler playerInventoryHandler = new net.neoforged.neoforge.items.wrapper.InvWrapper(playerInventory);
 
         // player inventory
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 3; y++) {
-                addSlot(new SlotItemHandler(playerInventoryHandler, y * 9 + x + 9, x * 17 + 84, y * 17 + 166));
+                addSlot(new Slot(playerInventory, y * 9 + x + 9, x * 17 + 84, y * 17 + 166));
             }
         }
 
         // player toolbar
         for (int i = 0; i < 9; i++) {
-            addSlot(new SlotItemHandler(playerInventoryHandler, i, i * 17 + 84, 221));
+            addSlot(new Slot(playerInventory, i, i * 17 + 84, 221));
         }
     }
 
     private int getSlots() {
-        IItemHandler handler = workbench.getItemHandler(null);
-        return handler != null ? handler.getSlots() : 0;
+        var handler = workbench.getResourceHandler(null);
+        return handler != null ? handler.size() : 0;
     }
 
     @Override

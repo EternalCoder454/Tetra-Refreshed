@@ -177,7 +177,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     @Override
     public Collection<ItemAbility> getTools(Level world, BlockPos pos, BlockState blockState) {
         return TileEntityOptional.from(world, pos, RackTile.class)
-                .map(tile -> tile.getItemHandler(null))
+                .map(tile -> tile.getResourceHandler(null))
                 .map(ItemHandlerWrapper::new)
                 .map(PropertyHelper::getInventoryTools)
                 .orElseGet(Collections::emptySet);
@@ -186,7 +186,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     @Override
     public int getToolLevel(Level world, BlockPos pos, BlockState blockState, ItemAbility toolAction) {
         return TileEntityOptional.from(world, pos, RackTile.class)
-                .map(tile -> tile.getItemHandler(null))
+                .map(tile -> tile.getResourceHandler(null))
                 .map(ItemHandlerWrapper::new)
                 .map(inv -> PropertyHelper.getInventoryToolLevel(inv, toolAction))
                 .orElse(-1);
@@ -198,8 +198,8 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
 
 
         Optional<Container> optional = TileEntityOptional.from(world, pos, RackTile.class)
-                .map(tile -> tile.getItemHandler(null))
-                .map(ItemHandlerWrapper::new);
+                .map(tile -> tile.getResourceHandler(null))
+                .map(handler -> (Container) new ItemHandlerWrapper(handler));
 
         if (optional.isPresent()) {
             Container inventory = optional.orElse(null);
@@ -222,7 +222,7 @@ public class RackBlock extends TetraWaterloggedBlock implements EntityBlock, ITo
     public ItemStack onActionConsumeTool(Level world, BlockPos pos, BlockState blockState, ItemStack targetStack, Player player,
             ItemAbility requiredTool, int requiredLevel, boolean consumeResources) {
         Optional<ItemHandlerWrapper> optional = TileEntityOptional.from(world, pos, RackTile.class)
-                .map(tile -> tile.getItemHandler(null))
+                .map(tile -> tile.getResourceHandler(null))
                 .map(ItemHandlerWrapper::new);
 
         if (optional.isPresent()) {

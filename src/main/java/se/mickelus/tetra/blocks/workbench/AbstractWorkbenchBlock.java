@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.mickelus.mutil.util.ResourceHandlers;
 
 public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInteractiveBlock, EntityBlock {
     public AbstractWorkbenchBlock(Properties properties) {
@@ -64,10 +65,10 @@ public abstract class AbstractWorkbenchBlock extends TetraBlock implements IInte
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
         TileEntityOptional.from(world, pos, WorkbenchTile.class)
-                .map(te -> te.getItemHandler(null))
+                .map(te -> te.getResourceHandler(null))
                 .ifPresent(cap -> {
-                    for (int i = 0; i < cap.getSlots(); i++) {
-                        ItemStack itemStack = cap.getStackInSlot(i);
+                    for (int i = 0; i < cap.size(); i++) {
+                        ItemStack itemStack = ResourceHandlers.stackIn(cap, i);
                         if (!itemStack.isEmpty()) {
                             Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack.copy());
                         }
