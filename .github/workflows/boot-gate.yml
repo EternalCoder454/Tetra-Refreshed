@@ -131,6 +131,13 @@ jobs:
           repository: EternalCoder454/emi-refreshed
           ref: ${{ env.EMI_COMMIT }}
           path: emi-refreshed
+          # Full history, and this is load bearing. EMI's version is
+          # 1.1.24-<git rev-parse --short HEAD>+26.1.2, and git sizes that abbreviation by how many
+          # objects the repository holds. A shallow clone holds few, so it abbreviates to seven
+          # characters and publishes 1.1.24-351ba8a+26.1.2, while the pin Tetra resolves against
+          # was built from full history and is eight, 1.1.24-351ba8a4+26.1.2. The first run of this
+          # workflow failed exactly there.
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -150,7 +157,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository/dev/emi
-          key: emi-refreshed-${{ env.EMI_COMMIT }}
+          # The suffix is bumped whenever the way EMI is built changes, because the first run
+          # cached a build whose version was a character short and a hit would keep serving it.
+          key: emi-refreshed-${{ env.EMI_COMMIT }}-fulldepth
 
       - name: build EMI Refreshed
         if: steps.m2.outputs.cache-hit != 'true'
@@ -158,6 +167,22 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew publishToMavenLocal --no-daemon --console=plain
+
+      - name: confirm EMI published the version Tetra pins
+        working-directory: Tetra-Refreshed
+        # Resolution failure here reads as a generic gradle "could not find" three steps later. This
+        # names the real problem, which is that the two versions disagree.
+        run: |
+          want=$(grep '^emi_version=' gradle.properties | cut -d= -f2)
+          echo "tetra pins emi_version=$want"
+          found=$(ls ~/.m2/repository/dev/emi/emi-neoforge/ 2>/dev/null || true)
+          echo "mavenLocal holds: ${found:-nothing}"
+          if ! echo "$found" | grep -qx "$want"; then
+            echo "MISMATCH. EMI published a version Tetra does not pin."
+            echo "Its version is 1.1.24-<git short hash>+26.1.2, so this is usually the hash"
+            echo "abbreviating to a different length. Check fetch-depth on the emi checkout."
+            exit 1
+          fi
 
       # Tetra compiles against mutil and EMI, the two addons compile against Tetra, and Tetra then
       # bundles the addons by jarJar. So Tetra is built twice, and the second build is the one whose
