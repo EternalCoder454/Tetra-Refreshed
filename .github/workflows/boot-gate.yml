@@ -79,20 +79,18 @@ jobs:
 
       # The checker is vendored into this repository, because the shared copy it came from lives
       # in an unversioned directory a runner cannot reach.
-      - name: writing rules, this repository
-        working-directory: Tetra-Refreshed
-        run: python tools/check-writing-rules.py $(git ls-files '*.md')
-
-      - name: writing rules, the other three
-        # Reported rather than enforced. Secrets of Forging's README carries a semicolon in a
-        # sentence Ace wrote himself, and failing this repository's build over another author's
-        # prose is not a decision a workflow should be making on its own.
-        continue-on-error: true
+      - name: writing rules
+        # All four, and enforced. This was split into an enforced half and a reported half while
+        # the semicolon ban stood, because the only violation in the family was a semicolon in a
+        # sentence Ace wrote in his own README. The ban is gone, that line is fine, and there is
+        # nothing left to be tactful about.
         run: |
-          for repo in Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
+          fail=0
+          for repo in Tetra-Refreshed Mutil-Refreshed Secrets-Of-Forging-Revelations-Refreshed Art-of-Forging-Refreshed; do
             echo "--- $repo"
-            ( cd "$repo" && python ../Tetra-Refreshed/tools/check-writing-rules.py $(git ls-files '*.md') ) || true
+            ( cd "$repo" && python ../Tetra-Refreshed/tools/check-writing-rules.py $(git ls-files '*.md') ) || fail=1
           done
+          exit $fail
 
       - name: repository checkers
         working-directory: Tetra-Refreshed

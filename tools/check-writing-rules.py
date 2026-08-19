@@ -1,4 +1,4 @@
-"""Check the writing rules: no em dash, no double hyphen, no semicolon outside code blocks.
+"""Check the writing rules: no em dash and no double hyphen outside code blocks.
 
 Vendored from Minecraft/tools/check-writing-rules.py so that CI can run it. That directory is
 shared between projects and is not version controlled, so a runner cannot reach it, and a workflow
@@ -13,7 +13,6 @@ BANNED = {
     "em dash": "—",
     "en dash": "–",
     "double hyphen": "--",
-    "semicolon": ";",
 }
 
 failures = 0
