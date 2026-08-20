@@ -213,6 +213,7 @@ public class TetraRegistries {
         // Game tests. They cost a few registry entries and run only when something asks for them,
         // by the test command or by the gameTestServer run.
         se.mickelus.tetra.gametest.InventoryMigrationTests.testFunctions.register(bus);
+        se.mickelus.tetra.gametest.CraftingTests.testFunctions.register(bus);
         creativeTabs.register(bus);
 
         itemProperties = new Item.Properties();
