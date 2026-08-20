@@ -228,9 +228,20 @@ jobs:
       # Tetra gives first. jarJar is the only part of its build that wants the addons, so the first
       # pass runs without it and publishes something the addons can compile against. The second
       # pass, after they exist, is the one that bundles them and the one the gate boots.
-      - name: mutil to mavenLocal
+      # build rather than publishToMavenLocal alone, because build runs the tests and publishing
+      # does not. A library published without them is a library nobody checked.
+      - name: mutil, tests then mavenLocal
         working-directory: Mutil-Refreshed
-        run: chmod +x gradlew && ./gradlew publishToMavenLocal --no-daemon --console=plain
+        run: chmod +x gradlew && ./gradlew build publishToMavenLocal --no-daemon --console=plain
+
+      - name: keep mutil's test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutil-test-report
+          path: Mutil-Refreshed/build/reports/tests/test
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: tetra to mavenLocal, without bundling
         working-directory: Tetra-Refreshed
