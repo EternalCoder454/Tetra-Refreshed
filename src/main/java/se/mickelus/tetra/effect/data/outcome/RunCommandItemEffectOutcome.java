@@ -31,8 +31,19 @@ public class RunCommandItemEffectOutcome extends ItemEffectOutcome {
                 commandSourceStack = commandSourceStack.withEntity(entity.getEntity(context));
             }
 
+            // Report whether the command actually did anything, rather than that it was run.
+            //
+            // Upstream returns `result > 0` from performPrefixedCommand. That method returns void
+            // in 26.1.2, so the result arrives through a callback on the source stack instead. It
+            // matters because this outcome nests: loop, multiple, find_blocks, find_entities and
+            // conditioned all branch on what perform returns, and a command that failed reporting
+            // success makes a loop keep going and a conditional take the wrong arm.
+            boolean[] succeeded = { false };
+            commandSourceStack = commandSourceStack.withCallback(
+                    (success, result) -> succeeded[0] = success && result > 0);
+
             server.getCommands().performPrefixedCommand(commandSourceStack, this.command);
-            return true;
+            return succeeded[0];
         }
         return false;
     }
