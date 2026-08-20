@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:function",
+    "environment": "minecraft:default",
+    "function": "tetra:a_scroll_trade_offers_a_scroll",
+    "structure": "minecraft:empty",
+    "max_ticks": 40,
+    "setup_ticks": 0,
+    "required": true
+}

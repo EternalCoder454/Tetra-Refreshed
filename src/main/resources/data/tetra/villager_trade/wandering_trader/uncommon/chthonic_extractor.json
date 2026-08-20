@@ -1,0 +1,16 @@
+{
+    "wants": {
+        "id": "minecraft:emerald",
+        "count": 8
+    },
+    "additional_wants": {
+        "id": "tetra:metal_scrap",
+        "count": 16
+    },
+    "gives": {
+        "id": "tetra:chthonic_extractor"
+    },
+    "max_uses": 5,
+    "xp": 0,
+    "reputation_discount": 0.05
+}

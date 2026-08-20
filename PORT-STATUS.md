@@ -229,30 +229,38 @@ lists the behaviour that changed on the way here and section 11 is the order to 
 Every item here compiles. Each one is a place where the new API could not express what the old code
 did, so the port made a decision. Read this before deciding a bug is a regression.
 
-**Villager trades, removed and needing readding as data.** `VillagerTrades.ItemListing` is gone,
-NeoForge's `VillagerTradesEvent` and `WandererTradesEvent` no longer exist, and trades are registry
-data. Tetra's `trades` package had nothing left to plug into, so it is deleted rather than left as
-code that reads as live and never runs. **Tetra currently sells nothing.** The five classes are in
-git at the commit that removed them, which is where the full table of professions, levels, items
-and prices lives.
+**Villager trades, removed and re added as data.** `VillagerTrades.ItemListing` is gone, and so
+are NeoForge's `VillagerTradesEvent` and `WandererTradesEvent`. Trades are registry data now, so
+Tetra's `trades` package had nothing left to plug into and was deleted. The table it held was
+rebuilt from git as data and Tetra sells again.
 
-Re adding them is data, not code. One file per trade under
-`data/tetra/villager_trade/<name>.json`:
+One file per trade under `data/tetra/villager_trade/<profession>/<level>/<name>.json`, following
+vanilla's own layout:
 
 ```json
 { "wants": { "id": "minecraft:emerald", "count": 4 },
-  "gives": { "id": "tetra:scroll", "count": 1 },
-  "max_uses": 1.0, "xp": 5, "reputation_discount": 0.05 }
+  "gives": { "id": "tetra:scroll_rolled", "components": { "tetra:scroll_data": { "key": "..." } } },
+  "max_uses": 1, "xp": 5, "reputation_discount": 0.05 }
 ```
 
-and then each one appended to the vanilla profession level tag it belongs in, at
-`data/minecraft/tags/villager_trade/<profession>/level_<n>.json` with `"replace": false`. The
-wandering trader uses `wandering_trader/common` and `uncommon` the same way. `additional_wants`
-carries the second cost the scrap trades charged.
+Each is then listed in the vanilla profession level tag at
+`data/minecraft/tags/villager_trade/<profession>/level_<n>.json`. Those files carry no `replace`
+key, which is what makes them append rather than take the profession over, and a game test asserts
+exactly that. The wandering trader's generic and rare pools became `wandering_trader/common` and
+`wandering_trader/uncommon`. A level tag draws two trades and `common` draws five, so appending
+reproduces what adding to the old event's list did.
 
-The scroll trades are the fiddly ones: `ScrollItem.hammerEfficiency` and friends are stacks built
-with scroll data components, so their `gives` needs the component patch spelled out rather than just
-an item id.
+Two things needed more than a straight translation. The scroll trades sell a stack carrying
+`ScrollData`, so `gives` spells the component patch out, with the ribbon as the hex string mutil's
+`HexCodec` writes. The cartographer's ruins map was a listing that searched for the structure
+itself; it is the `minecraft:exploration_map` loot function under `given_item_modifiers` now, with
+`set_custom_data` writing the `tetra.advancement_marker` that the `find_ruins_map` advancement
+looks for.
+
+`ItemsForScrapTrade` charged emeralds despite its name, its field name, and the existence of a
+separate scrap cost on the trade beside it. That looks like an upstream bug, but it is what
+shipped, so the data reproduces it: the wandering trader's vent plate is 24 emeralds and its
+forged bolt is 32. Worth a balance decision rather than a silent correction.
 
 **The interactive block overlay draws again.** It was written off during the port as needing a
 redesign of mutil's gui layer, and that was wrong on the important point. NeoForge ships

@@ -1,0 +1,12 @@
+{
+    "wants": {
+        "id": "minecraft:emerald",
+        "count": 32
+    },
+    "gives": {
+        "id": "tetra:forged_bolt"
+    },
+    "max_uses": 2,
+    "xp": 0,
+    "reputation_discount": 0.05
+}

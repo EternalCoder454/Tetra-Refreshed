@@ -1,0 +1,29 @@
+{
+    "wants": {
+        "id": "minecraft:emerald",
+        "count": 4
+    },
+    "gives": {
+        "id": "tetra:scroll_rolled",
+        "components": {
+            "tetra:scroll_data": {
+                "key": "cut_efficiency",
+                "intricate": false,
+                "material": 0,
+                "ribbon": "6666ff",
+                "glyphs": [
+                    4,
+                    0,
+                    3,
+                    5
+                ],
+                "effects": [
+                    "tetra:cut_efficiency"
+                ]
+            }
+        }
+    },
+    "max_uses": 1,
+    "xp": 10,
+    "reputation_discount": 0.05
+}

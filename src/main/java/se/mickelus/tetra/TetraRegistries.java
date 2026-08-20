@@ -214,6 +214,7 @@ public class TetraRegistries {
         // by the test command or by the gameTestServer run.
         se.mickelus.tetra.gametest.InventoryMigrationTests.testFunctions.register(bus);
         se.mickelus.tetra.gametest.CraftingTests.testFunctions.register(bus);
+        se.mickelus.tetra.gametest.TradeTests.testFunctions.register(bus);
         creativeTabs.register(bus);
 
         itemProperties = new Item.Properties();

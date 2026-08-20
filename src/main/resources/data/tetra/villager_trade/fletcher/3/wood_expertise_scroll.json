@@ -1,0 +1,29 @@
+{
+    "wants": {
+        "id": "minecraft:emerald",
+        "count": 8
+    },
+    "gives": {
+        "id": "tetra:scroll_rolled",
+        "components": {
+            "tetra:scroll_data": {
+                "key": "wood_expertise",
+                "intricate": false,
+                "material": 0,
+                "ribbon": "bf934b",
+                "glyphs": [
+                    2,
+                    1,
+                    2,
+                    1
+                ],
+                "effects": [
+                    "tetra:wood_expertise"
+                ]
+            }
+        }
+    },
+    "max_uses": 1,
+    "xp": 15,
+    "reputation_discount": 0.05
+}

@@ -1,0 +1,29 @@
+{
+    "wants": {
+        "id": "minecraft:emerald",
+        "count": 4
+    },
+    "gives": {
+        "id": "tetra:scroll_rolled",
+        "components": {
+            "tetra:scroll_data": {
+                "key": "hammer_efficiency",
+                "intricate": false,
+                "material": 0,
+                "ribbon": "ff6666",
+                "glyphs": [
+                    6,
+                    7,
+                    6,
+                    11
+                ],
+                "effects": [
+                    "tetra:hammer_efficiency"
+                ]
+            }
+        }
+    },
+    "max_uses": 1,
+    "xp": 10,
+    "reputation_discount": 0.05
+}
