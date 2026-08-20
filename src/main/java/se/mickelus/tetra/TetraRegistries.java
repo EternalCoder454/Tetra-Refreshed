@@ -212,6 +212,9 @@ public class TetraRegistries {
         lootFunctions.register(bus);
         lootModifiers.register(bus);
         structureProcessors.register(bus);
+        // Game tests. They cost a few registry entries and run only when something asks for them,
+        // by the test command or by the gameTestServer run.
+        se.mickelus.tetra.gametest.InventoryMigrationTests.testFunctions.register(bus);
         creativeTabs.register(bus);
 
         itemProperties = new Item.Properties();

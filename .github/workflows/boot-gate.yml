@@ -282,6 +282,12 @@ jobs:
               sys.exit(1)
           PY
 
+      # Runs in a real server with a real world, which is the only place an item exists here.
+      # Item components bind on world load, so a unit test cannot build an ItemStack at all.
+      - name: game tests
+        working-directory: Tetra-Refreshed
+        run: ./gradlew runGameTestServer --no-daemon --console=plain
+
       - name: boot gate
         working-directory: Tetra-Refreshed
         run: python tools/boot-gate.py --no-build --keep-log
