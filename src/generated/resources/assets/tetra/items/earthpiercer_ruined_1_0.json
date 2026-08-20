@@ -1,6 +1,6 @@
 {
-    "model": {
-        "type": "minecraft:model",
-        "model": "tetra:item/earthpiercer_ruined_1_0"
-    }
+  "model": {
+    "type": "minecraft:model",
+    "model": "tetra:block/earthpiercer_ruined_1_0"
+  }
 }

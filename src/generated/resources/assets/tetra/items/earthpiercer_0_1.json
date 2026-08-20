@@ -1,6 +1,6 @@
 {
-    "model": {
-        "type": "minecraft:model",
-        "model": "tetra:item/earthpiercer_0_1"
-    }
+  "model": {
+    "type": "minecraft:model",
+    "model": "tetra:block/earthpiercer_0_1"
+  }
 }

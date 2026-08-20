@@ -1,6 +1,6 @@
 {
-    "model": {
-        "type": "minecraft:model",
-        "model": "tetra:item/stonecutter_ruined_1_1"
-    }
+  "model": {
+    "type": "minecraft:model",
+    "model": "tetra:block/stonecutter_ruined_1_1"
+  }
 }

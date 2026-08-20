@@ -1,6 +1,6 @@
 {
-    "model": {
-        "type": "minecraft:model",
-        "model": "tetra:item/extractor_ruined_2_0"
-    }
+  "model": {
+    "type": "minecraft:model",
+    "model": "tetra:block/extractor_ruined_2_0"
+  }
 }

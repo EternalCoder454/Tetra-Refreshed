@@ -1,6 +1,6 @@
 {
-    "model": {
-        "type": "minecraft:model",
-        "model": "tetra:item/extractor_0_0"
-    }
+  "model": {
+    "type": "minecraft:model",
+    "model": "tetra:block/extractor_0_0"
+  }
 }

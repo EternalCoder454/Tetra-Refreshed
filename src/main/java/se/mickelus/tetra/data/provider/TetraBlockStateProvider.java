@@ -12,6 +12,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import se.mickelus.tetra.blocks.multischematic.MultiblockSchematicBlock;
 import se.mickelus.tetra.util.RegistryHelper;
@@ -54,6 +55,18 @@ public class TetraBlockStateProvider extends ModelProvider {
     @Override
     protected Stream<? extends Holder<Block>> getKnownBlocks() {
         return schematicBlocks().stream().map(Block::builtInRegistryHolder);
+    }
+
+    /**
+     * Only the items generated here, for the same reason as the blocks above.
+     *
+     * Narrowing the blocks alone is not enough. The item side validates separately and defaults to
+     * every item in the namespace, so leaving it alone made the generator demand an item model
+     * definition for all thirty of Tetra's hand written items and fail before writing anything.
+     */
+    @Override
+    protected Stream<? extends Holder<Item>> getKnownItems() {
+        return schematicBlocks().stream().map(Block::asItem).map(Item::builtInRegistryHolder);
     }
 
     private static List<Block> schematicBlocks() {

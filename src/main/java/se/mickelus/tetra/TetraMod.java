@@ -4,7 +4,12 @@ import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+
+import java.util.concurrent.CompletableFuture;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.fml.ModContainer;
@@ -235,13 +240,36 @@ public class TetraMod {
     // includeServer and includeClient are gone: the two sides are separate events now, and the
     // event itself hands each provider its pack output and lookup provider.
     private void onGatherServerData(final GatherDataEvent.Server event) {
-        event.createProvider(TetraBlockStateProvider::new);
-        event.createProvider((packOutput, lookupProvider) -> new TetraTagsProvider(packOutput, lookupProvider, MOD_ID));
-        event.createProvider(TetraLootTableProvider::new);
+        gatherData(event, true);
     }
 
     private void onGatherClientData(final GatherDataEvent.Client event) {
-        event.createProvider(StatBarProvider::new);
+        gatherData(event, false);
+    }
+
+    /**
+     * Registers every provider on both runs, and runs only the half that belongs to this side.
+     *
+     * Datagen is two runs now, one per distribution, and they write to the same directory. The
+     * cache that decides which files are stale is built from every provider a run knows about,
+     * so each run used to delete the other's output as orphaned: generating assets wiped the loot
+     * tables, and generating data wiped the models straight back. Registering all four on both
+     * sides leaves each run aware of the whole output while still generating only its own half.
+     *
+     * Models have to be the client half. An item model definition serialises through the item
+     * model type registry, which ClientSetup fills from RegisterItemModelsEvent, and that event
+     * never fires on the server side, so generating there died on an unknown codec id.
+     */
+    private void gatherData(final GatherDataEvent event, final boolean server) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput output = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
+
+        generator.addProvider(server, new TetraTagsProvider(output, lookup, MOD_ID));
+        generator.addProvider(server, new TetraLootTableProvider(output, lookup));
+
+        generator.addProvider(!server, new StatBarProvider(output));
+        generator.addProvider(!server, new TetraBlockStateProvider(output));
     }
 
     public void setup(FMLCommonSetupEvent event) {
