@@ -1,6 +1,9 @@
 {
     "replace": false,
     "values": [
-        "tetra:block_geode"
+        "tetra:block_geode",
+        "tetra:forged_workbench",
+        "tetra:hammer_base",
+        "tetra:hammer_head"
     ]
 }

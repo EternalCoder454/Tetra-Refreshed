@@ -551,6 +551,26 @@ them.
 Affected: `HammerBaseBlock`, `HammerHeadBlock`, `ForgedContainerBlock`, `CoreExtractorPistonBlock`,
 `ScrollBlock`.
 
+**Three deliberate changes to how the forged blocks behave.** All three diverge from upstream and
+are wanted rather than accidental.
+
+Materials leave the workbench when the screen closes. They used to sit in the slots until something
+else emptied them, which happens when the schematic or the slot changes, so a stack put in and
+walked away from stayed there until the next visit and read as lost. The tool in slot zero stays,
+which is the point of a workbench holding one.
+
+The forged workbench and both hammer blocks are mineable with a pickaxe now, not only a Tetra
+hammer. They were already in `needs_netherite_tool`, so the tier was always netherite, but nothing
+vanilla counted as a correct tool and a pickaxe got no drops however long it took.
+
+Breaking them correctly returns the block instead of scrap, so a workbench or a hammer can be
+moved. Upstream gave the block back only with silk touch and scrap otherwise. The old
+`forged_workbench_break` and `hammer_break` tables are left in place, unreferenced, rather than
+deleted.
+
+One item places both hammer blocks, so breaking either now takes the other down with it, removed
+without dropping. Without that, both halves drop the item and one hammer becomes two.
+
 ## 12. Known remaining
 
 * Villager trades are gone and need readding as data. Section 7.

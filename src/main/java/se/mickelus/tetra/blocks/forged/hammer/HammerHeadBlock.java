@@ -48,6 +48,7 @@ import java.util.Collections;
 import static se.mickelus.tetra.blocks.forged.ForgedBlockCommon.locationTooltip;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.server.level.ServerLevel;
 
 @ParametersAreNonnullByDefault
 public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteractiveBlock, IToolProviderBlock, EntityBlock, BlockTooltip {
@@ -218,5 +219,19 @@ public class HammerHeadBlock extends TetraWaterloggedBlock implements IInteracti
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
+    }
+
+    /**
+     * Breaking the head takes the base with it, the same way the base takes the head.
+     *
+     * The two are one item, so leaving half of it standing means a structure that cannot work and
+     * cannot be picked up. Removed without dropping, because the head's own loot already returned
+     * the item, and the base drops its cells and modules from its own removal.
+     */
+    @Override
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean isMoving) {
+        if (world.getBlockState(pos.above()).getBlock() instanceof HammerBaseBlock) {
+            world.removeBlock(pos.above(), false);
+        }
     }
 }

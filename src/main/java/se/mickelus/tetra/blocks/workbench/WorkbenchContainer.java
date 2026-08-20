@@ -66,6 +66,24 @@ public class WorkbenchContainer extends AbstractContainerMenu {
         return handler != null ? handler.size() : 0;
     }
 
+    /**
+     * Materials go back to the player when the screen closes.
+     *
+     * They used to sit in the workbench until something else emptied the slots, which happens when
+     * the schematic or the slot changes, so a stack put in and then walked away from stayed there
+     * until the next visit and looked lost. The tool in slot zero stays, which is the point of a
+     * workbench holding one.
+     */
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+
+        // Server side only. Both sides call this, and the client copy would drop a second stack.
+        if (!player.level().isClientSide() && workbench != null) {
+            workbench.emptyMaterialSlots(player);
+        }
+    }
+
     @Override
     public boolean stillValid(Player player) {
         BlockPos pos = workbench.getBlockPos();

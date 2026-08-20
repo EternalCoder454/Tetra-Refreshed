@@ -265,7 +265,13 @@ public class HammerBaseBlock extends TetraBlock implements IInteractiveBlock, En
                 });
 
         TileEntityOptional.from(world, pos, HammerBaseBlockEntity.class).ifPresent(BlockEntity::setRemoved);
-    
+
+        // One item places both blocks, so breaking either takes the whole thing down. Removed
+        // without dropping, because the block the player actually broke already dropped the item
+        // and doing it here as well would hand back two hammers for one.
+        if (world.getBlockState(pos.below()).getBlock() instanceof HammerHeadBlock) {
+            world.removeBlock(pos.below(), false);
+        }
     }
 
 

@@ -540,7 +540,7 @@ public class WorkbenchTile extends BlockEntity implements MenuProvider, ItemHand
      *
      * @param player
      */
-    private void emptyMaterialSlots(Player player) {
+    public void emptyMaterialSlots(Player player) {
         for (int i = 1; i < inventory.size(); i++) {
             transferStackToPlayer(player, i);
         }
