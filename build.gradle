@@ -145,6 +145,14 @@ dependencies {
             prefer "${aof_version}"
         }
     }
+
+    // jarJar puts them in the shipped jar and nowhere else, so a dev run loaded neither and the
+    // boot gate had been checking a Tetra with no addons without saying so. They used to arrive by
+    // way of implementation, which also put them on the compile classpath and made the build a
+    // cycle. localRuntime is the half that was wanted: present when the game runs, absent when it
+    // compiles.
+    localRuntime "net.acetheeldritchking.secrets_of_forging_revelations:secrets_of_forging_revelations:${sofr_version}"
+    localRuntime "net.acetheeldritchking.art_of_forging:art_of_forging:${aof_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
