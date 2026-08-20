@@ -17,6 +17,7 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +46,7 @@ import se.mickelus.tetra.blocks.workbench.unlocks.UnlockData;
 import se.mickelus.tetra.craftingeffect.CraftingEffect;
 import se.mickelus.tetra.craftingeffect.condition.CraftingEffectCondition;
 import se.mickelus.tetra.craftingeffect.outcome.CraftingEffectOutcome;
+import se.mickelus.tetra.data.deserializer.RarityDeserializer;
 import se.mickelus.tetra.data.deserializer.*;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;
 import se.mickelus.tetra.effect.ItemEffect;
@@ -107,6 +109,10 @@ public class DataManager implements DataDistributor {
             .registerTypeAdapter(OutcomeDefinition.class, new OutcomeDefinition.Deserializer())
             .registerTypeAdapter(MaterialColors.class, new MaterialColors.Deserializer())
             .registerTypeAdapter(ArmorMaterial.class, new ArmorMaterialDeserializer())
+            // Registered late. MaterialData and ItemProperties both carry a Rarity field, and without
+            // this the default enum adapter wants the constant's exact name, so a datapack writing
+            // "epic" got null. No shipped file writes one, which is why nothing noticed.
+            .registerTypeAdapter(Rarity.class, new RarityDeserializer())
             .registerTypeAdapter(CraftingEffectCondition.class, new CraftingEffectCondition.Deserializer())
             .registerTypeAdapter(CraftingEffectOutcome.class, new CraftingEffectOutcome.Deserializer())
             .registerTypeAdapter(CraftingRequirement.class, new CraftingRequirementDeserializer())

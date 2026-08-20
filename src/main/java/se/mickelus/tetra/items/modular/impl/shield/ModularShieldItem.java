@@ -2,8 +2,6 @@ package se.mickelus.tetra.items.modular.impl.shield;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -114,7 +112,6 @@ public class ModularShieldItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
         poseStack.mulPose(Axis.ZP.rotationDegrees(pitch));
         // Spins flat until it lands, then lies still facing the way it came.

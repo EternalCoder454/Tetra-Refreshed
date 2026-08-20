@@ -6,8 +6,6 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.blocks.forged.hammer.HammerBaseBlock;
 import se.mickelus.tetra.blocks.workbench.BasicWorkbenchBlock;
@@ -22,7 +20,6 @@ import se.mickelus.tetra.items.modular.impl.holo.ModularHolosphereItem;
  * about EMI, and the JEI plugin reads the same thing. That layer was written when EMI looked
  * impossible on this version, and adding this was the small class it was meant to make possible.
  */
-@OnlyIn(Dist.CLIENT)
 @EmiEntrypoint
 public class TetraEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory materialCategory = new EmiRecipeCategory(

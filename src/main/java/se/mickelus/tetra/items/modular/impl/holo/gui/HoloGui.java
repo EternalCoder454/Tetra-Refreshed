@@ -7,8 +7,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.mickelus.mutil.gui.GuiElement;
@@ -28,7 +26,6 @@ import java.util.Optional;
 import net.minecraft.client.input.CharacterEvent;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class HoloGui extends Screen {
     private static final Logger logger = LogManager.getLogger();
     private static HoloGui instance = null;

@@ -7,8 +7,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -80,7 +78,6 @@ public class SweepingStrikeParticle extends SingleQuadParticle {
         return reverse ? super.getU0() : super.getU1();
     }
 
-    @OnlyIn(Dist.CLIENT)
     @ParametersAreNonnullByDefault
     public static class Provider implements ParticleProvider<SweepingStrikeParticleOption> {
         private final SpriteSet sprites;

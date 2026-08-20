@@ -12,8 +12,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.data.deserializer.ItemPredicateDeserializer;
 import se.mickelus.tetra.data.predicate.TetraItemPredicate;
 import se.mickelus.tetra.util.RegistryHelper;
@@ -78,7 +76,6 @@ public class OutcomeMaterial {
         return result;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public Component[] getDisplayNames() {
         if (getPredicate() == null) {
             return new Component[] { Component.literal("Unknown material") };

@@ -12,14 +12,11 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class CoreExtractorPistonRenderer implements BlockEntityRenderer<CoreExtractorPistonBlockEntity, CoreExtractorPistonRenderer.State> {
 
     public CoreExtractorPistonRenderer(BlockEntityRendererProvider.Context context) {

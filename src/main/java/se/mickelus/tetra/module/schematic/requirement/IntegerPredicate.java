@@ -4,8 +4,6 @@ import com.google.gson.*;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.util.JsonOptional;
 import se.mickelus.tetra.tools.HarvestTierRegistry;
 import se.mickelus.tetra.util.TierHelper;
@@ -76,13 +74,11 @@ public class IntegerPredicate implements Predicate<Integer> {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     @Nullable
     public String getDescription() {
         return getDescription(I18n.get("tetra.integer_predicate_value"));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Nullable
     public String getDescription(String key) {
         if (min != null && max != null) {

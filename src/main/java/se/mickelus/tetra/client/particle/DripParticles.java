@@ -10,8 +10,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import java.util.function.Supplier;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
@@ -21,7 +19,6 @@ public class DripParticles {
     public static Supplier<SimpleParticleType> fallingSlime;
     public static Supplier<SimpleParticleType> landingSlime;
 
-    @OnlyIn(Dist.CLIENT)
     public static class FallingBloodProvider implements ParticleProvider<SimpleParticleType> {
         SpriteSet sprites;
 
@@ -38,7 +35,6 @@ public class DripParticles {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class LandingBloodProvider implements ParticleProvider<SimpleParticleType> {
         SpriteSet sprites;
 
@@ -54,7 +50,6 @@ public class DripParticles {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class FallingSlimeProvider implements ParticleProvider<SimpleParticleType> {
         SpriteSet sprites;
 
@@ -71,7 +66,6 @@ public class DripParticles {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class LandingSlimeProvider implements ParticleProvider<SimpleParticleType> {
         SpriteSet sprites;
 

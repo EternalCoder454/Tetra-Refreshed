@@ -5,8 +5,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import se.mickelus.mutil.gui.GuiAlignment;
 import se.mickelus.mutil.gui.GuiString;
@@ -29,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class GuiStatBar extends GuiStatBase {
     protected ICondition[] conditions;
 

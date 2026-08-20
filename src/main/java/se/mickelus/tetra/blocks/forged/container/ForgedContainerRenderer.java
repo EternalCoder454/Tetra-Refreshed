@@ -23,14 +23,11 @@ import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ForgedContainerRenderer implements BlockEntityRenderer<ForgedContainerBlockEntity, ForgedContainerRenderer.State> {
     public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
             Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_container/forged_container"));

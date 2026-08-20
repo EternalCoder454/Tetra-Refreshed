@@ -30,8 +30,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import net.neoforged.neoforge.event.EventHooks;
 import se.mickelus.mutil.util.CastOptional;
@@ -65,7 +63,6 @@ public class ExtractorProjectileEntity extends AbstractArrow implements IEntityW
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     public ExtractorProjectileEntity(Level worldIn, double x, double y, double z) {
         super(type, x, y, z, worldIn, new ItemStack(ChthonicExtractorBlock.item), null);
         initDefaults();

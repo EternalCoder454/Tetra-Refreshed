@@ -23,7 +23,6 @@ import static se.mickelus.tetra.effect.EffectHelper.getEffectLevel;
  * bytecode and could not load on a dedicated server, taking every server side handler on that class
  * down with it. Keeping the client input here is what @OnlyIn was being asked to do and cannot.
  */
-@OnlyIn(Dist.CLIENT)
 public class ClientInputHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -7,8 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.gui.*;
 import se.mickelus.mutil.gui.impl.GuiHorizontalLayoutGroup;
 import se.mickelus.tetra.client.keymap.TetraKeyMappings;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ToolbeltScreen extends AbstractContainerScreen<ToolbeltContainer> {
 
     private static ToolbeltScreen instance;

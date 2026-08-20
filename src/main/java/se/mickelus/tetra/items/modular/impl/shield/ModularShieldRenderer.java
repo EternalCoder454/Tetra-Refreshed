@@ -17,8 +17,6 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3fc;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.mutil.util.CastOptional;
@@ -40,7 +38,6 @@ import java.util.function.Consumer;
  * unbaked form whenever models reload, which is what the reload listener was there to force.
  */
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ModularShieldRenderer implements SpecialModelRenderer<ItemStack> {
     public static ModelLayerLocation layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield"), "main");
     public static ModelLayerLocation bannerLayer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "item/shield_banner"),

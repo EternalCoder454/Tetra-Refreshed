@@ -4,8 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.module.data.MaterialData;
 
 import javax.annotation.Nullable;
@@ -21,7 +19,6 @@ import java.util.List;
  * The stat labels are the holosphere's own. Using them means the page is worded the way the mod
  * already words these numbers, rather than inventing a second vocabulary for them.
  */
-@OnlyIn(Dist.CLIENT)
 public final class MaterialSummary {
     private static final String statPrefix = "tetra.holo.craft.materials.stat.";
 

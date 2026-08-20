@@ -14,7 +14,6 @@ import se.mickelus.tetra.items.modular.impl.holo.gui.HoloGui;
  * screen behind its own class means the server never loads it, which is what @OnlyIn was being
  * asked to do and cannot.
  */
-@OnlyIn(Dist.CLIENT)
 public class HolosphereGuiOpener {
     private HolosphereGuiOpener() {
     }

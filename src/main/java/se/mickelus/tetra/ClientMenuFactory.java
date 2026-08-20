@@ -19,7 +19,6 @@ import se.mickelus.tetra.blocks.workbench.WorkbenchTile;
  * class there threw NoClassDefFoundError before any menu could register. Keeping the client lookups
  * in a client only class is what @OnlyIn was being asked to do and cannot.
  */
-@OnlyIn(Dist.CLIENT)
 public class ClientMenuFactory {
     private ClientMenuFactory() {
     }

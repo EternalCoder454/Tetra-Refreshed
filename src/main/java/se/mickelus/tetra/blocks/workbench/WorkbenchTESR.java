@@ -15,15 +15,12 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jspecify.annotations.Nullable;
 import se.mickelus.tetra.items.modular.impl.shield.ModularShieldItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class WorkbenchTESR implements BlockEntityRenderer<WorkbenchTile, WorkbenchTESR.State> {
 
     private final ItemModelResolver itemModelResolver;

@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.module.schematic.CraftingContext;
 
@@ -22,7 +20,6 @@ public class AndRequirement implements CraftingRequirement {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     @Nullable
     public List<Component> getDescription() {

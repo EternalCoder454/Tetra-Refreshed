@@ -6,8 +6,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class PlainParticle extends SimpleAnimatedParticle {
     protected PlainParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, PlainParticleOption options,
@@ -27,7 +25,6 @@ public class PlainParticle extends SimpleAnimatedParticle {
         this.setSpriteFromAge(sprites);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Provider implements ParticleProvider<PlainParticleOption> {
         private final SpriteSet sprites;
 

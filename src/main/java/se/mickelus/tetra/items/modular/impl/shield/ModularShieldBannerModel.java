@@ -9,15 +9,12 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.Unit;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.NoSuchElementException;
 
 // todo 1.18: fix up shield renderer
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ModularShieldBannerModel extends Model<Unit> {
 
     public ModularShieldBannerModel(ModelPart modelPart) {

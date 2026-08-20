@@ -27,8 +27,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.util.RandomSource;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -581,7 +579,6 @@ public interface IModularItem {
         return maxDamage != 0 && damage >= maxDamage - 1;
     }
 
-    @OnlyIn(Dist.CLIENT)
     default List<Component> getTooltip(ItemStack itemStack, @Nullable Level world, TooltipFlag advanced) {
         List<Component> tooltip = Lists.newArrayList();
         if (isBroken(itemStack)) {
@@ -1176,11 +1173,9 @@ public interface IModularItem {
      *                     should tumble rather than hold an angle
      * @param dealtDamage  whether it has already hit something, which usually stops the tumble
      */
-    @OnlyIn(Dist.CLIENT)
     default void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
     }
 
-    @OnlyIn(Dist.CLIENT)
     default ImmutableList<IModuleModel> getModels(ItemStack itemStack, @Nullable LivingEntity entity) {
         return getAllModules(itemStack).stream()
                 .sorted(Comparator.comparing(ItemModule::getRenderLayer))
@@ -1191,17 +1186,14 @@ public interface IModularItem {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
     }
 
-    @OnlyIn(Dist.CLIENT)
     default String getTransformVariant(ItemStack itemStack, @Nullable LivingEntity entity) {
         return null;
     }
 
-    @OnlyIn(Dist.CLIENT)
     default GuiModuleOffsets getMajorGuiOffsets(ItemStack itemStack) {
         return defaultMajorOffsets[getNumMajorModules(itemStack)];
     }
 
-    @OnlyIn(Dist.CLIENT)
     default GuiModuleOffsets getMinorGuiOffsets(ItemStack itemStack) {
         return defaultMinorOffsets[getNumMinorModules(itemStack)];
     }

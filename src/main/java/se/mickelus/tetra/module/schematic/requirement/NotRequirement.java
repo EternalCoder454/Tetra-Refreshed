@@ -1,8 +1,6 @@
 package se.mickelus.tetra.module.schematic.requirement;
 
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.module.schematic.CraftingContext;
 
@@ -18,7 +16,6 @@ public class NotRequirement implements CraftingRequirement {
         return !requirement.test(context);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     @Nullable
     public List<Component> getDescription() {

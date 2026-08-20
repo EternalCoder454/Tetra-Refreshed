@@ -26,8 +26,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -176,7 +174,6 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
                         ((PrimaryMultiblockSchematicBlock) part.blockState.getBlock()).updateComplete(part.blockState(), level, part.worldPos(), blockPos));
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected void spawnParticles(BlockState blockState, Level level, BlockPos blockPos) {
         Vec3 face = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getUnitVec3i());
         Vec3 dir = Vec3.atLowerCornerOf(blockState.getValue(facingProp).getClockWise().getUnitVec3i());
@@ -185,7 +182,6 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
                         spawnParticleBlock(level, blockState, part.basePos(), part.blockState(), part.worldPos(), face, dir)));
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected void spawnParticleBlock(Level level, BlockState originState, BlockPos basePos, BlockState blockState, BlockPos pos, Vec3 face,
             Vec3 dir) {
         Vec3 facePos = Vec3.atCenterOf(pos).add(face.scale(0.52));
@@ -199,7 +195,6 @@ public class MultiblockSchematicBlock extends HorizontalDirectionalBlock impleme
         spawnParticle(level, particle, facePos);
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected void spawnParticle(Level level, DustParticleOptions particle, Vec3 pos) {
         level.addParticle(particle, pos.x, pos.y, pos.z, 0, 0, 0);
     }

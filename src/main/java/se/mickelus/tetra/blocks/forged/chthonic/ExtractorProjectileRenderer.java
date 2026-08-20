@@ -11,13 +11,10 @@ import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ExtractorProjectileRenderer extends EntityRenderer<ExtractorProjectileEntity, ExtractorProjectileRenderer.State> {
 
     public ExtractorProjectileRenderer(EntityRendererProvider.Context renderContext) {

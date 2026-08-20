@@ -7,8 +7,6 @@ import com.google.gson.JsonParseException;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.mutil.util.JsonOptional;
 import se.mickelus.tetra.module.ItemModule;
@@ -70,7 +68,6 @@ public class ModuleRequirement implements CraftingRequirement {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     @Nullable
     public List<Component> getDescription() {

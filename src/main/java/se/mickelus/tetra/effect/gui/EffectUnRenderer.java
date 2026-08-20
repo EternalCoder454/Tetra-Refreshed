@@ -4,11 +4,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
-@OnlyIn(Dist.CLIENT)
 public class EffectUnRenderer implements IClientMobEffectExtensions {
     public static final IClientMobEffectExtensions INSTANCE = new EffectUnRenderer();
 

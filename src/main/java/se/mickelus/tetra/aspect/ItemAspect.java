@@ -9,8 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
@@ -53,17 +51,14 @@ public class ItemAspect {
         return key;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public MutableComponent getLabel() {
         return getAspectLabel(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static MutableComponent getAspectLabel(ItemAspect aspect) {
         return getAspectLabel(aspect.getKey());
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static MutableComponent getAspectLabel(String key) {
         String localizationKey = "tetra.aspect." + key;
         if (I18n.exists(localizationKey)) {
@@ -72,17 +67,14 @@ public class ItemAspect {
         return Component.literal(StringUtils.capitalize(key.replace("_", " ")));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public MutableComponent getDescription() {
         return getAspectDescription(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static MutableComponent getAspectDescription(ItemAspect aspect) {
         return getAspectDescription(aspect.getKey());
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static MutableComponent getAspectDescription(String key) {
         String localizationKey = "tetra.aspect." + key + ".description";
         if (I18n.exists(localizationKey)) {

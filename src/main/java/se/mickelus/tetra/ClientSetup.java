@@ -4,8 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -108,7 +106,6 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             // enqueueWork swallows exceptions without logging

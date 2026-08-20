@@ -20,8 +20,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.mickelus.tetra.data.DataManager;
@@ -33,7 +31,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ModularShieldModel extends Model<Unit> {
     private static final Logger logger = LogManager.getLogger();
 

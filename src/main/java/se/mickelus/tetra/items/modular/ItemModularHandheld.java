@@ -54,8 +54,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.ItemAbilities;
 import se.mickelus.mutil.util.CastOptional;
@@ -815,7 +813,6 @@ public class ItemModularHandheld extends ModularItem {
                 .orElse(null);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void triggerChargedAbility(ItemStack itemStack, Level world, LivingEntity entity, int ticksUsed) {
         if (entity instanceof Player playerValue) {
             HitResult rayTrace = Minecraft.getInstance().hitResult;
@@ -843,7 +840,6 @@ public class ItemModularHandheld extends ModularItem {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void onPlayerStoppedUsingSecondary(ItemStack itemStack, Level world, LivingEntity entity, int timeLeft) {
         if (entity instanceof Player player) {
             LivingEntity target = Optional.ofNullable(Minecraft.getInstance().hitResult)

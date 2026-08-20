@@ -6,8 +6,6 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.compat.viewer.MaterialSummary;
 import se.mickelus.tetra.compat.viewer.ViewerMaterial;
@@ -18,7 +16,6 @@ import java.util.List;
  * One material page, as EMI draws it. The same content the JEI category shows, laid out with EMI's
  * widgets rather than its own text.
  */
-@OnlyIn(Dist.CLIENT)
 public class MaterialEmiRecipe extends BasicEmiRecipe {
     private static final int panelWidth = 160;
     private static final int panelHeight = 108;

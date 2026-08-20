@@ -10,8 +10,6 @@ import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.blocks.workbench.BasicWorkbenchBlock;
 import se.mickelus.tetra.compat.viewer.MaterialSummary;
@@ -26,7 +24,6 @@ import java.util.List;
  * The slot holds every item that resolves to the material, so asking what an iron ingot is used for
  * finds this page. That lookup is the point, and it is the question the holosphere answers slowly.
  */
-@OnlyIn(Dist.CLIENT)
 public class MaterialCategory extends AbstractRecipeCategory<ViewerMaterial> {
     public static final RecipeType<ViewerMaterial> type = RecipeType.create(TetraMod.MOD_ID, "material", ViewerMaterial.class);
 

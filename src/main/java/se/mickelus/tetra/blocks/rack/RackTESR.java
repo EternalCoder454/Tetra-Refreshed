@@ -17,8 +17,6 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jspecify.annotations.Nullable;
 import se.mickelus.tetra.items.modular.impl.ModularBladedItem;
 import se.mickelus.tetra.items.modular.impl.crossbow.ModularCrossbowItemImpl;
@@ -30,7 +28,6 @@ import java.util.List;
 import se.mickelus.mutil.util.ResourceHandlers;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class RackTESR implements BlockEntityRenderer<RackTile, RackTESR.State> {
 
     private final ItemModelResolver itemModelResolver;

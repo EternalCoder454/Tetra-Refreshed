@@ -21,14 +21,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class HammerBaseRenderer implements BlockEntityRenderer<HammerBaseBlockEntity, HammerBaseRenderer.State> {
     public static final SpriteId material = new SpriteId(TextureAtlas.LOCATION_BLOCKS,
             Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "block/forged_hammer/base_sheet"));

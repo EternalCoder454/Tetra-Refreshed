@@ -40,8 +40,6 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
@@ -118,7 +116,6 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
         NeoForge.EVENT_BUS.register(new CrossbowOverlay(Minecraft.getInstance()));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public IClientItemExtensions createClientExtensions() {
         return new IClientItemExtensions() {
             @Override
@@ -191,7 +188,6 @@ public class ModularCrossbowItemImpl extends AbstractModularCrossbowItem {
         };
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
         List<ItemStack> list = getProjectiles(stack, context.registries());

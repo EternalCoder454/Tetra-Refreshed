@@ -7,8 +7,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import java.util.function.Supplier;
 import se.mickelus.mutil.gui.DisabledSlot;
 import se.mickelus.tetra.items.modular.impl.toolbelt.inventory.*;
@@ -99,7 +97,6 @@ public class ToolbeltContainer extends AbstractContainerMenu {
                 .orElse(null);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static ToolbeltContainer create(int windowId, Inventory inv) {
         ItemStack itemStack = inv.player.getMainHandItem();
         if (!ModularToolbeltItem.instance.get().equals(itemStack.getItem())) {

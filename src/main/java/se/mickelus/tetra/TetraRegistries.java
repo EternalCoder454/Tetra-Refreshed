@@ -28,8 +28,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -601,7 +599,6 @@ public class TetraRegistries {
     }
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             // enqueueWork swallows exceptions without logging

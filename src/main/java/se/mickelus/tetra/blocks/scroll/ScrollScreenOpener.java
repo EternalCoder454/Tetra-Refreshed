@@ -13,7 +13,6 @@ import se.mickelus.tetra.blocks.scroll.gui.ScrollScreen;
  * dedicated server. Keeping the screen behind its own class is what @OnlyIn was being asked to do
  * and cannot.
  */
-@OnlyIn(Dist.CLIENT)
 public class ScrollScreenOpener {
     private ScrollScreenOpener() {
     }

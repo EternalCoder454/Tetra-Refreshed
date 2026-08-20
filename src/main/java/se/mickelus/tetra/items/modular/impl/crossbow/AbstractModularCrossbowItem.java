@@ -5,8 +5,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.network.PacketHandler;
 import se.mickelus.tetra.ConfigHandler;
 import se.mickelus.tetra.TetraMod;
@@ -123,7 +121,6 @@ public abstract class AbstractModularCrossbowItem extends ModularItem {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public ImmutableList<IModuleModel> getModels(ItemStack itemStack, @Nullable LivingEntity entity) {
         String modelType = getDrawVariant(itemStack, entity);
 
@@ -151,13 +148,11 @@ public abstract class AbstractModularCrossbowItem extends ModularItem {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMajorGuiOffsets(ItemStack itemStack) {
         return majorOffsets;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMinorGuiOffsets(ItemStack itemStack) {
         return minorOffsets;
     }

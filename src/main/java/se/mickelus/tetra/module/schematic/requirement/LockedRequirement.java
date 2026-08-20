@@ -3,8 +3,6 @@ package se.mickelus.tetra.module.schematic.requirement;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import se.mickelus.tetra.module.schematic.CraftingContext;
 
@@ -19,7 +17,6 @@ public class LockedRequirement implements CraftingRequirement {
         return Arrays.asList(context.unlocks).contains(key);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     @Nullable
     public List<Component> getDescription() {

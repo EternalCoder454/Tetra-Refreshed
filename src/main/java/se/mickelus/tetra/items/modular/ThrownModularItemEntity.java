@@ -33,8 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import net.neoforged.neoforge.event.EventHooks;
 import se.mickelus.mutil.util.CastOptional;
@@ -94,7 +92,6 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         updateSoundEvent();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public ThrownModularItemEntity(Level worldIn, double x, double y, double z) {
         super(type, x, y, z, worldIn, new ItemStack(Items.TRIDENT), null);
     }
@@ -484,7 +481,6 @@ public class ThrownModularItemEntity extends AbstractArrow implements IEntityWit
         return 0.99F;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public boolean shouldRender(double x, double y, double z) {
         return true;
     }

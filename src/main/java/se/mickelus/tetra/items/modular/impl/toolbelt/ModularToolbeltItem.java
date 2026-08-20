@@ -12,8 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import java.util.function.Supplier;
 import se.mickelus.mutil.network.PacketHandler;
@@ -164,13 +162,11 @@ public class ModularToolbeltItem extends ModularItem implements MenuProvider {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMajorGuiOffsets(ItemStack itemStack) {
         return majorOffsets;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMinorGuiOffsets(ItemStack itemStack) {
         return minorOffsets;
     }

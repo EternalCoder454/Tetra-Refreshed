@@ -5,8 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.ItemAbility;
 import se.mickelus.mutil.util.CastOptional;
 import se.mickelus.mutil.util.Filter;
@@ -216,7 +214,6 @@ public class ConfigSchematic extends BaseSchematic {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     @Nullable
     public List<Component> getRequirementDescription() {
         if (definition.materialRevealSlot > -1) {

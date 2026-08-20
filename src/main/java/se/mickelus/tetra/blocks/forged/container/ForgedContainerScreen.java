@@ -8,8 +8,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.gui.GuiElement;
 import se.mickelus.mutil.gui.GuiRect;
 import se.mickelus.mutil.gui.GuiTexture;
@@ -24,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.IntStream;
 
 @ParametersAreNonnullByDefault
-@OnlyIn(Dist.CLIENT)
 public class ForgedContainerScreen extends AbstractContainerScreen<ForgedContainerMenu> {
     private static final Identifier containerTexture = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "textures/gui/forged-container.png");
 

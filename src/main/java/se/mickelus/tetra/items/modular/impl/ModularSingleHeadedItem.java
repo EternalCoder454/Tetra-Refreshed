@@ -4,8 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.mutil.network.PacketHandler;
 import se.mickelus.tetra.ConfigHandler;
 import se.mickelus.tetra.data.DataManager;
@@ -70,7 +68,6 @@ public class ModularSingleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public String getTransformVariant(ItemStack itemStack, @Nullable LivingEntity entity) {
         if (isThrowing(itemStack, entity)) {
             return "throwing";
@@ -79,7 +76,6 @@ public class ModularSingleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw - 90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(pitch + 135.0F));
@@ -88,13 +84,11 @@ public class ModularSingleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMajorGuiOffsets(ItemStack itemStack) {
         return majorOffsets;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMinorGuiOffsets(ItemStack itemStack) {
         return minorOffsets;
     }

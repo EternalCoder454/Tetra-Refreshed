@@ -20,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -208,7 +206,6 @@ public class ModularDoubleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void applyThrownPose(PoseStack poseStack, float yaw, float pitch, float spin, boolean dealtDamage, boolean onGround) {
         // Tumbles end over end until it hits something, then holds the angle it struck at.
         poseStack.mulPose(Axis.ZP.rotationDegrees(dealtDamage ? pitch + 135.0F : pitch + spin));
@@ -218,13 +215,11 @@ public class ModularDoubleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMajorGuiOffsets(ItemStack itemStack) {
         return majorOffsets;
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public GuiModuleOffsets getMinorGuiOffsets(ItemStack itemStack) {
         return minorOffsets;
     }
@@ -242,7 +237,6 @@ public class ModularDoubleHeadedItem extends ItemModularHandheld {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public String getTransformVariant(ItemStack itemStack, @Nullable LivingEntity entity) {
         ChargedAbilityEffect ability = getChargeableAbility(itemStack);
         if (entity != null && ability != null && itemStack.equals(entity.getUseItem())) {

@@ -6,8 +6,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import se.mickelus.tetra.TetraMod;
 import se.mickelus.tetra.blocks.forged.hammer.HammerBaseBlock;
 import se.mickelus.tetra.blocks.workbench.BasicWorkbenchBlock;
@@ -21,7 +19,6 @@ import se.mickelus.tetra.items.modular.impl.holo.ModularHolosphereItem;
  * JEI never loads it. The content comes from se.mickelus.tetra.compat.viewer, which knows nothing
  * about JEI, so a second viewer is a second class in this shape rather than a second extraction.
  */
-@OnlyIn(Dist.CLIENT)
 @JeiPlugin
 public class TetraJeiPlugin implements IModPlugin {
     private static final Identifier uid = Identifier.fromNamespaceAndPath(TetraMod.MOD_ID, "jei");
